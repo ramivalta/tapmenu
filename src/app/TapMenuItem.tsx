@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Heading, Text, List, ListItem, Flex } from "@chakra-ui/layout";
+import { Box, Heading, Text, List, ListItem, Flex, Divider } from "@chakra-ui/layout";
 import { CloseButton, Select } from "@chakra-ui/react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Fragment, useState } from "react";
@@ -10,10 +10,14 @@ const TapMenuItem = ({
   batch,
   batches,
   tap,
+  showHops,
+  showFermentables,
 }: {
   batches: any[];
   batch: any;
   tap: string;
+  showHops: number;
+  showFermentables: number;
 }) => {
   const hopsGroupedByUse = batch?.recipe?.hops?.reduce((acc: any, hop: any) => {
     if (!acc[hop.use]) {
@@ -28,29 +32,22 @@ const TapMenuItem = ({
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  console.log("MENU ITEM PARMS?", batch);
 
   return (
     <Flex
       flexDirection="column"
-      p="12"
+      p="4"
       width="50%"
-      _hover={{
-        ".sel": {
-          opacity: "1 !important",
-        },
-        button: {
-          opacity: "1 !important",
-        },
-      }}
+
     >
-      <Flex gap="8">
-        <select
+      <Flex>
+
+        <Select
+          size="lg"
+          fontWeight="bold"
+
           defaultValue={batch?._id}
-          style={{
-            opacity: 0,
-            transition: "0.35s all",
-          }}
+
           className="sel"
           onChange={(e) => {
             const selectedBatch = batches.find(
@@ -58,7 +55,12 @@ const TapMenuItem = ({
             );
 
             const params = new URLSearchParams(searchParams.toString());
-            params.set(tap, selectedBatch._id);
+            if (selectedBatch) {
+              params.set(tap, selectedBatch._id);
+            } else {
+              params.delete(tap);
+            }
+
 
             router.replace(`
             /?${params.toString()}
@@ -67,125 +69,122 @@ const TapMenuItem = ({
         >
           <option>-</option>
 
-          {batches.map((batch) => {
+          {batches.map((batch, index) => {
             return (
-              <option value={batch._id} key={batch.id}>
+              <option value={batch._id} key={batch.id + "_" + index}>
                 {batch?.recipe?.name}
               </option>
             );
           })}
-        </select>
-        {batch && (
-          <CloseButton
-            size="xs"
-            opacity="0"
-            onClick={() => {
-              const params = new URLSearchParams(searchParams.toString());
-              params.delete(tap);
+        </Select>
+      </Flex>
 
-              router.replace(`
-              /?${params.toString()}
-            `);
-            }}
-          />
-        )}
-      </Flex>
-      <Flex flexDir="column" gap="2" py="4">
-        <Flex gap="4">
-          {/* <Text display="inline" textTransform="uppercase" fontSize="24"> */}
-          {/* {tap} */}
-          {/* </Text> */}
-          {batch && (
-            <Fragment>
-              {/* <Text fontSize="24">-</Text> */}
-              <Text display="inline" fontSize="24">
-                {batch?.recipe?.name}
-              </Text>
-            </Fragment>
-          )}
-        </Flex>
-      </Flex>
 
       {batch && (
         <Flex flexDir="column" gap="4" py="4">
-          <Text>
-            {batch?.recipe?.style?.name} - {batch?.recipe?.style?.category}
-          </Text>
-          <Text>
-            {round(batch.recipe?.abv, 1)}% ABV - {round(batch.recipe?.ibu)} IBU
-          </Text>
+          <Flex justifyContent="" gap="3">
 
-          <Heading fontSize="22px">Fermentables</Heading>
+            
+            <Text>
+              {round(batch.recipe?.abv, 1)}% ABV
+            </Text>
 
-          <List gap="3" display="flex" flexDirection="column">
-            {batch.recipe?.data?.mashFermentables?.map((fermentable: any) => {
-              return (
-                <Fragment key={fermentable._id}>
-                  <ListItem
-                    display="flex"
-                    justifyContent="space-between"
-                    width="100%"
-                  >
-                    <Text>{fermentable.name}</Text>
-                    <Text>{round(fermentable.percentage, 0)}%</Text>
-                  </ListItem>
-                </Fragment>
-              );
-            })}
-          </List>
+            <Divider orientation="vertical" />
 
-          {hopsGroupedByUse && (
+            <Text>
+              {round(batch.recipe?.ibu)} IBU
+            </Text>
+
+            <Divider orientation="vertical" />
+
+            <Text>
+              {batch?.recipe?.style?.name}
+            </Text>
+          </Flex>
+
+          {showFermentables ? (
             <Fragment>
-              <Heading fontSize="22px">Hops</Heading>
+              <Heading fontSize="22px">Fermentables</Heading>
 
-              <Flex
-                flexDirection="row"
-                gap="7"
-                width="100%"
-                justifyContent="space-between"
-              >
-                {Object.keys(hopsGroupedByUse).map((use) => {
+              <List display="flex" flexDirection="column">
+                {batch.recipe?.data?.mashFermentables?.map((fermentable: any) => {
                   return (
-                    <Flex
-                      flexDirection="column"
-                      key={use}
-                      gap="3"
-                      _last={{
-                        gap: 0,
-                      }}
-                    >
-                      <Heading fontSize="18px">{use}</Heading>
-
-                      <List
-                        gap="3"
+                    <Fragment key={fermentable._id}>
+                      <ListItem
                         display="flex"
-                        flexDirection="column"
                         justifyContent="space-between"
+                        width="100%"
                       >
-                        {hopsGroupedByUse[use].map((hop: any) => {
-                          return (
-                            <ListItem
-                              key={hop._id}
-                              display="flex"
-                              justifyContent="space-between"
-                              width="100%"
-                              gap="16"
-                              _last={{
-                                pr: 0,
-                              }}
-                            >
-                              <Text>{hop.name}</Text>
-                              <Text>{hop.amount}g</Text>
-                            </ListItem>
-                          );
-                        })}
-                      </List>
-                    </Flex>
+                        <Text>{fermentable.name}</Text>
+                        <Text>{round(fermentable.percentage, 0)}%</Text>
+                      </ListItem>
+                    </Fragment>
                   );
                 })}
-              </Flex>
+              </List>
             </Fragment>
-          )}
+          ) : null}
+
+
+          {showHops ? (
+            <Fragment>
+              {hopsGroupedByUse && (
+                <Fragment>
+                  <Heading fontSize="22px">Hops</Heading>
+
+                  <Flex
+                    flexDirection="row"
+                    width="100%"
+                    justifyContent="space-between"
+                    gap="8"
+                  >
+                    {Object.keys(hopsGroupedByUse).map((use) => {
+                      return (
+                        <Flex
+                          flexDirection="column"
+                          key={use}
+                          width="100%"
+
+
+                        // gap="3"
+                        // _last={{
+                        //   gap: 0,
+                        // }}
+                        >
+                          <Heading fontSize="18px">{use}</Heading>
+
+                          <List
+                            gap="3"
+                            width="100%"
+
+                          >
+                            {hopsGroupedByUse[use].map((hop: any) => {
+                              return (
+                                <ListItem
+                                  key={hop._id}
+                                  width="100%"
+
+                                  display="flex"
+                                  justifyContent="space-between"
+
+                                >
+                                  <Text as="span">{hop.name}</Text>
+                                  <Text as="span">{hop.amount}g</Text>
+                                </ListItem>
+                              );
+                            })}
+                          </List>
+                        </Flex>
+                      );
+                    })}
+                  </Flex>
+                </Fragment>
+              )}
+
+            </Fragment>
+
+          ) : null}
+
         </Flex>
       )}
     </Flex>
