@@ -69,7 +69,7 @@ export default async function Home({ searchParams }: {
           </Center>
         </Box>
 
-        <Flex flexWrap="wrap" flexDirection="row" p="8">
+        <Flex flexWrap="wrap" flexDirection="row" p="8" justifyContent="center">
           <TapMenuItem
             batches={batchesData}
             batch={batchesData?.find((batch: any) => batch._id === tap1)}
@@ -80,7 +80,7 @@ export default async function Home({ searchParams }: {
           />
 
           <Flex>
-            <Divider orientation="vertical" />
+            <Divider orientation="vertical" borderColor="#ccc" />
           </Flex>
 
 
@@ -94,7 +94,7 @@ export default async function Home({ searchParams }: {
           />
 
           <Flex>
-            <Divider orientation="vertical" />
+            <Divider orientation="vertical" borderColor="#ccc" />
           </Flex>
 
           <TapMenuItem
@@ -107,7 +107,7 @@ export default async function Home({ searchParams }: {
           />
 
           <Flex>
-            <Divider orientation="vertical" />
+            <Divider orientation="vertical" borderColor="#ccc" />
           </Flex>
 
           <TapMenuItem
