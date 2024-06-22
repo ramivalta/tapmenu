@@ -73,13 +73,13 @@ const TapMenuItem = ({
       acc[hop.use] = [];
     }
 
-    !acc[hop.use].some((hopInAcc) => hopInAcc._id === hop._id) &&
+    !acc[hop.use].some((hopInAcc: any) => hopInAcc._id === hop._id) &&
       acc[hop.use].push(hop);
 
     return acc;
   }, {});
 
-  const hops = uniq(batch?.recipe?.hops.map(hop => hop.name));
+  const hops = uniq(batch?.recipe?.hops.map((hop: any) => hop.name));
 
   console.log("HOPS", hops)
 
@@ -167,7 +167,7 @@ const TapMenuItem = ({
 
               <Text>
 
-                {hops.map((hop, index, arr) => {
+                {hops.map((hop: any, index, arr) => {
                   return (
                     <Fragment key={hop}>
                       {hop}

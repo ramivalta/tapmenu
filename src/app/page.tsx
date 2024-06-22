@@ -6,7 +6,17 @@ import Controls from "./Controls";
 
 const token = process.env.BREWFATHER_API_TOKEN;
 
-export default async function Home({ searchParams }) {
+export default async function Home({ searchParams }: {
+  searchParams: {
+    tap1: string;
+    tap2: string;
+    tap3: string;
+    tap4: string;
+    showHops: string;
+    showFermentables: string;
+  };
+
+}) {
   if (!token) {
     return (
       <Flex
@@ -62,7 +72,7 @@ export default async function Home({ searchParams }) {
         <Flex flexWrap="wrap" flexDirection="row" p="8">
           <TapMenuItem
             batches={batchesData}
-            batch={batchesData?.find((batch) => batch._id === tap1)}
+            batch={batchesData?.find((batch: any) => batch._id === tap1)}
             tap="tap1"
             showHops={showHops}
             showFermentables={showFermentables}
