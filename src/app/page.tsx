@@ -86,7 +86,7 @@ export default async function Home({ searchParams }: {
 
           <TapMenuItem
             batches={batchesData}
-            batch={batchesData?.find((batch) => batch._id === tap2)}
+            batch={batchesData?.find((batch: any) => batch._id === tap2)}
             tap="tap2"
             showHops={showHops}
             showFermentables={showFermentables}
@@ -99,7 +99,7 @@ export default async function Home({ searchParams }: {
 
           <TapMenuItem
             batches={batchesData}
-            batch={batchesData?.find((batch) => batch._id === tap3)}
+            batch={batchesData?.find((batch: any) => batch._id === tap3)}
             tap="tap3"
             showHops={showHops}
             showFermentables={showFermentables}
@@ -112,7 +112,7 @@ export default async function Home({ searchParams }: {
 
           <TapMenuItem
             batches={batchesData}
-            batch={batchesData?.find((batch) => batch._id === tap4)}
+            batch={batchesData?.find((batch: any) => batch._id === tap4)}
             tap="tap4"
             showHops={showHops}
             showFermentables={showFermentables}
