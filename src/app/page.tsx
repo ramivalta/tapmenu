@@ -1,7 +1,8 @@
-import { Box, Text, Spacer, Flex, Divider, Center } from "@chakra-ui/layout";
+import { Box, Text, Spacer, Flex, Divider, Center, Link } from "@chakra-ui/layout";
 import TapMenuItem from "./TapMenuItem";
 import { Fragment } from "react";
 import Controls from "./Controls";
+
 
 const token = process.env.BREWFATHER_API_TOKEN;
 
@@ -16,22 +17,27 @@ export default async function Home({ searchParams }) {
       >
         <Text>Missing Brewfather API token</Text>
 
-        <a href="https://docs.brewfather.app/api#authentication">
-          <Text>Get your API token here and put in BREWFATHER_API_TOKEN env variable to use this thing</Text>
-        </a>
-
+        <Text>Get your <Link textDecor="underline" href="https://docs.brewfather.app/api#authentication">
+          API token here
+        </Link > and put in BREWFATHER_API_TOKEN env variable to use this thing</Text>
       </Flex>
     );
   }
 
   try {
     const batches = await fetch(
-      "https://api.brewfather.app/v2/batches?include=[brewday,recipe,fermentations,fermentationsteps,fermentationreadings,fermentationnotes,batch]",
+      "https://api.brewfather.app/v2/batches?include=[brewday,recipe,batchNotes,batch.notes]&status=Completed",
+      // "https://api.brewfather.app/v2/batches?complete=True",
       {
         headers: {
           Authorization: `Basic ${token}`,
         },
+        next: {
+          revalidate: 1,
+        }
+
       }
+
     );
 
     const batchesData = await batches.json();
@@ -41,14 +47,13 @@ export default async function Home({ searchParams }) {
     const showHops = Number(_showHops);
     const showFermentables = Number(_showFermantables);
 
-    console.log("DEARCH PARAMS", searchParams);
-
-
 
     return (
       <Fragment>
 
-        <Box position="fixed" top="0" left="0" right="0" zIndex="2" background="#ddd">
+        <Box position="fixed" top="0" left="0" right="0" zIndex="2" background="#ddd" opacity="0" _hover={{
+          opacity: 1
+        }} transition="0.35s all">
           <Center>
             <Controls showHops={showHops} showFermentables={showFermentables} />
           </Center>
@@ -61,7 +66,13 @@ export default async function Home({ searchParams }) {
             tap="tap1"
             showHops={showHops}
             showFermentables={showFermentables}
+            tapNumber="1"
           />
+
+          <Flex>
+            <Divider orientation="vertical" />
+          </Flex>
+
 
           <TapMenuItem
             batches={batchesData}
@@ -69,7 +80,12 @@ export default async function Home({ searchParams }) {
             tap="tap2"
             showHops={showHops}
             showFermentables={showFermentables}
+            tapNumber="2"
           />
+
+          <Flex>
+            <Divider orientation="vertical" />
+          </Flex>
 
           <TapMenuItem
             batches={batchesData}
@@ -77,7 +93,12 @@ export default async function Home({ searchParams }) {
             tap="tap3"
             showHops={showHops}
             showFermentables={showFermentables}
+            tapNumber="3"
           />
+
+          <Flex>
+            <Divider orientation="vertical" />
+          </Flex>
 
           <TapMenuItem
             batches={batchesData}
@@ -85,8 +106,13 @@ export default async function Home({ searchParams }) {
             tap="tap4"
             showHops={showHops}
             showFermentables={showFermentables}
+            tapNumber="4"
           />
         </Flex>
+
+        {/* <pre>
+          {JSON.stringify(batchesData, null, 2)}
+        </pre> */}
       </Fragment>
     );
   } catch (error) {

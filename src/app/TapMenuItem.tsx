@@ -1,10 +1,57 @@
 "use client";
 
-import { Box, Heading, Text, List, ListItem, Flex, Divider } from "@chakra-ui/layout";
-import { CloseButton, Select } from "@chakra-ui/react";
+import { Box, Heading, Text, List, ListItem, Flex, Divider, Stack } from "@chakra-ui/layout";
+import { CloseButton, Select, Link } from "@chakra-ui/react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Fragment, useState } from "react";
-import { round } from "lodash";
+import { round, uniq } from "lodash";
+import QRCode from "react-qr-code";
+
+const beerColors = [
+  "#FFE699",
+  "#FFD878",
+  "#FFCA5A",
+  "#FFBF42",
+  "#FBB123",
+  "#F8A600",
+  "#F39C00",
+  "#EA8F00",
+  "#E58500",
+  "#DE7C00",
+  "#D77200",
+  "#CF6900",
+  "#CB6200",
+  "#C35900",
+  "#BB5100",
+  "#B54C00",
+  "#B04500",
+  "#A63E00",
+  "#A13700",
+  "#9B3200",
+  "#952D00",
+  "#8E2900",
+  "#882300",
+  "#821E00",
+  "#7B1A00",
+  "#771900",
+  "#701400",
+  "#6A0E00",
+  "#660D00",
+  "#5E0B00",
+  "#5A0A02",
+  "#600903",
+  "#520907",
+  "#4C0505",
+  "#470606",
+  "#440607",
+  "#3F0708",
+  "#3B0607",
+  "#3A070B",
+  "#36080A",
+
+
+
+]
 
 const TapMenuItem = ({
   batch,
@@ -12,12 +59,14 @@ const TapMenuItem = ({
   tap,
   showHops,
   showFermentables,
+  tapNumber,
 }: {
   batches: any[];
   batch: any;
   tap: string;
   showHops: number;
   showFermentables: number;
+  tapNumber: string;
 }) => {
   const hopsGroupedByUse = batch?.recipe?.hops?.reduce((acc: any, hop: any) => {
     if (!acc[hop.use]) {
@@ -30,24 +79,39 @@ const TapMenuItem = ({
     return acc;
   }, {});
 
+  const hops = uniq(batch?.recipe?.hops.map(hop => hop.name));
+
+  console.log("HOPS", hops)
+
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const fullUntappedLink = batch?.batchNotes?.match(/https:\/\/untappd.com\/b\/[^ ]*/g)?.[0];
+
 
   return (
     <Flex
       flexDirection="column"
       p="4"
-      width="50%"
-
+    // width="50%"
     >
-      <Flex>
+      <Flex alignItems="center"
+      // background={beerColors[round(batch?.recipe?.color) + 1]}
+      >
+        {/* {batch && <Text mr="0.5ch" fontSize="18px">
+          {tapNumber}.
 
+        </Text>
+        } */}
         <Select
+          // background={beerColors[round(batch?.recipe?.color) + 1]}
+          ml="-4"
+          textDecoration="underline"
+          icon={<Fragment />}
+          borderColor="transparent"
           size="lg"
           fontWeight="bold"
-
           defaultValue={batch?._id}
-
           className="sel"
           onChange={(e) => {
             const selectedBatch = batches.find(
@@ -60,7 +124,6 @@ const TapMenuItem = ({
             } else {
               params.delete(tap);
             }
-
 
             router.replace(`
             /?${params.toString()}
@@ -81,26 +144,70 @@ const TapMenuItem = ({
 
 
       {batch && (
-        <Flex flexDir="column" gap="4" py="4">
-          <Flex justifyContent="" gap="3">
+        <Flex flexDir="column" gap="4" py="4" position="relative">
+          {/* <Box position="absolute" left="0" top="0" right="0" bottom="0" opacity="0.5">
+            {fullUntappedLink &&
+              <QRCode value={fullUntappedLink} />
+            }
+          </Box> */}
 
-            
-            <Text>
-              {round(batch.recipe?.abv, 1)}% ABV
-            </Text>
-
-            <Divider orientation="vertical" />
-
-            <Text>
-              {round(batch.recipe?.ibu)} IBU
-            </Text>
-
-            <Divider orientation="vertical" />
+          <Flex flexDirection="column" gap="3">
 
             <Text>
               {batch?.recipe?.style?.name}
             </Text>
+
+            <Stack flexDirection="row">
+              <Text>
+
+                {round(batch.recipe?.ibu)} IBU
+              </Text>
+
+              <Divider orientation="vertical" borderColor="#aaa" />
+
+              <Text>
+
+                {hops.map((hop, index, arr) => {
+                  return (
+                    <Fragment key={hop}>
+                      {hop}
+                      {arr[index + 1] && ", "}
+
+                    </Fragment>
+                  );
+
+                }
+                )}
+              </Text>
+
+            </Stack>
+
+            <Stack flexDirection="row" alignItems="center">
+
+              <Text fontSize="lg" fontWeight="bold">
+                {round(batch.recipe?.abv, 1)}% ABV
+              </Text>
+
+
+              {fullUntappedLink &&
+                <Fragment>
+
+                  <QRCode value={fullUntappedLink} size={36} fgColor="green" />
+
+
+                  {/* <Link href={fullUntappedLink} isExternal>
+                  <Text>Untapped</Text>
+                </Link> */}
+                </Fragment>
+              }
+            </Stack>
+
+
+
+
+
           </Flex>
+
 
           {showFermentables ? (
             <Fragment>
