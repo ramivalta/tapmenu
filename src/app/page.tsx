@@ -47,9 +47,7 @@ export default async function Home({ searchParams }: {
         next: {
           revalidate: 1,
         }
-
       }
-
     );
 
     const batchesData = await batches.json();
@@ -85,14 +83,14 @@ export default async function Home({ searchParams }: {
           </Center>
         </Box>
 
-        <Center pb="18">
-          <Image src="/Panimo_Valta-logo.png" alt="Panimo Valta logo" width={480} height={360} />
+        <Center pb="18" color="#044350"> 
+          <Image src="/Panimo_Valta-logo.svg" alt="Panimo Valta logo" width={480} height={360} color="#044350" />
         </Center>
 
         <Center pt="12">
           <Flex flexWrap="wrap" flexDirection="row" justifyContent="center" gap="4" position="relative" p="4">
 
-          <Flex width="23%" maxWidth="420px">
+          <Flex width="23%" maxWidth="420px" minWidth="360px">
 
               <TapMenuItem
                 batches={batchesData}
@@ -108,7 +106,7 @@ export default async function Home({ searchParams }: {
               <Divider orientation="vertical" borderLeft="3px solid #044350" />
             </Flex>
 
-            <Flex width="23%" maxWidth="420px">
+            <Flex width="23%" maxWidth="420px" minWidth="360px">
 
               <TapMenuItem
                 batches={batchesData}
@@ -125,7 +123,7 @@ export default async function Home({ searchParams }: {
               <Divider orientation="vertical" borderLeft="3px solid #044350" />
             </Flex>
 
-            <Flex width="23%" maxWidth="420px">
+            <Flex width="23%" maxWidth="420px" minWidth="360px">
               <TapMenuItem
                 batches={batchesData}
                 batch={batchesData?.find((batch: any) => batch._id === tap3)}
@@ -140,7 +138,7 @@ export default async function Home({ searchParams }: {
               <Divider orientation="vertical" borderLeft="3px solid #044350" />
             </Flex>
 
-            <Flex width="23%" maxWidth="420px">
+            <Flex width="23%" maxWidth="420px" minWidth="360px">
               <TapMenuItem
                 batches={batchesData}
                 batch={batchesData?.find((batch: any) => batch._id === tap4)}

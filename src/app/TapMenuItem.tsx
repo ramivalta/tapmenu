@@ -93,20 +93,13 @@ const TapMenuItem = ({
     <Flex flexDirection="column" color="#044350">
       <Flex alignItems="center" borderBottom="3px solid #044350">
         <Select
-
           className="beer-label sel"
-          // background={beerColors[round(batch?.recipe?.color) + 1]}
           ml="-4"
-
           icon={<Fragment />}
           borderColor="transparent"
-          // size="lg"
-          // fontWeight="bold"
           defaultValue={batch?._id}
           fontSize="24px"
-          // minWidth="fit-content"
-          
-
+          color="#044350"
           onChange={(e) => {
             const selectedBatch = batches.find(
               (batch) => batch._id === e.target.value
