@@ -92,7 +92,7 @@ export default async function Home({ searchParams }: {
         <Center pt="12">
           <Flex flexWrap="wrap" flexDirection="row" justifyContent="center" gap="4" position="relative" p="4">
 
-            <Flex width="23%" maxWidth="360px">
+            <Flex width="23%" maxWidth="390px">
 
               <TapMenuItem
                 batches={batchesData}
@@ -108,7 +108,7 @@ export default async function Home({ searchParams }: {
               <Divider orientation="vertical" borderLeft="3px solid #044350" />
             </Flex>
 
-            <Flex width="23%" maxWidth="360px">
+            <Flex width="23%" maxWidth="390px">
 
               <TapMenuItem
                 batches={batchesData}
@@ -125,7 +125,7 @@ export default async function Home({ searchParams }: {
               <Divider orientation="vertical" borderLeft="3px solid #044350" />
             </Flex>
 
-            <Flex width="23%" maxWidth="360px">
+            <Flex width="23%" maxWidth="390px">
               <TapMenuItem
                 batches={batchesData}
                 batch={batchesData?.find((batch: any) => batch._id === tap3)}
@@ -140,7 +140,7 @@ export default async function Home({ searchParams }: {
               <Divider orientation="vertical" borderLeft="3px solid #044350" />
             </Flex>
 
-            <Flex width="23%" maxWidth="360px">
+            <Flex width="23%" maxWidth="390px">
               <TapMenuItem
                 batches={batchesData}
                 batch={batchesData?.find((batch: any) => batch._id === tap4)}
