@@ -90,29 +90,23 @@ const TapMenuItem = ({
 
 
   return (
-    <Flex
-      flexDirection="column"
-      p="4"
-    // width="50%"
-    >
-      <Flex alignItems="center"
-      // background={beerColors[round(batch?.recipe?.color) + 1]}
-      >
-        {/* {batch && <Text mr="0.5ch" fontSize="18px">
-          {tapNumber}.
-
-        </Text>
-        } */}
+    <Flex flexDirection="column" color="#044350">
+      <Flex alignItems="center" borderBottom="3px solid #044350">
         <Select
+
+          className="beer-label sel"
           // background={beerColors[round(batch?.recipe?.color) + 1]}
           ml="-4"
-          textDecoration="underline"
+
           icon={<Fragment />}
           borderColor="transparent"
-          size="lg"
-          fontWeight="bold"
+          // size="lg"
+          // fontWeight="bold"
           defaultValue={batch?._id}
-          className="sel"
+          fontSize="24px"
+          // minWidth="fit-content"
+          
+
           onChange={(e) => {
             const selectedBatch = batches.find(
               (batch) => batch._id === e.target.value
@@ -144,13 +138,7 @@ const TapMenuItem = ({
 
 
       {batch && (
-        <Flex flexDir="column" gap="4" py="4" position="relative">
-          {/* <Box position="absolute" left="0" top="0" right="0" bottom="0" opacity="0.5">
-            {fullUntappedLink &&
-              <QRCode value={fullUntappedLink} />
-            }
-          </Box> */}
-
+        <Flex flexDir="column" gap="4" py="4" position="relative" className="beer-data" fontSize="lg">
           <Flex flexDirection="column" gap="3">
 
             <Text>
@@ -158,15 +146,14 @@ const TapMenuItem = ({
             </Text>
 
             <Stack flexDirection="row">
-              <Text>
+              <Text whiteSpace="nowrap">
 
                 {round(batch.recipe?.ibu)} IBU
               </Text>
 
-              <Divider orientation="vertical" borderColor="#aaa" />
+              <Divider orientation="vertical" borderColor="#044350" />
 
               <Text>
-
                 {hops.map((hop: any, index, arr) => {
                   return (
                     <Fragment key={hop}>
@@ -184,28 +171,17 @@ const TapMenuItem = ({
 
             <Stack flexDirection="row" alignItems="center">
 
-              <Text fontSize="lg" fontWeight="bold">
+              <Text fontSize="xl" fontWeight="bold">
                 {round(batch.recipe?.abv, 1)}% ABV
               </Text>
 
 
               {fullUntappedLink &&
                 <Link href={fullUntappedLink}>
-
                   <QRCode value={fullUntappedLink} size={36} fgColor="green" />
-
-
-                  {/* <Link href={fullUntappedLink} isExternal>
-                  <Text>Untapped</Text>
-                </Link> */}
                 </Link>
               }
             </Stack>
-
-
-
-
-
           </Flex>
 
 
@@ -251,12 +227,6 @@ const TapMenuItem = ({
                           flexDirection="column"
                           key={use}
                           width="100%"
-
-
-                        // gap="3"
-                        // _last={{
-                        //   gap: 0,
-                        // }}
                         >
                           <Heading fontSize="18px">{use}</Heading>
 
