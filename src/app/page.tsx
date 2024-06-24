@@ -62,15 +62,19 @@ export default async function Home({ searchParams }: {
 
     return (
       <Flex
-        // backgroundImage="/Panimo_Valta-taustatile.png"
+        backgroundImage="/Panimo_Valta-taustatile-white.png"
         backgroundRepeat="repeat"
         minHeight="100vh"
-        // filter="saturate(0.2)"
+        filter="saturate(0.4)"
         justifyContent="center"
         flexDirection="column"
       >
         <Box position="absolute" left="0" right="0" bottom="0" top="0">
-          <Image src="/Panimo_Valta-taustalogo.png" alt="Panimo Valta background" layout="fill" objectFit="contain" />
+          <Image src="/Panimo_Valta-taustalogo.png" alt="Panimo Valta background" layout="fill" style={{
+            objectFit: "contain",
+            
+            
+          }} />
         </Box>
 
         <Box position="fixed" top="0" left="0" right="0" zIndex="2" background="#ddd" opacity="0" _hover={{

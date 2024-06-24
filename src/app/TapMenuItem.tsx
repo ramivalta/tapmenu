@@ -138,35 +138,35 @@ const TapMenuItem = ({
 
 
       {batch && (
-        <Flex flexDir="column" gap="4" py="4" position="relative" className="beer-data" fontSize="lg">
-          <Flex flexDirection="column" gap="3">
-
-            <Text>
-              {batch?.recipe?.style?.name}
-            </Text>
-
-            <Stack flexDirection="row">
-              <Text whiteSpace="nowrap">
-
-                {round(batch.recipe?.ibu)} IBU
-              </Text>
-
-              <Divider orientation="vertical" borderColor="#044350" />
-
+        <Flex flexDir="column" gap="4" py="4" position="relative" className="beer-data" fontSize="lg" flex="1">
+          <Flex flexDirection="column" gap="3" justifyContent="space-between" flex="1">
+            <Stack flex="1">
               <Text>
-                {hops.map((hop: any, index, arr) => {
-                  return (
-                    <Fragment key={hop}>
-                      {hop}
-                      {arr[index + 1] && ", "}
-
-                    </Fragment>
-                  );
-
-                }
-                )}
+                {batch?.recipe?.style?.name}
               </Text>
 
+              <Stack flexDirection="row">
+                <Text whiteSpace="nowrap">
+
+                  {round(batch.recipe?.ibu)} IBU
+                </Text>
+
+                <Divider orientation="vertical" borderColor="#044350" />
+
+                <Text>
+                  {hops.map((hop: any, index, arr) => {
+                    return (
+                      <Fragment key={hop}>
+                        {hop}
+                        {arr[index + 1] && ", "}
+
+                      </Fragment>
+                    );
+
+                  }
+                  )}
+                </Text>
+              </Stack>
             </Stack>
 
             <Stack flexDirection="row" alignItems="center">
