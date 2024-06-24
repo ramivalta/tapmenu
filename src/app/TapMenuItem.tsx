@@ -81,7 +81,7 @@ const TapMenuItem = ({
 
   const hops = uniq(batch?.recipe?.hops.map((hop: any) => hop.name));
 
-  console.log("HOPS", hops)
+  
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -90,7 +90,7 @@ const TapMenuItem = ({
 
 
   return (
-    <Flex flexDirection="column" color="#044350">
+    <Flex flexDirection="column" color="#044350" width="100%" py="6">
       <Flex alignItems="center" borderBottom="3px solid #044350">
         <Select
           className="beer-label sel"
@@ -128,7 +128,6 @@ const TapMenuItem = ({
           })}
         </Select>
       </Flex>
-
 
       {batch && (
         <Flex flexDir="column" gap="4" py="4" position="relative" className="beer-data" fontSize="lg" flex="1">

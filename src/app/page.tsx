@@ -60,18 +60,27 @@ export default async function Home({ searchParams }: {
 
     return (
       <Flex
-        backgroundImage="/Panimo_Valta-taustatile-white.png"
+        // backgroundImage="/Panimo_Valta-taustatile.png"
+        backgroundImage="/noisy-gradient.svg"
         backgroundRepeat="repeat"
+        backgroundSize="cover"
+        
+        // backdropFilter="blur(12px)"
         minHeight="100vh"
-        filter="saturate(0.1)"
+
+
+        // filter="saturate(0.1)"
+
+
         justifyContent="center"
         flexDirection="column"
+        
       >
         <Box position="absolute" left="0" right="0" bottom="0" top="0">
           <Image src="/Panimo_Valta-taustalogo.png" alt="Panimo Valta background" layout="fill" style={{
             objectFit: "contain",
-            
-            
+
+
           }} />
         </Box>
 
@@ -83,14 +92,14 @@ export default async function Home({ searchParams }: {
           </Center>
         </Box>
 
-        <Center pb="18" color="#044350"> 
-          <Image src="/Panimo_Valta-logo.svg" alt="Panimo Valta logo" width={480} height={360} color="#044350" />
+        <Center pb="52px" color="#044350">
+          <Image src="/Panimo_Valta-logo.svg" alt="Panimo Valta logo" width={480} height={360} />
         </Center>
 
-        <Center pt="12">
-          <Flex flexWrap="wrap" flexDirection="row" justifyContent="center" gap="4" position="relative" p="4">
+        <Center pt="8" pb="8" backdropFilter="blur(12px)" boxShadow="0px 24px 48px rgba(255, 255, 255, 0.1)" border="1px solid #ccc">
+          <Flex flexWrap="wrap" flexDirection="row" justifyContent="center" gap="4" position="relative">
 
-          <Flex width="23%" maxWidth="420px" minWidth="360px">
+            <Flex width="23%" maxWidth="420px" minWidth="360px">
 
               <TapMenuItem
                 batches={batchesData}
@@ -102,8 +111,8 @@ export default async function Home({ searchParams }: {
               />
             </Flex>
 
-            <Flex>
-              <Divider orientation="vertical" borderLeft="3px solid #044350" />
+            <Flex opacity="0.2">
+              <Divider orientation="vertical" borderLeft="2px solid #044350" />
             </Flex>
 
             <Flex width="23%" maxWidth="420px" minWidth="360px">
@@ -119,8 +128,8 @@ export default async function Home({ searchParams }: {
 
             </Flex>
 
-            <Flex>
-              <Divider orientation="vertical" borderLeft="3px solid #044350" />
+            <Flex opacity="0.2">
+              <Divider orientation="vertical" borderLeft="2px solid #044350" />
             </Flex>
 
             <Flex width="23%" maxWidth="420px" minWidth="360px">
@@ -134,8 +143,9 @@ export default async function Home({ searchParams }: {
               />
 
             </Flex>
-            <Flex>
-              <Divider orientation="vertical" borderLeft="3px solid #044350" />
+
+            <Flex opacity="0.2">
+              <Divider orientation="vertical" borderLeft="2px solid #044350" />
             </Flex>
 
             <Flex width="23%" maxWidth="420px" minWidth="360px">
