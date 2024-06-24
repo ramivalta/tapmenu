@@ -65,7 +65,7 @@ export default async function Home({ searchParams }: {
         backgroundImage="/Panimo_Valta-taustatile-white.png"
         backgroundRepeat="repeat"
         minHeight="100vh"
-        filter="saturate(0.4)"
+        filter="saturate(0.1)"
         justifyContent="center"
         flexDirection="column"
       >
