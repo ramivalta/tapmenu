@@ -95,7 +95,7 @@ const TapMenuItem = ({
       py="6"
       // p="6"
     >
-      <Flex alignItems="center" borderBottom="3px solid #044350">
+      <Flex alignItems="center" borderBottom={batch ? "3px solid #044350" : ""}>
         <Select
           className="beer-label sel"
           ml="-4"
@@ -103,6 +103,7 @@ const TapMenuItem = ({
           borderColor="transparent"
           defaultValue={batch?._id}
           fontSize="24px"
+          opacity={batch ? 1 : 0.2}
           color="#044350"
           onChange={(e) => {
             const selectedBatch = batches.find(

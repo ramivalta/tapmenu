@@ -1,4 +1,4 @@
-import { Box, Text, Spacer, Flex, Divider, Center, Link } from "@chakra-ui/layout";
+import { Box, Text, Spacer, Flex, Divider, Center, Link, Stack } from "@chakra-ui/layout";
 import TapMenuItem from "./TapMenuItem";
 import { Fragment } from "react";
 import Controls from "./Controls";
@@ -92,7 +92,14 @@ export default async function Home({ searchParams }: {
           </Center>
         </Box>
 
-        <Center pb="52px" color="#044350" backdropFilter="blur(16px)" width="100%" flex="1" pt="240px">
+        <Center 
+          pb="52px" 
+          color="#044350" 
+          backdropFilter="blur(16px)" 
+          width="100%" 
+          flex="1" 
+          pt="160px"
+        >
           <Image src="/Panimo_Valta-logo.svg" alt="Panimo Valta logo" width={480} height={360} />
         </Center>
 
@@ -107,24 +114,21 @@ export default async function Home({ searchParams }: {
         >
 
           <Center
-            maxHeight="300px"
-            // pt="8" 
-            // pb="8" 
-            // backdropFilter="blur(12px)"
+            borderTop="1px solid #ccc"
+            borderBottom="1px solid #ccc"
             boxShadow="0px 42px 72px rgba(50, 50, 50, 0.1)"
             backdropFilter="blur(16px)"
-            // border="1px solid #ccc"
-            minHeight="300px"
-            // backgroundColor="rgba(255, 255, 255, 0.5)"
             width="100%"
-            background="transparent"
-            flexWrap="wrap"
-            flexDirection="row"
+            background="rgba(255, 255, 255, 0.2)"
+            
+            
             justifyContent="center"
-            gap="4"
+            
             position="relative"
-
           >
+            <Stack gap="4" direction="row" flexWrap="wrap" justifyContent="center">
+
+            
           
               <Flex width="23%" maxWidth="420px" minWidth="360px">
                 <TapMenuItem
@@ -142,7 +146,6 @@ export default async function Home({ searchParams }: {
               </Flex>
 
               <Flex width="23%" maxWidth="420px" minWidth="360px">
-
                 <TapMenuItem
                   batches={batchesData}
                   batch={batchesData?.find((batch: any) => batch._id === tap2)}
@@ -185,7 +188,7 @@ export default async function Home({ searchParams }: {
                 />
 
               </Flex>
-            
+              </Stack>
             
 
           </Center>
