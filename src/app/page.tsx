@@ -64,7 +64,7 @@ export default async function Home({ searchParams }: {
         backgroundImage="/noisy-gradient.svg"
         backgroundRepeat="repeat"
         backgroundSize="cover"
-        
+
         // backdropFilter="blur(12px)"
         minHeight="100vh"
 
@@ -74,12 +74,12 @@ export default async function Home({ searchParams }: {
 
         justifyContent="center"
         flexDirection="column"
-        
-      >
-        <Box position="absolute" left="0" right="0" bottom="0" top="0">
-          <Image src="/Panimo_Valta-taustalogo.png" alt="Panimo Valta background" layout="fill" style={{
-            objectFit: "contain",
 
+      >
+        <Box position="absolute" left="280px" right="280px" bottom="0" top="0">
+          <Image src="/Panimo_Valta-taustalogo.png" alt="Panimo Valta background" layout="fill" style={{
+            objectFit: "cover",
+            objectPosition: "bottom"
 
           }} />
         </Box>
@@ -92,76 +92,109 @@ export default async function Home({ searchParams }: {
           </Center>
         </Box>
 
-        <Center pb="52px" color="#044350">
+        <Center pb="52px" color="#044350" backdropFilter="blur(16px)" width="100%" flex="1" pt="240px">
           <Image src="/Panimo_Valta-logo.svg" alt="Panimo Valta logo" width={480} height={360} />
         </Center>
 
-        <Center pt="8" pb="8" backdropFilter="blur(12px)" boxShadow="0px 24px 48px rgba(255, 255, 255, 0.1)" border="1px solid #ccc">
-          <Flex flexWrap="wrap" flexDirection="row" justifyContent="center" gap="4" position="relative">
 
-            <Flex width="23%" maxWidth="420px" minWidth="360px">
+        <Flex
+          
+          flex="1"
+          width="100%"
+          alignItems="flex-end"
+          justifyContent="center" 
+          
+        >
 
-              <TapMenuItem
-                batches={batchesData}
-                batch={batchesData?.find((batch: any) => batch._id === tap1)}
-                tap="tap1"
-                showHops={showHops}
-                showFermentables={showFermentables}
-                tapNumber="1"
-              />
-            </Flex>
+          <Center
+            maxHeight="300px"
+            // pt="8" 
+            // pb="8" 
+            // backdropFilter="blur(12px)"
+            boxShadow="0px 42px 72px rgba(50, 50, 50, 0.1)"
+            backdropFilter="blur(16px)"
+            // border="1px solid #ccc"
+            minHeight="300px"
+            // backgroundColor="rgba(255, 255, 255, 0.5)"
+            width="100%"
+            background="transparent"
+            flexWrap="wrap"
+            flexDirection="row"
+            justifyContent="center"
+            gap="4"
+            position="relative"
 
-            <Flex opacity="0.2">
-              <Divider orientation="vertical" borderLeft="2px solid #044350" />
-            </Flex>
+          >
+          
+              <Flex width="23%" maxWidth="420px" minWidth="360px">
+                <TapMenuItem
+                  batches={batchesData}
+                  batch={batchesData?.find((batch: any) => batch._id === tap1)}
+                  tap="tap1"
+                  showHops={showHops}
+                  showFermentables={showFermentables}
+                  tapNumber="1"
+                />
+              </Flex>
 
-            <Flex width="23%" maxWidth="420px" minWidth="360px">
+              <Flex opacity="0.2">
+                <Divider orientation="vertical" borderLeft="2px solid #044350" />
+              </Flex>
 
-              <TapMenuItem
-                batches={batchesData}
-                batch={batchesData?.find((batch: any) => batch._id === tap2)}
-                tap="tap2"
-                showHops={showHops}
-                showFermentables={showFermentables}
-                tapNumber="2"
-              />
+              <Flex width="23%" maxWidth="420px" minWidth="360px">
 
-            </Flex>
+                <TapMenuItem
+                  batches={batchesData}
+                  batch={batchesData?.find((batch: any) => batch._id === tap2)}
+                  tap="tap2"
+                  showHops={showHops}
+                  showFermentables={showFermentables}
+                  tapNumber="2"
+                />
 
-            <Flex opacity="0.2">
-              <Divider orientation="vertical" borderLeft="2px solid #044350" />
-            </Flex>
+              </Flex>
 
-            <Flex width="23%" maxWidth="420px" minWidth="360px">
-              <TapMenuItem
-                batches={batchesData}
-                batch={batchesData?.find((batch: any) => batch._id === tap3)}
-                tap="tap3"
-                showHops={showHops}
-                showFermentables={showFermentables}
-                tapNumber="3"
-              />
+              <Flex opacity="0.2">
+                <Divider orientation="vertical" borderLeft="2px solid #044350" />
+              </Flex>
 
-            </Flex>
+              <Flex width="23%" maxWidth="420px" minWidth="360px">
+                <TapMenuItem
+                  batches={batchesData}
+                  batch={batchesData?.find((batch: any) => batch._id === tap3)}
+                  tap="tap3"
+                  showHops={showHops}
+                  showFermentables={showFermentables}
+                  tapNumber="3"
+                />
 
-            <Flex opacity="0.2">
-              <Divider orientation="vertical" borderLeft="2px solid #044350" />
-            </Flex>
+              </Flex>
 
-            <Flex width="23%" maxWidth="420px" minWidth="360px">
-              <TapMenuItem
-                batches={batchesData}
-                batch={batchesData?.find((batch: any) => batch._id === tap4)}
-                tap="tap4"
-                showHops={showHops}
-                showFermentables={showFermentables}
-                tapNumber="4"
-              />
+              <Flex opacity="0.2">
+                <Divider orientation="vertical" borderLeft="2px solid #044350" />
+              </Flex>
 
-            </Flex>
+              <Flex width="23%" maxWidth="420px" minWidth="360px">
+                <TapMenuItem
+                  batches={batchesData}
+                  batch={batchesData?.find((batch: any) => batch._id === tap4)}
+                  tap="tap4"
+                  showHops={showHops}
+                  showFermentables={showFermentables}
+                  tapNumber="4"
+                />
+
+              </Flex>
+            
+            
+
+          </Center>
+        </Flex>
+
+          <Flex minHeight="240px">
+
           </Flex>
 
-        </Center>
 
         {/* <pre>
           {JSON.stringify(batchesData, null, 2)}

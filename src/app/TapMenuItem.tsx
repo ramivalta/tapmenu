@@ -90,7 +90,11 @@ const TapMenuItem = ({
 
 
   return (
-    <Flex flexDirection="column" color="#044350" width="100%" py="6">
+    <Flex flexDirection="column" color="#044350" width="100%" 
+      minHeight="300px"
+      py="6"
+      // p="6"
+    >
       <Flex alignItems="center" borderBottom="3px solid #044350">
         <Select
           className="beer-label sel"
@@ -161,7 +165,7 @@ const TapMenuItem = ({
               </Stack>
             </Stack>
 
-            <Stack flexDirection="row" alignItems="center">
+            <Stack flexDirection="row" alignItems="center" justifyContent="space-between">
 
               <Text fontSize="xl" fontWeight="bold">
                 {round(batch.recipe?.abv, 1)}% ABV
@@ -174,6 +178,10 @@ const TapMenuItem = ({
                 </Link>
               }
             </Stack>
+
+
+            
+
           </Flex>
 
 
@@ -181,7 +189,7 @@ const TapMenuItem = ({
             <Fragment>
               <Heading fontSize="22px">Fermentables</Heading>
 
-              <List display="flex" flexDirection="column">
+              <List display="flex" flexDirection="column" fontSize="sm">
                 {batch.recipe?.data?.mashFermentables?.map((fermentable: any) => {
                   return (
                     <Fragment key={fermentable._id}>
@@ -212,6 +220,7 @@ const TapMenuItem = ({
                     width="100%"
                     justifyContent="space-between"
                     gap="8"
+                    fontSize="sm"
                   >
                     {Object.keys(hopsGroupedByUse).map((use) => {
                       return (
