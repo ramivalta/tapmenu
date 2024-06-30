@@ -91,6 +91,8 @@ const TapMenuItem = ({
 
   const fullUntappedLink = batch?.batchNotes?.match(/https:\/\/untappd.com\/b\/[^ ]*/g)?.[0];
 
+  console.log("BATCH 1", batch);
+
 
   return (
     <Flex flexDirection="column" color="#044350" width="100%"
@@ -103,7 +105,7 @@ const TapMenuItem = ({
           ml="-4"
           icon={<Fragment />}
           borderColor="transparent"
-          defaultValue={batch?._id}
+          value={batch?._id}
           fontSize="24px"
           opacity={batch ? 1 : 0.2}
           color="#044350"

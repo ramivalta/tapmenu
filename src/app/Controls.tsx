@@ -5,6 +5,10 @@ import { Button } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import urlGenerator from "./generateShortUrlAction";
+import saveTapConfigAction from "./saveTapConfigAction";
+import { isEmpty } from "lodash";
+import defaultTapConfig from "./defaultTapConfig.json";
+import { use, useEffect } from "react";
 
 const Controls = ({
   showHops,
@@ -15,6 +19,14 @@ const Controls = ({
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  useEffect(() => {
+    console.log("SEARCH PARAMS", searchParams.toString());
+    if (isEmpty(searchParams.toString())) {
+      router.replace(`/?${new URLSearchParams(defaultTapConfig).toString()}`);
+    }
+  }, []);
+
   return (
     <Flex p="1" gap="4">
       <Button
@@ -43,11 +55,21 @@ const Controls = ({
         {showFermentables ? "Hide fermentables" : "Show fermentables"}
       </Button>
 
-      <Button size="xs" colorScheme="gray" onClick={async (e) => {
+      {/* <Button size="xs" colorScheme="gray" onClick={async (e) => {
         const newUrl = await urlGenerator(window.location.href);
         navigator.clipboard.writeText(newUrl);
       }}>
         Share link
+      </Button> */}
+
+      <Button size="xs" colorScheme="gray" onClick={async (e) => {
+        const searchParamsObj = Object.fromEntries(searchParams);
+        await saveTapConfigAction(
+          JSON.stringify(searchParamsObj, null, 4),
+          prompt("Enter password")
+        )
+      }}>
+        Save tap config
       </Button>
     </Flex >
   );

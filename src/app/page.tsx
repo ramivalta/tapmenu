@@ -2,7 +2,9 @@ import { Box, Text, Spacer, Flex, Divider, Center, Link, Stack, Heading } from "
 import TapMenuItem from "./TapMenuItem";
 import Controls from "./Controls";
 import Image from "next/image";
-
+import defaultTapConfig from "./defaultTapConfig.json";
+import { isEmpty } from "lodash";
+import { Router } from "next/router";
 
 const token = process.env.BREWFATHER_API_TOKEN;
 
@@ -53,7 +55,10 @@ export default async function Home({ searchParams }: {
     );
 
     const batchesData = await batches.json();
+
+    
     const { tap1, tap2, tap3, tap4, tap1Notes, tap2Notes, tap3Notes, tap4Notes, showHops: _showHops, showFermentables: _showFermantables } = searchParams ?? {};
+
 
 
     const showHops = Number(_showHops);
@@ -99,7 +104,9 @@ export default async function Home({ searchParams }: {
           flex="1"
           pt="160px"
         >
-          <Image src="/Panimo_Valta-logo.svg" alt="Panimo Valta logo" width={480} height={360} />
+          <Link href="/">
+            <Image src="/Panimo_Valta-logo.svg" alt="Panimo Valta logo" width={480} height={360} />
+          </Link>
         </Center>
 
         <Heading
