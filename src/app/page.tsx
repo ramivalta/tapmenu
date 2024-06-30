@@ -1,8 +1,6 @@
-import { Box, Text, Spacer, Flex, Divider, Center, Link, Stack } from "@chakra-ui/layout";
+import { Box, Text, Spacer, Flex, Divider, Center, Link, Stack, Heading } from "@chakra-ui/layout";
 import TapMenuItem from "./TapMenuItem";
-import { Fragment } from "react";
 import Controls from "./Controls";
-import Logo from "./Panimo_Valta-logo.svg";
 import Image from "next/image";
 
 
@@ -14,6 +12,10 @@ export default async function Home({ searchParams }: {
     tap2: string;
     tap3: string;
     tap4: string;
+    tap1Notes?: string;
+    tap2Notes?: string;
+    tap3Notes?: string;
+    tap4Notes?: string;
     showHops: string;
     showFermentables: string;
   };
@@ -51,36 +53,33 @@ export default async function Home({ searchParams }: {
     );
 
     const batchesData = await batches.json();
-    const { tap1, tap2, tap3, tap4, showHops: _showHops, showFermentables: _showFermantables } = searchParams ?? {};
+    const { tap1, tap2, tap3, tap4, tap1Notes, tap2Notes, tap3Notes, tap4Notes, showHops: _showHops, showFermentables: _showFermantables } = searchParams ?? {};
 
 
     const showHops = Number(_showHops);
     const showFermentables = Number(_showFermantables);
 
+    const taps = [
+      tap1,
+      tap2,
+      tap3,
+      tap4
+    ]
+
 
     return (
       <Flex
-        // backgroundImage="/Panimo_Valta-taustatile.png"
         backgroundImage="/noisy-gradient.svg"
         backgroundRepeat="repeat"
         backgroundSize="cover"
-
-        // backdropFilter="blur(12px)"
         minHeight="100vh"
-
-
-        // filter="saturate(0.1)"
-
-
         justifyContent="center"
         flexDirection="column"
-
       >
         <Box position="absolute" left="280px" right="280px" bottom="0" top="0">
           <Image src="/Panimo_Valta-taustalogo.png" alt="Panimo Valta background" layout="fill" style={{
             objectFit: "cover",
             objectPosition: "bottom"
-
           }} />
         </Box>
 
@@ -92,27 +91,36 @@ export default async function Home({ searchParams }: {
           </Center>
         </Box>
 
-        <Center 
-          pb="52px" 
-          color="#044350" 
-          backdropFilter="blur(16px)" 
-          width="100%" 
-          flex="1" 
+        <Center
+          pb="52px"
+          color="#044350"
+          backdropFilter="blur(16px)"
+          width="100%"
+          flex="1"
           pt="160px"
         >
           <Image src="/Panimo_Valta-logo.svg" alt="Panimo Valta logo" width={480} height={360} />
         </Center>
 
+        <Heading
+          as="h1"
+          fontFamily="Open Sans"
+          alignItems="center"
+          textAlign="center"
+          fontSize="3xl"
+          color="#044350"
+          backdropFilter="blur(16px)"
+          py="4"
+        >
+          Taproom menu
+        </Heading>
 
         <Flex
-          
           flex="1"
           width="100%"
           alignItems="flex-end"
-          justifyContent="center" 
-          
+          justifyContent="center"
         >
-
           <Center
             borderTop="1px solid #ccc"
             borderBottom="1px solid #ccc"
@@ -120,16 +128,10 @@ export default async function Home({ searchParams }: {
             backdropFilter="blur(16px)"
             width="100%"
             background="rgba(255, 255, 255, 0.2)"
-            
-            
             justifyContent="center"
-            
             position="relative"
           >
             <Stack gap="4" direction="row" flexWrap="wrap" justifyContent="center">
-
-            
-          
               <Flex width="23%" maxWidth="420px" minWidth="360px">
                 <TapMenuItem
                   batches={batchesData}
@@ -138,6 +140,8 @@ export default async function Home({ searchParams }: {
                   showHops={showHops}
                   showFermentables={showFermentables}
                   tapNumber="1"
+                  taps={taps}
+                  tapNotes={tap1Notes}
                 />
               </Flex>
 
@@ -153,6 +157,8 @@ export default async function Home({ searchParams }: {
                   showHops={showHops}
                   showFermentables={showFermentables}
                   tapNumber="2"
+                  taps={taps}
+                  tapNotes={tap2Notes}
                 />
 
               </Flex>
@@ -169,6 +175,8 @@ export default async function Home({ searchParams }: {
                   showHops={showHops}
                   showFermentables={showFermentables}
                   tapNumber="3"
+                  taps={taps}
+                  tapNotes={tap3Notes}
                 />
 
               </Flex>
@@ -185,18 +193,20 @@ export default async function Home({ searchParams }: {
                   showHops={showHops}
                   showFermentables={showFermentables}
                   tapNumber="4"
+                  taps={taps}
+                  tapNotes={tap4Notes}
                 />
 
               </Flex>
-              </Stack>
-            
+            </Stack>
+
 
           </Center>
         </Flex>
 
-          <Flex minHeight="240px">
+        <Flex minHeight="240px">
 
-          </Flex>
+        </Flex>
 
 
         {/* <pre>

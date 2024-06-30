@@ -1,9 +1,9 @@
 "use client";
 
 import { Box, Heading, Text, List, ListItem, Flex, Divider, Stack } from "@chakra-ui/layout";
-import { CloseButton, Select, Link } from "@chakra-ui/react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { Fragment, useState } from "react";
+import { Select, Link, Textarea } from "@chakra-ui/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Fragment } from "react";
 import { round, uniq } from "lodash";
 import QRCode from "react-qr-code";
 
@@ -60,6 +60,8 @@ const TapMenuItem = ({
   showHops,
   showFermentables,
   tapNumber,
+  taps,
+  tapNotes,
 }: {
   batches: any[];
   batch: any;
@@ -67,21 +69,22 @@ const TapMenuItem = ({
   showHops: number;
   showFermentables: number;
   tapNumber: string;
+  taps: string[];
+  tapNotes?: string;
 }) => {
   const hopsGroupedByUse = batch?.recipe?.hops?.reduce((acc: any, hop: any) => {
     if (!acc[hop.use]) {
       acc[hop.use] = [];
     }
 
-    !acc[hop.use].some((hopInAcc: any) => hopInAcc._id === hop._id) &&
-      acc[hop.use].push(hop);
+    !acc[hop.use].some((hopInAcc: any) => hopInAcc._id === hop._id) ?
+      acc[hop.use].push(hop)
+      : acc[hop.use].find((hopInAcc: any) => hopInAcc._id === hop._id).amount += hop.amount;
 
     return acc;
   }, {});
 
   const hops = uniq(batch?.recipe?.hops.map((hop: any) => hop.name));
-
-  
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -90,10 +93,9 @@ const TapMenuItem = ({
 
 
   return (
-    <Flex flexDirection="column" color="#044350" width="100%" 
+    <Flex flexDirection="column" color="#044350" width="100%"
       minHeight="300px"
       py="6"
-      // p="6"
     >
       <Flex alignItems="center" borderBottom={batch ? "3px solid #044350" : ""}>
         <Select
@@ -106,6 +108,10 @@ const TapMenuItem = ({
           opacity={batch ? 1 : 0.2}
           color="#044350"
           onChange={(e) => {
+            if (taps.includes(e.target.value)) {
+              return;
+            }
+
             const selectedBatch = batches.find(
               (batch) => batch._id === e.target.value
             );
@@ -180,11 +186,23 @@ const TapMenuItem = ({
               }
             </Stack>
 
-
-            
-
+            <Textarea
+              resize="none"
+              _hover={{
+                border: "1px solid",
+              }}
+              border="0"
+              defaultValue={tapNotes}
+              ml="-18px"
+              onChange={e => {
+                const params = new URLSearchParams(searchParams.toString());
+                params.set(tap + "Notes", e.target.value);
+                router.replace(`
+                  /?${params.toString()}
+                `);
+              }}
+            />
           </Flex>
-
 
           {showFermentables ? (
             <Fragment>
