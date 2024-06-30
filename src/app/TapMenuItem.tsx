@@ -140,150 +140,157 @@ const TapMenuItem = ({
         </Select>
       </Flex>
 
-      {batch && (
-        <Flex flexDir="column" gap="4" py="4" position="relative" className="beer-data" fontSize="lg" flex="1">
-          <Flex flexDirection="column" gap="3" justifyContent="space-between" flex="1">
-            <Stack flex="1">
-              <Text>
-                {batch?.recipe?.style?.name}
-              </Text>
+      {/* {batch && ( */}
+      <Flex flexDir="column" gap="4" py="4" position="relative" className="beer-data" fontSize="lg" flex="1">
+        <Flex flexDirection="column" gap="3" justifyContent="space-between" flex="1">
+          <Stack flex="1">
+            <Text>
+              {batch?.recipe?.style?.name}
+            </Text>
 
-              <Stack flexDirection="row">
+            <Stack flexDirection="row">
+              {batch &&
                 <Text whiteSpace="nowrap">
 
-                  {round(batch.recipe?.ibu)} IBU
+
+                  {round(batch?.recipe?.ibu)} IBU
                 </Text>
 
-                <Divider orientation="vertical" borderColor="#044350" />
-
-                <Text>
-                  {hops.map((hop: any, index, arr) => {
-                    return (
-                      <Fragment key={hop}>
-                        {hop}
-                        {arr[index + 1] && ", "}
-
-                      </Fragment>
-                    );
-
-                  }
-                  )}
-                </Text>
-              </Stack>
-            </Stack>
-
-            <Stack flexDirection="row" alignItems="center" justifyContent="space-between">
-
-              <Text fontSize="xl" fontWeight="bold">
-                {round(batch.recipe?.abv, 1)}% ABV
-              </Text>
-
-
-              {fullUntappedLink &&
-                <Link href={fullUntappedLink}>
-                  <QRCode value={fullUntappedLink} size={36} fgColor="green" />
-                </Link>
               }
-            </Stack>
 
-            <Textarea
-              resize="none"
-              _hover={{
-                border: "1px solid",
-              }}
-              border="0"
-              defaultValue={tapNotes}
-              ml="-18px"
-              onChange={e => {
-                const params = new URLSearchParams(searchParams.toString());
-                params.set(tap + "Notes", e.target.value);
-                router.replace(`
-                  /?${params.toString()}
-                `);
-              }}
-            />
-          </Flex>
+              <Divider orientation="vertical" borderColor="#044350" />
 
-          {showFermentables ? (
-            <Fragment>
-              <Heading fontSize="22px">Fermentables</Heading>
-
-              <List display="flex" flexDirection="column" fontSize="sm">
-                {batch.recipe?.data?.mashFermentables?.map((fermentable: any) => {
+              <Text>
+                {hops.map((hop: any, index, arr) => {
                   return (
-                    <Fragment key={fermentable._id}>
-                      <ListItem
-                        display="flex"
-                        justifyContent="space-between"
-                        width="100%"
-                      >
-                        <Text>{fermentable.name}</Text>
-                        <Text>{round(fermentable.percentage, 0)}%</Text>
-                      </ListItem>
+                    <Fragment key={hop}>
+                      {hop}
+                      {arr[index + 1] && ", "}
+
                     </Fragment>
                   );
-                })}
-              </List>
-            </Fragment>
-          ) : null}
+
+                }
+                )}
+              </Text>
+            </Stack>
+          </Stack>
+
+          <Stack flexDirection="row" alignItems="center" justifyContent="space-between">
+
+            {batch &&
+              <Text fontSize="xl" fontWeight="bold">
+                {round(batch?.recipe?.abv, 1)}% ABV
+              </Text>
+
+            }
 
 
-          {showHops ? (
-            <Fragment>
-              {hopsGroupedByUse && (
-                <Fragment>
-                  <Heading fontSize="22px">Hops</Heading>
+            {fullUntappedLink &&
+              <Link href={fullUntappedLink}>
+                <QRCode value={fullUntappedLink} size={36} fgColor="green" />
+              </Link>
+            }
+          </Stack>
 
-                  <Flex
-                    flexDirection="row"
-                    width="100%"
-                    justifyContent="space-between"
-                    gap="8"
-                    fontSize="sm"
-                  >
-                    {Object.keys(hopsGroupedByUse).map((use) => {
-                      return (
-                        <Flex
-                          flexDirection="column"
-                          key={use}
-                          width="100%"
-                        >
-                          <Heading fontSize="18px">{use}</Heading>
-
-                          <List
-                            gap="3"
-                            width="100%"
-
-                          >
-                            {hopsGroupedByUse[use].map((hop: any) => {
-                              return (
-                                <ListItem
-                                  key={hop._id}
-                                  width="100%"
-
-                                  display="flex"
-                                  justifyContent="space-between"
-
-                                >
-                                  <Text as="span">{hop.name}</Text>
-                                  <Text as="span">{hop.amount}g</Text>
-                                </ListItem>
-                              );
-                            })}
-                          </List>
-                        </Flex>
-                      );
-                    })}
-                  </Flex>
-                </Fragment>
-              )}
-
-            </Fragment>
-
-          ) : null}
-
+          <Textarea
+            resize="none"
+            _hover={{
+              border: "1px solid",
+            }}
+            border="0"
+            defaultValue={tapNotes}
+            ml="-18px"
+            onChange={e => {
+              const params = new URLSearchParams(searchParams.toString());
+              params.set(tap + "Notes", e.target.value);
+              router.replace(`
+                  /?${params.toString()}
+                `);
+            }}
+          />
         </Flex>
-      )}
+
+        {showFermentables ? (
+          <Fragment>
+            <Heading fontSize="22px">Fermentables</Heading>
+
+            <List display="flex" flexDirection="column" fontSize="sm">
+              {batch?.recipe?.data?.mashFermentables?.map((fermentable: any) => {
+                return (
+                  <Fragment key={fermentable._id}>
+                    <ListItem
+                      display="flex"
+                      justifyContent="space-between"
+                      width="100%"
+                    >
+                      <Text>{fermentable.name}</Text>
+                      <Text>{round(fermentable.percentage, 0)}%</Text>
+                    </ListItem>
+                  </Fragment>
+                );
+              })}
+            </List>
+          </Fragment>
+        ) : null}
+
+
+        {showHops ? (
+          <Fragment>
+            {hopsGroupedByUse && (
+              <Fragment>
+                <Heading fontSize="22px">Hops</Heading>
+
+                <Flex
+                  flexDirection="row"
+                  width="100%"
+                  justifyContent="space-between"
+                  gap="8"
+                  fontSize="sm"
+                >
+                  {Object.keys(hopsGroupedByUse).map((use) => {
+                    return (
+                      <Flex
+                        flexDirection="column"
+                        key={use}
+                        width="100%"
+                      >
+                        <Heading fontSize="18px">{use}</Heading>
+
+                        <List
+                          gap="3"
+                          width="100%"
+
+                        >
+                          {hopsGroupedByUse[use].map((hop: any) => {
+                            return (
+                              <ListItem
+                                key={hop._id}
+                                width="100%"
+
+                                display="flex"
+                                justifyContent="space-between"
+
+                              >
+                                <Text as="span">{hop.name}</Text>
+                                <Text as="span">{hop.amount}g</Text>
+                              </ListItem>
+                            );
+                          })}
+                        </List>
+                      </Flex>
+                    );
+                  })}
+                </Flex>
+              </Fragment>
+            )}
+
+          </Fragment>
+
+        ) : null}
+
+      </Flex>
+      {/* // )} */}
     </Flex>
   );
 };

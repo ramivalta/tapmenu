@@ -46,8 +46,6 @@ const Controls = ({
       <Button size="xs" colorScheme="gray" onClick={async (e) => {
         const newUrl = await urlGenerator(window.location.href);
         navigator.clipboard.writeText(newUrl);
-
-        // alert("Link copied to clipboard" +  " " + newUrl);
       }}>
         Share link
       </Button>
