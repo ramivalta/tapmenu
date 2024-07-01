@@ -4,7 +4,7 @@ import Controls from "./Controls";
 import Image from "next/image";
 
 import { put, list  } from "@vercel/blob";
-import { tap } from "lodash";
+import { first, last, orderBy, tap } from "lodash";
 
 
 const token = process.env.BREWFATHER_API_TOKEN;
@@ -56,16 +56,14 @@ export default async function Home({ searchParams }: {
     );
 
     const blobs = await list();
-    const savedTapConfig = blobs?.blobs?.find((blob: any) => blob.pathname === "tapmenu/defaultTapConfig.json");
+    const sortedByDate = orderBy(blobs?.blobs, "uploadedAt", "desc");
+    const savedTapConfig = first(sortedByDate);
     const savedTapConfigData = savedTapConfig?.downloadUrl && await fetch(savedTapConfig?.downloadUrl);
     const savedTapConfigJson = savedTapConfigData && await savedTapConfigData.json();
 
     const batchesData = await batches.json();
 
-    
     const { tap1, tap2, tap3, tap4, tap1Notes, tap2Notes, tap3Notes, tap4Notes, showHops: _showHops, showFermentables: _showFermantables } = searchParams ?? {};
-
-
 
     const showHops = Number(_showHops);
     const showFermentables = Number(_showFermantables);
