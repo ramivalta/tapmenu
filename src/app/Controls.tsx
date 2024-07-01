@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import urlGenerator from "./generateShortUrlAction";
 import saveTapConfigAction from "./saveTapConfigAction";
 import { isEmpty } from "lodash";
-import defaultTapConfig from "./defaultTapConfig.json";
+import defaultTapConfig from "../../defaultTapConfig.json";
 import { use, useEffect } from "react";
 
 const Controls = ({

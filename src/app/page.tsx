@@ -2,7 +2,7 @@ import { Box, Text, Spacer, Flex, Divider, Center, Link, Stack, Heading } from "
 import TapMenuItem from "./TapMenuItem";
 import Controls from "./Controls";
 import Image from "next/image";
-import defaultTapConfig from "./defaultTapConfig.json";
+import defaultTapConfig from "../../defaultTapConfig.json";
 import { isEmpty } from "lodash";
 import { Router } from "next/router";
 
