@@ -8,7 +8,7 @@ import urlGenerator from "./generateShortUrlAction";
 import saveTapConfigAction from "./saveTapConfigAction";
 import { isEmpty } from "lodash";
 import defaultTapConfig from "../../defaultTapConfig.json";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 
 const Controls = ({
   showHops,
@@ -21,9 +21,19 @@ const Controls = ({
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    let overriddenTapConfig;
+    try {
+      overriddenTapConfig = require("/tmp/defaultTapConfig.json");
+    } catch (err) {
+      //
+    };
     console.log("SEARCH PARAMS", searchParams.toString());
     if (isEmpty(searchParams.toString())) {
-      router.replace(`/?${new URLSearchParams(defaultTapConfig).toString()}`);
+      if (overriddenTapConfig) {
+        router.replace(`/?${new URLSearchParams(overriddenTapConfig).toString()}`);
+      } else {
+        router.replace(`/?${new URLSearchParams(defaultTapConfig).toString()}`);
+      }
     }
   }, []);
 

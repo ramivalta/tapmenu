@@ -10,7 +10,7 @@ const saveTapConfigAction = async (queryParams: string, password: string | null)
     console.log("PASSWORD OK, PARAMS:", queryParams);
     try {
         console.log("LETS WRITE", queryParams);
-        await fs.writeFile('./defaultTapConfig.json', queryParams);
+        await fs.writeFile('/tmp/defaultTapConfig.json', queryParams);
         return 'Tap configuration saved successfully.';
     } catch (error) {
         console.error('Error saving tap configuration:', error);
