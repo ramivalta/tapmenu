@@ -20,7 +20,8 @@ const Controls = ({
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    console.log("SEARCH PARAMS", searchParams.toString());
+    console.log("SEARCH PARAMS", searchParams.toString(), "SAVED CONFIG", savedTapConfig);
+
     if (isEmpty(searchParams.toString())) {
       if (savedTapConfig) {
         router.replace(`/?${new URLSearchParams(savedTapConfig).toString()}`);
