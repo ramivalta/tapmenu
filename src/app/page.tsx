@@ -3,7 +3,8 @@ import TapMenuItem from "./TapMenuItem";
 import Controls from "./Controls";
 import Image from "next/image";
 
-
+import { put, list  } from "@vercel/blob";
+import { tap } from "lodash";
 
 
 const token = process.env.BREWFATHER_API_TOKEN;
@@ -54,14 +55,10 @@ export default async function Home({ searchParams }: {
       }
     );
 
-    let savedTapConfig;
-
-    try {
-      savedTapConfig = require("/tmp/defaultTapConfig.json");
-    } catch (err) {
-      savedTapConfig = {};
-    }
-
+    const blobs = await list();
+    const savedTapConfig = blobs?.blobs?.find((blob: any) => blob.pathname === "tapmenu/defaultTapConfig.json");
+    const savedTapConfigData = savedTapConfig?.downloadUrl && await fetch(savedTapConfig?.downloadUrl);
+    const savedTapConfigJson = savedTapConfigData && await savedTapConfigData.json();
 
     const batchesData = await batches.json();
 
@@ -101,7 +98,7 @@ export default async function Home({ searchParams }: {
           opacity: 1
         }} transition="0.35s all">
           <Center>
-            <Controls showHops={showHops} showFermentables={showFermentables} savedTapConfig={savedTapConfig} />
+            <Controls showHops={showHops} showFermentables={showFermentables} savedTapConfig={savedTapConfigJson} />
           </Center>
         </Box>
 
