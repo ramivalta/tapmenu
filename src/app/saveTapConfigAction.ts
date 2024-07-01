@@ -3,6 +3,7 @@
 import { promises as fs } from 'fs';
 
 const saveTapConfigAction = async (queryParams: string, password: string | null) => {
+    console.log("BASSWORD", password, process.env.PASSWORD);
     if (!password || password !== process.env.PASSWORD) {
         throw new Error('Invalid password');
     }
