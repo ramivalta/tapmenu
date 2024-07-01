@@ -1,38 +1,29 @@
 "use client";
 
-import { Box, Flex } from "@chakra-ui/layout"
+import { Flex } from "@chakra-ui/layout"
 import { Button } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
-
-import urlGenerator from "./generateShortUrlAction";
 import saveTapConfigAction from "./saveTapConfigAction";
 import { isEmpty } from "lodash";
-import defaultTapConfig from "../../defaultTapConfig.json";
 import { useEffect } from "react";
 
 const Controls = ({
   showHops,
-  showFermentables
+  showFermentables,
+  savedTapConfig
 }: {
   showHops: number;
   showFermentables: number;
+  savedTapConfig: string;
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    let overriddenTapConfig;
-    try {
-      overriddenTapConfig = require("/tmp/defaultTapConfig.json");
-    } catch (err) {
-      console.log("No overridden tap config found", err);
-      //
-    };
-    console.log("OVERRIDEN FCONDFIF FROM TEMP", overriddenTapConfig);
     console.log("SEARCH PARAMS", searchParams.toString());
     if (isEmpty(searchParams.toString())) {
-      if (overriddenTapConfig) {
-        router.replace(`/?${new URLSearchParams(overriddenTapConfig).toString()}`);
+      if (savedTapConfig) {
+        router.replace(`/?${new URLSearchParams(savedTapConfig).toString()}`);
       } else {
         router.replace(`/?${new URLSearchParams(defaultTapConfig).toString()}`);
       }

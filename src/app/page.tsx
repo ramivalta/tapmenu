@@ -1,10 +1,10 @@
-import { Box, Text, Spacer, Flex, Divider, Center, Link, Stack, Heading } from "@chakra-ui/layout";
+import { Box, Text, Flex, Divider, Center, Link, Stack, Heading } from "@chakra-ui/layout";
 import TapMenuItem from "./TapMenuItem";
 import Controls from "./Controls";
 import Image from "next/image";
-import defaultTapConfig from "../../defaultTapConfig.json";
-import { isEmpty } from "lodash";
-import { Router } from "next/router";
+
+
+
 
 const token = process.env.BREWFATHER_API_TOKEN;
 
@@ -54,6 +54,15 @@ export default async function Home({ searchParams }: {
       }
     );
 
+    let savedTapConfig;
+
+    try {
+      savedTapConfig = require("/tmp/defaultTapConfig.json");
+    } catch (err) {
+      savedTapConfig = {};
+    }
+
+
     const batchesData = await batches.json();
 
     
@@ -92,7 +101,7 @@ export default async function Home({ searchParams }: {
           opacity: 1
         }} transition="0.35s all">
           <Center>
-            <Controls showHops={showHops} showFermentables={showFermentables} />
+            <Controls showHops={showHops} showFermentables={showFermentables} savedTapConfig={savedTapConfig} />
           </Center>
         </Box>
 
