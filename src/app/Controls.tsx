@@ -24,8 +24,6 @@ const Controls = ({
     if (isEmpty(searchParams.toString())) {
       if (savedTapConfig) {
         router.replace(`/?${new URLSearchParams(savedTapConfig).toString()}`);
-      } else {
-        router.replace(`/?${new URLSearchParams(defaultTapConfig).toString()}`);
       }
     }
   }, []);
