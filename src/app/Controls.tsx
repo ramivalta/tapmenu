@@ -25,8 +25,10 @@ const Controls = ({
     try {
       overriddenTapConfig = require("/tmp/defaultTapConfig.json");
     } catch (err) {
+      console.log("No overridden tap config found", err);
       //
     };
+    console.log("OVERRIDEN FCONDFIF FROM TEMP", overriddenTapConfig);
     console.log("SEARCH PARAMS", searchParams.toString());
     if (isEmpty(searchParams.toString())) {
       if (overriddenTapConfig) {
