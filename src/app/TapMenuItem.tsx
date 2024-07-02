@@ -187,7 +187,7 @@ const TapMenuItem = ({
 
             {fullUntappedLink &&
               <Link href={fullUntappedLink}>
-                <QRCode value={fullUntappedLink} size={36} fgColor="green" />
+                <QRCode value={fullUntappedLink} size={96} fgColor="black" />
               </Link>
             }
           </Stack>
