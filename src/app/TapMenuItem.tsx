@@ -95,7 +95,12 @@ const TapMenuItem = ({
     <Flex flexDirection="column" color="#044350" width="100%"
       minHeight="300px"
       py="6"
+      position="relative"
     >
+      <Text position="absolute" opacity="0.15" fontSize="124px" bottom="0" left="0" textShadow="0px 0px 16px">
+        {tapNumber}.
+      </Text>
+
       <Flex alignItems="center" borderBottom={batch ? "3px solid #044350" : ""}>
         <Select
           className="beer-label sel"
@@ -175,7 +180,7 @@ const TapMenuItem = ({
             </Stack>
           </Stack>
 
-          <Stack flexDirection="row" alignItems="center" justifyContent="space-between">
+          <Stack flexDirection="row" alignItems="flex-start" justifyContent="space-between">
 
             {batch &&
               <Text fontSize="xl" fontWeight="bold">
@@ -187,7 +192,7 @@ const TapMenuItem = ({
 
             {fullUntappedLink &&
               <Link href={fullUntappedLink}>
-                <QRCode value={fullUntappedLink} size={96} fgColor="black" />
+                <QRCode value={fullUntappedLink} size={96} fgColor="black" bgColor="transparent" />
               </Link>
             }
           </Stack>
