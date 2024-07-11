@@ -128,8 +128,8 @@ const TapMenuItem = ({
             }
 
             router.replace(`
-            /?${params.toString()}
-          `);
+              /?${params.toString()}
+            `);
           }}
         >
           <option>-</option>
@@ -204,13 +204,13 @@ const TapMenuItem = ({
             }}
             border="0"
             defaultValue={tapNotes}
-            ml="-18px"
+            pl="124px"
             onChange={e => {
               const params = new URLSearchParams(searchParams.toString());
               params.set(tap + "Notes", e.target.value);
               router.replace(`
-                  /?${params.toString()}
-                `);
+                /?${params.toString()}
+              `);
             }}
           />
         </Flex>
@@ -294,7 +294,6 @@ const TapMenuItem = ({
         ) : null}
 
       </Flex>
-      {/* // )} */}
     </Flex>
   );
 };
