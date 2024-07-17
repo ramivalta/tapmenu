@@ -84,6 +84,9 @@ const TapMenuItem = ({
     return acc;
   }, {});
 
+
+  console.log("BATCHY", batch);
+
   const hops = uniq(batch?.recipe?.hops.map((hop: any) => hop.name));
 
   const router = useRouter();
@@ -157,7 +160,7 @@ const TapMenuItem = ({
                 <Text whiteSpace="nowrap">
 
 
-                  {round(batch?.recipe?.ibu)} IBU
+                  {round(batch?.estimatedIbu)} IBU
                 </Text>
 
               }
@@ -184,7 +187,7 @@ const TapMenuItem = ({
 
             {batch &&
               <Text fontSize="xl" fontWeight="bold">
-                {round(batch?.recipe?.abv, 1)}% ABV
+                {round(batch?.measuredAbv, 1)}% ABV
               </Text>
 
             }
