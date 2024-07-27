@@ -92,28 +92,42 @@ const TapMenuItem = ({
   const fullUntappedLink = batch?.batchNotes?.match(/https:\/\/untappd.com\/b\/[^ ]*/g)?.[0];
 
   return (
-    <Flex flexDirection="column" color="#044350" width="100%"
+    <Flex 
+      flexDirection="column" 
+      color="#044350" 
+      width="100%"
       minHeight="300px"
       py="6"
       position="relative"
+      px="6"
     >
-      <Text position="absolute" opacity="0.66" fontSize="124px" bottom="0" left="0" textShadow="0px 0px 16px">
+      <Text position="absolute" opacity="0.5" fontSize="124px" bottom="0" left="6" textShadow="0px 0px 16px">
         {tapNumber}.
       </Text>
 
-      <Box opacity="0.5" left="-4" right="-4" bottom="0" height="360px" position="absolute"
-        backgroundImage={`linear-gradient(180deg, transparent 0%, ${beerColors[round(batch?.estimatedColor, 0)]} 100%)`}
-      >
-      </Box>
-
-      <Box 
-          left="-4" 
-          right="-4" 
-          bottom="0" 
-          height="16px" 
-          position="absolute"
-          backgroundColor={beerColors[round(batch?.estimatedColor, 0)]}
-        />
+      {batch && 
+        <Fragment>
+          <Box 
+            opacity="0.4" 
+            left="0" 
+            right="0" 
+            bottom="0" 
+            height="320px" 
+            position="absolute"
+            backgroundImage={`linear-gradient(180deg, transparent 0%, ${beerColors[round(batch?.estimatedColor, 0)]} 100%)`}
+          >
+          </Box>
+    
+          <Box 
+            left="0" 
+            right="0" 
+            bottom="0" 
+            height="16px" 
+            position="absolute"
+            backgroundColor={beerColors[round(batch?.estimatedColor, 0)]}
+          />
+        </Fragment>
+      }
 
       <Flex alignItems="center" borderBottom={batch ? "3px solid #044350" : ""}>
         <Select
@@ -158,7 +172,6 @@ const TapMenuItem = ({
         </Select>
       </Flex>
 
-      {/* {batch && ( */}
       <Flex flexDir="column" gap="4" py="4" position="relative" className="beer-data" fontSize="lg" flex="1">
         <Flex flexDirection="column" gap="3" justifyContent="space-between" flex="1">
           <Stack flex="1">
@@ -171,7 +184,6 @@ const TapMenuItem = ({
                 <Text whiteSpace="nowrap">
                   {round(batch?.estimatedIbu)} IBU
                 </Text>
-
               }
 
               <Divider orientation="vertical" borderColor="#044350" />

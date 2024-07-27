@@ -136,15 +136,17 @@ export default async function Home({ searchParams }: {
           <Center
             borderTop="1px solid #ccc"
             // borderBottom="1px solid #bbb"
-            boxShadow="0px 42px 72px rgba(50, 50, 50, 0.1)"
+            boxShadow="0px 42px 72px rgba(50, 50, 50, 0.3)"
             backdropFilter="blur(16px)"
-            width="100%"
-            background="rgba(255, 255, 255, 0.2)"
+            // width="100%"
+            // background="rgba(255, 255, 255, 0.2)"
             justifyContent="center"
             position="relative"
+            borderRadius="6px"
+            overflow="hidden"
           >
-            <Stack gap="4" direction="row" flexWrap="wrap" justifyContent="center">
-              <Flex width="23%" maxWidth="420px" minWidth="360px">
+            <Stack gap="0" direction="row" flexWrap="wrap" justifyContent="center">
+              <Flex width="25%" maxWidth="420px" minWidth="360px">
                 <TapMenuItem
                   batches={batchesData}
                   batch={batchesData?.find((batch: any) => batch._id === tap1)}
@@ -157,12 +159,11 @@ export default async function Home({ searchParams }: {
                 />
               </Flex>
 
-              <Flex opacity="0.2">
-                {/* <Divider orientation="vertical" borderLeft="2px solid #044350" /> */}
-                {/* <Divider orientation="vertical" borderLeft="2px solid black" /> */}
-              </Flex>
+              {/* <Flex opacity="0.2">
+                <Divider orientation="vertical" borderLeft="2px solid #044350" />
+              </Flex> */}
 
-              <Flex width="23%" maxWidth="420px" minWidth="360px">
+              <Flex width="25%" maxWidth="420px" minWidth="360px">
                 <TapMenuItem
                   batches={batchesData}
                   batch={batchesData?.find((batch: any) => batch._id === tap2)}
@@ -176,11 +177,11 @@ export default async function Home({ searchParams }: {
 
               </Flex>
 
-              <Flex opacity="0.2">
-                {/* <Divider orientation="vertical" borderLeft="2px solid #044350" /> */}
-              </Flex>
+              {/* <Flex opacity="0.2">
+                <Divider orientation="vertical" borderLeft="2px solid #044350" />
+              </Flex> */}
 
-              <Flex width="23%" maxWidth="420px" minWidth="360px">
+              <Flex width="25%" maxWidth="420px" minWidth="360px">
                 <TapMenuItem
                   batches={batchesData}
                   batch={batchesData?.find((batch: any) => batch._id === tap3)}
@@ -194,11 +195,11 @@ export default async function Home({ searchParams }: {
 
               </Flex>
 
-              <Flex opacity="0.2">
-                {/* <Divider orientation="vertical" borderLeft="2px solid #044350" /> */}
-              </Flex>
+              {/* <Flex opacity="0.2">
+                <Divider orientation="vertical" borderLeft="2px solid #044350" />
+              </Flex> */}
 
-              <Flex width="23%" maxWidth="420px" minWidth="360px">
+              <Flex width="25%" maxWidth="420px" minWidth="360px">
                 <TapMenuItem
                   batches={batchesData}
                   batch={batchesData?.find((batch: any) => batch._id === tap4)}
