@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Heading, Text, List, ListItem, Flex, Divider, Stack } from "@chakra-ui/layout";
+import { Box, Heading, Text, List, ListItem, Flex, Divider, Stack, Spacer } from "@chakra-ui/layout";
 import { Select, Link, Textarea } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Fragment } from "react";
@@ -48,9 +48,6 @@ const beerColors = [
   "#3B0607",
   "#3A070B",
   "#36080A",
-
-
-
 ]
 
 const TapMenuItem = ({
@@ -100,9 +97,23 @@ const TapMenuItem = ({
       py="6"
       position="relative"
     >
-      <Text position="absolute" opacity="0.15" fontSize="124px" bottom="0" left="0" textShadow="0px 0px 16px">
+      <Text position="absolute" opacity="0.66" fontSize="124px" bottom="0" left="0" textShadow="0px 0px 16px">
         {tapNumber}.
       </Text>
+
+      <Box opacity="0.5" left="-4" right="-4" bottom="0" height="360px" position="absolute"
+        backgroundImage={`linear-gradient(180deg, transparent 0%, ${beerColors[round(batch?.estimatedColor, 0)]} 100%)`}
+      >
+      </Box>
+
+      <Box 
+          left="-4" 
+          right="-4" 
+          bottom="0" 
+          height="16px" 
+          position="absolute"
+          backgroundColor={beerColors[round(batch?.estimatedColor, 0)]}
+        />
 
       <Flex alignItems="center" borderBottom={batch ? "3px solid #044350" : ""}>
         <Select
@@ -158,8 +169,6 @@ const TapMenuItem = ({
             <Stack flexDirection="row">
               {batch &&
                 <Text whiteSpace="nowrap">
-
-
                   {round(batch?.estimatedIbu)} IBU
                 </Text>
 
@@ -184,14 +193,11 @@ const TapMenuItem = ({
           </Stack>
 
           <Stack flexDirection="row" alignItems="flex-start" justifyContent="space-between">
-
             {batch &&
               <Text fontSize="xl" fontWeight="bold">
                 {round(batch?.measuredAbv, 1)}% ABV
               </Text>
-
             }
-
 
             {fullUntappedLink &&
               <Link href={fullUntappedLink}>

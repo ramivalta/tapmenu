@@ -135,7 +135,7 @@ export default async function Home({ searchParams }: {
         >
           <Center
             borderTop="1px solid #ccc"
-            borderBottom="1px solid #ccc"
+            // borderBottom="1px solid #bbb"
             boxShadow="0px 42px 72px rgba(50, 50, 50, 0.1)"
             backdropFilter="blur(16px)"
             width="100%"
@@ -158,7 +158,8 @@ export default async function Home({ searchParams }: {
               </Flex>
 
               <Flex opacity="0.2">
-                <Divider orientation="vertical" borderLeft="2px solid #044350" />
+                {/* <Divider orientation="vertical" borderLeft="2px solid #044350" /> */}
+                {/* <Divider orientation="vertical" borderLeft="2px solid black" /> */}
               </Flex>
 
               <Flex width="23%" maxWidth="420px" minWidth="360px">
@@ -176,7 +177,7 @@ export default async function Home({ searchParams }: {
               </Flex>
 
               <Flex opacity="0.2">
-                <Divider orientation="vertical" borderLeft="2px solid #044350" />
+                {/* <Divider orientation="vertical" borderLeft="2px solid #044350" /> */}
               </Flex>
 
               <Flex width="23%" maxWidth="420px" minWidth="360px">
@@ -194,7 +195,7 @@ export default async function Home({ searchParams }: {
               </Flex>
 
               <Flex opacity="0.2">
-                <Divider orientation="vertical" borderLeft="2px solid #044350" />
+                {/* <Divider orientation="vertical" borderLeft="2px solid #044350" /> */}
               </Flex>
 
               <Flex width="23%" maxWidth="420px" minWidth="360px">
