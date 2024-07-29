@@ -135,11 +135,8 @@ export default async function Home({ searchParams }: {
         >
           <Center
             borderTop="1px solid #ccc"
-            // borderBottom="1px solid #bbb"
-            boxShadow="0px 42px 72px rgba(50, 50, 50, 0.3)"
+            boxShadow="0px 36px 72px rgba(50, 50, 50, 0.3)"
             backdropFilter="blur(16px)"
-            // width="100%"
-            // background="rgba(255, 255, 255, 0.2)"
             justifyContent="center"
             position="relative"
             borderRadius="6px"
