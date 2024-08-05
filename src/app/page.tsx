@@ -3,7 +3,7 @@ import TapMenuItem from "./TapMenuItem";
 import Controls from "./Controls";
 import Image from "next/image";
 
-import { put, list  } from "@vercel/blob";
+import { put, list } from "@vercel/blob";
 import { first, last, orderBy, tap } from "lodash";
 
 
@@ -107,7 +107,8 @@ export default async function Home({ searchParams }: {
           backdropFilter="blur(16px)"
           width="100%"
           flex="1"
-          pt="160px"
+          pt={["60px", "160px"]}
+          px="4"
         >
           <Link href="/">
             <Image src="/Panimo_Valta-logo.svg" alt="Panimo Valta logo" width={480} height={360} />
@@ -135,7 +136,7 @@ export default async function Home({ searchParams }: {
         >
           <Center
             borderTop="1px solid #ccc"
-            boxShadow="0px 36px 72px rgba(50, 50, 50, 0.3)"
+            boxShadow={["none", "0px 36px 72px rgba(50, 50, 50, 0.3)"]}
             backdropFilter="blur(16px)"
             justifyContent="center"
             position="relative"
@@ -143,7 +144,7 @@ export default async function Home({ searchParams }: {
             overflow="hidden"
           >
             <Stack gap="0" direction="row" flexWrap="wrap" justifyContent="center">
-              <Flex width="25%" maxWidth="420px" minWidth="360px">
+              <Flex width={["100%", "25%"]} maxWidth="420px" minWidth={"360px"}>
                 <TapMenuItem
                   batches={batchesData}
                   batch={batchesData?.find((batch: any) => batch._id === tap1)}
@@ -156,11 +157,7 @@ export default async function Home({ searchParams }: {
                 />
               </Flex>
 
-              {/* <Flex opacity="0.2">
-                <Divider orientation="vertical" borderLeft="2px solid #044350" />
-              </Flex> */}
-
-              <Flex width="25%" maxWidth="420px" minWidth="360px">
+              <Flex width={["100%", "25%"]} maxWidth="420px" minWidth={"360px"}>
                 <TapMenuItem
                   batches={batchesData}
                   batch={batchesData?.find((batch: any) => batch._id === tap2)}
@@ -174,11 +171,7 @@ export default async function Home({ searchParams }: {
 
               </Flex>
 
-              {/* <Flex opacity="0.2">
-                <Divider orientation="vertical" borderLeft="2px solid #044350" />
-              </Flex> */}
-
-              <Flex width="25%" maxWidth="420px" minWidth="360px">
+              <Flex width={["100%", "25%"]} maxWidth="420px" minWidth={"360px"}>
                 <TapMenuItem
                   batches={batchesData}
                   batch={batchesData?.find((batch: any) => batch._id === tap3)}
@@ -192,11 +185,7 @@ export default async function Home({ searchParams }: {
 
               </Flex>
 
-              {/* <Flex opacity="0.2">
-                <Divider orientation="vertical" borderLeft="2px solid #044350" />
-              </Flex> */}
-
-              <Flex width="25%" maxWidth="420px" minWidth="360px">
+              <Flex width={["100%", "25%"]} maxWidth="420px" minWidth={"360px"}>
                 <TapMenuItem
                   batches={batchesData}
                   batch={batchesData?.find((batch: any) => batch._id === tap4)}
@@ -211,7 +200,6 @@ export default async function Home({ searchParams }: {
               </Flex>
             </Stack>
 
-
           </Center>
         </Flex>
 
@@ -219,10 +207,6 @@ export default async function Home({ searchParams }: {
 
         </Flex>
 
-
-        {/* <pre>
-          {JSON.stringify(batchesData, null, 2)}
-        </pre> */}
       </Flex>
     );
   } catch (error) {
