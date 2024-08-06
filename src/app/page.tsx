@@ -76,7 +76,6 @@ export default async function Home({ searchParams }: {
       tap4
     ]
 
-
     return (
       <Flex
         backgroundImage="/noisy-gradient.svg"
@@ -203,7 +202,13 @@ export default async function Home({ searchParams }: {
           </Center>
         </Flex>
 
-        <Flex minHeight="240px">
+        <Flex minHeight="240px" width="100%">
+          <Center width="100%">
+            <Text size="xs" color="gray.500">
+              Updated {" "}
+              {savedTapConfig?.uploadedAt && new Date(savedTapConfig?.uploadedAt).toLocaleDateString("fi-FI")}
+            </Text>
+          </Center>
 
         </Flex>
 
