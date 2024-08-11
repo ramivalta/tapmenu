@@ -3,7 +3,7 @@
 import { Box, Heading, Text, List, ListItem, Flex, Divider, Stack, Spacer } from "@chakra-ui/layout";
 import { Select, Link, Textarea } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import { round, uniq } from "lodash";
 import QRCode from "react-qr-code";
 
@@ -69,7 +69,8 @@ const TapMenuItem = ({
   taps: string[];
   tapNotes?: string;
 }) => {
-  const hopsGroupedByUse = batch?.recipe?.hops?.reduce((acc: any, hop: any) => {
+
+  const hopsGroupedByUse = useMemo(() => batch?.recipe?.hops?.reduce((acc: any, hop: any) => {
     if (!acc[hop.use]) {
       acc[hop.use] = [];
     }
@@ -79,7 +80,7 @@ const TapMenuItem = ({
       : acc[hop.use].find((hopInAcc: any) => hopInAcc._id === hop._id).amount += hop.amount;
 
     return acc;
-  }, {});
+  }, {}), []);
 
 
   console.log("BATCHY", batch);
@@ -101,7 +102,7 @@ const TapMenuItem = ({
       position="relative"
       px="6"
     >
-      <Text position="absolute" opacity="0.5" fontSize="124px" bottom="0" left="6" textShadow="0px 0px 16px">
+      <Text position="absolute" opacity="0.33" fontSize="124px" bottom="0" left="6" textShadow="0px 0px 16px">
         {tapNumber}.
       </Text>
 
@@ -236,7 +237,7 @@ const TapMenuItem = ({
           />
         </Flex>
 
-        {showFermentables ? (
+        {showFermentables && batch?.recipe?.data?.mashFermentables ? (
           <Fragment>
             <Heading fontSize="22px">Fermentables</Heading>
 
@@ -273,7 +274,7 @@ const TapMenuItem = ({
                   gap="8"
                   fontSize="sm"
                 >
-                  {Object.keys(hopsGroupedByUse).map((use) => {
+                  {Object.keys(hopsGroupedByUse).map((use, index) => {
                     return (
                       <Flex
                         flexDirection="column"
@@ -292,10 +293,8 @@ const TapMenuItem = ({
                               <ListItem
                                 key={hop._id}
                                 width="100%"
-
                                 display="flex"
                                 justifyContent="space-between"
-
                               >
                                 <Text as="span">{hop.name}</Text>
                                 <Text as="span">{hop.amount}g</Text>
