@@ -71,7 +71,7 @@ const Controls = ({
 
       <Button
         size="xs"
-        colorScheme="black"
+        colorScheme="green"
         onClick={async (e) => {
           const searchParamsObj = Object.fromEntries(searchParams);
           await saveTapConfigAction(
@@ -84,7 +84,7 @@ const Controls = ({
       </Button>
 
       <Link href="/history">
-        <Button size="xs" colorScheme="black" as="span">
+        <Button size="xs" colorScheme="green" as="span">
           History
         </Button>
       </Link>
