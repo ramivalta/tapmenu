@@ -1,15 +1,26 @@
-import { Box, Text, Flex, Divider, Center, Link, Stack, Heading } from "@chakra-ui/layout";
+import {
+  Box,
+  Text,
+  Flex,
+  Divider,
+  Center,
+  Link,
+  Stack,
+  Heading,
+} from "@chakra-ui/layout";
 import TapMenuItem from "./TapMenuItem";
 import Controls from "./Controls";
 import Image from "next/image";
+import { Fragment } from "react";
 
-import { put, list } from "@vercel/blob";
-import { first, last, orderBy, tap } from "lodash";
-
+import { list } from "@vercel/blob";
+import { first, orderBy } from "lodash";
 
 const token = process.env.BREWFATHER_API_TOKEN;
 
-export default async function Home({ searchParams }: {
+export default async function Home({
+  searchParams,
+}: {
   searchParams: {
     tap1: string;
     tap2: string;
@@ -22,7 +33,6 @@ export default async function Home({ searchParams }: {
     showHops: string;
     showFermentables: string;
   };
-
 }) {
   if (!token) {
     return (
@@ -34,9 +44,16 @@ export default async function Home({ searchParams }: {
       >
         <Text>Missing Brewfather API token</Text>
 
-        <Text>Get your <Link textDecor="underline" href="https://docs.brewfather.app/api#authentication">
-          API token here
-        </Link > and put in BREWFATHER_API_TOKEN env variable to use this thing</Text>
+        <Text>
+          Get your{" "}
+          <Link
+            textDecor="underline"
+            href="https://docs.brewfather.app/api#authentication"
+          >
+            API token here
+          </Link>{" "}
+          and put in BREWFATHER_API_TOKEN env variable to use this thing
+        </Text>
       </Flex>
     );
   }
@@ -52,51 +69,59 @@ export default async function Home({ searchParams }: {
         },
         next: {
           revalidate: 1,
-        }
+        },
       }
     );
 
     const blobs = await list();
     const sortedByDate = orderBy(blobs?.blobs, "uploadedAt", "desc");
     const savedTapConfig = first(sortedByDate);
-    const savedTapConfigData = savedTapConfig?.downloadUrl && await fetch(savedTapConfig?.downloadUrl);
-    const savedTapConfigJson = savedTapConfigData && await savedTapConfigData.json();
+    const savedTapConfigData =
+      savedTapConfig?.downloadUrl && (await fetch(savedTapConfig?.downloadUrl));
+    const savedTapConfigJson =
+      savedTapConfigData && (await savedTapConfigData.json());
 
     const batchesData = await batches.json();
 
-    const { tap1, tap2, tap3, tap4, tap1Notes, tap2Notes, tap3Notes, tap4Notes, showHops: _showHops, showFermentables: _showFermantables } = searchParams ?? {};
+    const {
+      tap1,
+      tap2,
+      tap3,
+      tap4,
+      tap1Notes,
+      tap2Notes,
+      tap3Notes,
+      tap4Notes,
+      showHops: _showHops,
+      showFermentables: _showFermantables,
+    } = searchParams ?? {};
 
     const showHops = Number(_showHops);
     const showFermentables = Number(_showFermantables);
 
-    const taps = [
-      tap1,
-      tap2,
-      tap3,
-      tap4
-    ]
+    const taps = [tap1, tap2, tap3, tap4];
 
     return (
-      <Flex
-        backgroundImage="/noisy-gradient.svg"
-        backgroundRepeat="repeat"
-        backgroundSize="cover"
-        minHeight="100vh"
-        justifyContent="center"
-        flexDirection="column"
-      >
-        <Box position="absolute" left="280px" right="280px" bottom="0" top="0">
-          <Image src="/Panimo_Valta-taustalogo.png" alt="Panimo Valta background" layout="fill" style={{
-            objectFit: "cover",
-            objectPosition: "bottom"
-          }} />
-        </Box>
-
-        <Box position="fixed" top="0" left="0" right="0" zIndex="2" background="#ddd" opacity="0" _hover={{
-          opacity: 1
-        }} transition="0.35s all">
+      <Fragment>
+        <Box
+          position="fixed"
+          top="0"
+          left="0"
+          right="0"
+          zIndex="2"
+          background="#ddd"
+          opacity="0"
+          _hover={{
+            opacity: 1,
+          }}
+          transition="0.35s all"
+        >
           <Center>
-            <Controls showHops={showHops} showFermentables={showFermentables} savedTapConfig={savedTapConfigJson} />
+            <Controls
+              showHops={showHops}
+              showFermentables={showFermentables}
+              savedTapConfig={savedTapConfigJson}
+            />
           </Center>
         </Box>
 
@@ -110,7 +135,12 @@ export default async function Home({ searchParams }: {
           px="4"
         >
           <Link href="/">
-            <Image src="/Panimo_Valta-logo.svg" alt="Panimo Valta logo" width={480} height={360} />
+            <Image
+              src="/Panimo_Valta-logo.svg"
+              alt="Panimo Valta logo"
+              width={480}
+              height={360}
+            />
           </Link>
         </Center>
 
@@ -142,7 +172,12 @@ export default async function Home({ searchParams }: {
             borderRadius="6px"
             overflow="hidden"
           >
-            <Stack gap="0" direction="row" flexWrap="wrap" justifyContent="center">
+            <Stack
+              gap="0"
+              direction="row"
+              flexWrap="wrap"
+              justifyContent="center"
+            >
               <Flex width={["100%", "25%"]} maxWidth="420px" minWidth={"360px"}>
                 <TapMenuItem
                   batches={batchesData}
@@ -167,7 +202,6 @@ export default async function Home({ searchParams }: {
                   taps={taps}
                   tapNotes={tap2Notes}
                 />
-
               </Flex>
 
               <Flex width={["100%", "25%"]} maxWidth="420px" minWidth={"360px"}>
@@ -181,7 +215,6 @@ export default async function Home({ searchParams }: {
                   taps={taps}
                   tapNotes={tap3Notes}
                 />
-
               </Flex>
 
               <Flex width={["100%", "25%"]} maxWidth="420px" minWidth={"360px"}>
@@ -195,24 +228,23 @@ export default async function Home({ searchParams }: {
                   taps={taps}
                   tapNotes={tap4Notes}
                 />
-
               </Flex>
             </Stack>
-
           </Center>
         </Flex>
 
         <Flex minHeight="240px" width="100%">
           <Center width="100%">
             <Text size="xs" color="gray.500">
-              Updated {" "}
-              {savedTapConfig?.uploadedAt && new Date(savedTapConfig?.uploadedAt).toLocaleDateString("fi-FI")}
+              Updated{" "}
+              {savedTapConfig?.uploadedAt &&
+                new Date(savedTapConfig?.uploadedAt).toLocaleDateString(
+                  "fi-FI"
+                )}
             </Text>
           </Center>
-
         </Flex>
-
-      </Flex>
+      </Fragment>
     );
   } catch (error) {
     console.error("ERROR", error);

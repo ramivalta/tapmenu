@@ -1,6 +1,16 @@
 "use client";
 
-import { Box, Heading, Text, List, ListItem, Flex, Divider, Stack, Spacer } from "@chakra-ui/layout";
+import {
+  Box,
+  Heading,
+  Text,
+  List,
+  ListItem,
+  Flex,
+  Divider,
+  Stack,
+  Spacer,
+} from "@chakra-ui/layout";
 import { Select, Link, Textarea } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Fragment, useMemo } from "react";
@@ -48,7 +58,7 @@ const beerColors = [
   "#3B0607",
   "#3A070B",
   "#36080A",
-]
+];
 
 const TapMenuItem = ({
   batch,
@@ -69,19 +79,23 @@ const TapMenuItem = ({
   taps: string[];
   tapNotes?: string;
 }) => {
+  const hopsGroupedByUse = useMemo(
+    () =>
+      batch?.recipe?.hops?.reduce((acc: any, hop: any) => {
+        if (!acc[hop.use]) {
+          acc[hop.use] = [];
+        }
 
-  const hopsGroupedByUse = useMemo(() => batch?.recipe?.hops?.reduce((acc: any, hop: any) => {
-    if (!acc[hop.use]) {
-      acc[hop.use] = [];
-    }
+        !acc[hop.use].some((hopInAcc: any) => hopInAcc._id === hop._id)
+          ? acc[hop.use].push(hop)
+          : (acc[hop.use].find(
+              (hopInAcc: any) => hopInAcc._id === hop._id
+            ).amount += hop.amount);
 
-    !acc[hop.use].some((hopInAcc: any) => hopInAcc._id === hop._id) ?
-      acc[hop.use].push(hop)
-      : acc[hop.use].find((hopInAcc: any) => hopInAcc._id === hop._id).amount += hop.amount;
-
-    return acc;
-  }, {}), []);
-
+        return acc;
+      }, {}),
+    []
+  );
 
   console.log("BATCHY", batch);
 
@@ -90,45 +104,57 @@ const TapMenuItem = ({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const fullUntappedLink = batch?.batchNotes?.match(/https:\/\/untappd.com\/b\/[^ ]*/g)?.[0];
+  const fullUntappedLink = batch?.batchNotes?.match(
+    /https:\/\/untappd.com\/b\/[^ ]*/g
+  )?.[0];
 
   return (
-    <Flex 
-      flexDirection="column" 
-      color="#044350" 
+    <Flex
+      flexDirection="column"
+      color="#044350"
       width="100%"
       minHeight={["auto", "300px"]}
       py="6"
       position="relative"
       px="6"
     >
-      <Text position="absolute" opacity="0.33" fontSize="124px" bottom="0" left="6" textShadow="0px 0px 16px">
+      <Text
+        position="absolute"
+        opacity="0.33"
+        fontSize="124px"
+        bottom="0"
+        left="6"
+        textShadow="0px 0px 16px"
+      >
         {tapNumber}.
       </Text>
 
-      {batch && 
+      {!batch && <Heading as="h4" fontSize="2xl" mt="1" opacity="0.8">Currently empty</Heading>}
+
+      {batch && (
         <Fragment>
-          <Box 
-            opacity="0.4" 
-            left="0" 
-            right="0" 
-            bottom="0" 
-            height="320px" 
+          <Box
+            opacity="0.4"
+            left="0"
+            right="0"
+            bottom="0"
+            height="320px"
             position="absolute"
-            backgroundImage={`linear-gradient(180deg, transparent 0%, ${beerColors[round(batch?.estimatedColor, 0)]} 100%)`}
-          >
-          </Box>
-    
-          <Box 
-            left="0" 
-            right="0" 
-            bottom="0" 
-            height="16px" 
+            backgroundImage={`linear-gradient(180deg, transparent 0%, ${
+              beerColors[round(batch?.estimatedColor, 0)]
+            } 100%)`}
+          ></Box>
+
+          <Box
+            left="0"
+            right="0"
+            bottom="0"
+            height="16px"
             position="absolute"
             backgroundColor={beerColors[round(batch?.estimatedColor, 0)]}
           />
         </Fragment>
-      }
+      )}
 
       <Flex alignItems="center" borderBottom={batch ? "3px solid #044350" : ""}>
         <Select
@@ -173,19 +199,30 @@ const TapMenuItem = ({
         </Select>
       </Flex>
 
-      <Flex flexDir="column" gap="4" py="4" position="relative" className="beer-data" fontSize="lg" flex="1">
-        <Flex flexDirection="column" gap="3" justifyContent="space-between" flex="1">
+      <Flex
+        flexDir="column"
+        gap="4"
+        py="4"
+        position="relative"
+        className="beer-data"
+        fontSize="lg"
+        flex="1"
+      >
+        <Flex
+          flexDirection="column"
+          gap="3"
+          justifyContent="space-between"
+          flex="1"
+        >
           <Stack flex="1">
-            <Text>
-              {batch?.recipe?.style?.name}
-            </Text>
+            <Text>{batch?.recipe?.style?.name}</Text>
 
             <Stack flexDirection="row">
-              {batch &&
+              {batch && (
                 <Text whiteSpace="nowrap">
                   {round(batch?.estimatedIbu)} IBU
                 </Text>
-              }
+              )}
 
               <Divider orientation="vertical" borderColor="#044350" />
 
@@ -195,28 +232,39 @@ const TapMenuItem = ({
                     <Fragment key={hop}>
                       {hop}
                       {arr[index + 1] && ", "}
-
                     </Fragment>
                   );
-
-                }
-                )}
+                })}
               </Text>
             </Stack>
           </Stack>
 
-          <Stack flexDirection="row" alignItems="flex-start" justifyContent="space-between">
-            {batch &&
+          <Stack
+            flexDirection="row"
+            alignItems="flex-start"
+            justifyContent="space-between"
+          >
+            {batch && (
               <Text fontSize="xl" fontWeight="bold">
                 {round(batch?.measuredAbv, 1)}% ABV
               </Text>
-            }
+            )}
 
-            {fullUntappedLink &&
-              <Link href={fullUntappedLink} background="#eee" p="1" borderRadius="6">
-                <QRCode value={fullUntappedLink} size={96} fgColor="black" bgColor="transparent" />
+            {fullUntappedLink && (
+              <Link
+                href={fullUntappedLink}
+                background="#eee"
+                p="1"
+                borderRadius="6"
+              >
+                <QRCode
+                  value={fullUntappedLink}
+                  size={96}
+                  fgColor="black"
+                  bgColor="transparent"
+                />
               </Link>
-            }
+            )}
           </Stack>
 
           <Textarea
@@ -227,7 +275,7 @@ const TapMenuItem = ({
             border="0"
             defaultValue={tapNotes}
             pl="124px"
-            onChange={e => {
+            onChange={(e) => {
               const params = new URLSearchParams(searchParams.toString());
               params.set(tap + "Notes", e.target.value);
               router.replace(`
@@ -242,24 +290,25 @@ const TapMenuItem = ({
             <Heading fontSize="22px">Fermentables</Heading>
 
             <List display="flex" flexDirection="column" fontSize="sm">
-              {batch?.recipe?.data?.mashFermentables?.map((fermentable: any) => {
-                return (
-                  <Fragment key={fermentable._id}>
-                    <ListItem
-                      display="flex"
-                      justifyContent="space-between"
-                      width="100%"
-                    >
-                      <Text>{fermentable.name}</Text>
-                      <Text>{round(fermentable.percentage, 0)}%</Text>
-                    </ListItem>
-                  </Fragment>
-                );
-              })}
+              {batch?.recipe?.data?.mashFermentables?.map(
+                (fermentable: any) => {
+                  return (
+                    <Fragment key={fermentable._id}>
+                      <ListItem
+                        display="flex"
+                        justifyContent="space-between"
+                        width="100%"
+                      >
+                        <Text>{fermentable.name}</Text>
+                        <Text>{round(fermentable.percentage, 0)}%</Text>
+                      </ListItem>
+                    </Fragment>
+                  );
+                }
+              )}
             </List>
           </Fragment>
         ) : null}
-
 
         {showHops ? (
           <Fragment>
@@ -276,18 +325,10 @@ const TapMenuItem = ({
                 >
                   {Object.keys(hopsGroupedByUse).map((use, index) => {
                     return (
-                      <Flex
-                        flexDirection="column"
-                        key={use}
-                        width="100%"
-                      >
+                      <Flex flexDirection="column" key={use} width="100%">
                         <Heading fontSize="18px">{use}</Heading>
 
-                        <List
-                          gap="3"
-                          width="100%"
-
-                        >
+                        <List gap="3" width="100%">
                           {hopsGroupedByUse[use].map((hop: any) => {
                             return (
                               <ListItem
@@ -308,11 +349,8 @@ const TapMenuItem = ({
                 </Flex>
               </Fragment>
             )}
-
           </Fragment>
-
         ) : null}
-
       </Flex>
     </Flex>
   );
