@@ -10,7 +10,7 @@ import {
 import { orderBy, round } from "lodash";
 import Link from "next/link";
 
-const BrewHistory = ({ batches }) => {
+const BrewHistory = ({ batches }: any) => {
   return (
     <Center flexDirection="column" gap="4" width="100%" my="8">
       <Stack justifyContent="flex-start" minWidth="400px">
