@@ -4,7 +4,7 @@ import {
   Flex,
   Divider,
   Center,
-  
+  Link as ChakraLink,
   Stack,
   Heading,
   
@@ -49,12 +49,12 @@ export default async function Home({
 
         <Text>
           Get your{" "}
-          <Link
+          <ChakraLink
             textDecor="underline"
             href="https://docs.brewfather.app/api#authentication"
           >
             API token here
-          </Link>{" "}
+          </ChakraLink>{" "}
           and put in BREWFATHER_API_TOKEN env variable to use this thing
         </Text>
       </Flex>
