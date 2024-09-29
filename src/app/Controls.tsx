@@ -82,12 +82,6 @@ const Controls = ({
       >
         Save tap config
       </Button>
-
-      <Link href="/history">
-        <Button size="xs" colorScheme="green" as="span">
-          History
-        </Button>
-      </Link>
     </Flex>
   );
 };

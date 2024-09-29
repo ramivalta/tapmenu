@@ -4,14 +4,17 @@ import {
   Flex,
   Divider,
   Center,
-  Link,
+  
   Stack,
   Heading,
+  
 } from "@chakra-ui/layout";
+import { Button } from "@chakra-ui/button";
 import TapMenuItem from "./TapMenuItem";
 import Controls from "./Controls";
 import Image from "next/image";
 import { Fragment } from "react";
+import Link from "next/link";
 
 import { list } from "@vercel/blob";
 import { first, orderBy } from "lodash";
@@ -234,7 +237,7 @@ export default async function Home({
         </Flex>
 
         <Flex minHeight="240px" width="100%">
-          <Center width="100%">
+          <Center width="100%" flexDirection="column" gap="2">
             <Text size="xs" color="gray.500">
               Updated{" "}
               {savedTapConfig?.uploadedAt &&
@@ -242,6 +245,12 @@ export default async function Home({
                   "fi-FI"
                 )}
             </Text>
+
+            <Link href="/history">
+              <Button size="xs" colorScheme="blackAlpha" as="span">
+                See archived batches
+              </Button>
+            </Link>
           </Center>
         </Flex>
       </Fragment>
