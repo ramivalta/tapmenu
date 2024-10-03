@@ -12,7 +12,7 @@ import Link from "next/link";
 
 const BrewHistory = ({ batches }: any) => {
   return (
-    <Center flexDirection="column" gap="4" width="100%" my="8">
+    <Center flexDirection="column" gap="4" width="100%" my="8" p="2">
       <Stack justifyContent="flex-start" minWidth="400px">
         <Text color="black">
           <Link href="/">Go to current menu</Link>
@@ -34,10 +34,10 @@ const BrewHistory = ({ batches }: any) => {
           )?.[0];
           return (
             <Flex
-              minWidth="440px"
+              width={["100%", "100%", "33%"]}
               key={batch._id}
               p="6"
-              boxShadow="rgba(0, 0, 0, 0.25)"
+              boxShadow="0px 1px 12px rgba(0, 0, 0, 0.15)"
               color="#044350"
               justifyContent="space-between"
               background="rgba(255, 255, 255, 0.5)"
