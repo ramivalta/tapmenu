@@ -7,7 +7,6 @@ import {
   Link as ChakraLink,
   Stack,
   Heading,
-  
 } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 import TapMenuItem from "./TapMenuItem";
@@ -137,14 +136,14 @@ export default async function Home({
           pt={["60px", "160px"]}
           px="4"
         >
-          <Link href="/">
+          <ChakraLink href="/">
             <Image
               src="/Panimo_Valta-logo.svg"
               alt="Panimo Valta logo"
               width={480}
               height={360}
             />
-          </Link>
+          </ChakraLink>
         </Center>
 
         <Heading
