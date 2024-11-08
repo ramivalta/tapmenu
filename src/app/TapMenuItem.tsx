@@ -4,18 +4,20 @@ import {
   Box,
   Heading,
   Text,
-  List,
+  // List,
   ListItem,
   Flex,
-  Divider,
   Stack,
-  Spacer,
-} from "@chakra-ui/layout";
-import { Select, Link, Textarea } from "@chakra-ui/react";
+  Separator,
+  Input,
+} from "@chakra-ui/react";
+import { Link, Textarea } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Fragment, useMemo } from "react";
 import { round, uniq } from "lodash";
 import QRCode from "react-qr-code";
+import { Field } from "@/components/ui/field";
+import { SelectItem, SelectTrigger } from "@/components/ui/select";
 
 const beerColors = [
   "#FFE699",
@@ -97,8 +99,6 @@ const TapMenuItem = ({
     []
   );
 
-  console.log("BATCHY", batch);
-
   const hops = uniq(batch?.recipe?.hops.map((hop: any) => hop.name));
 
   const router = useRouter();
@@ -161,15 +161,22 @@ const TapMenuItem = ({
       )}
 
       <Flex alignItems="center" borderBottom={batch ? "3px solid #044350" : ""}>
-        <Select
+        <select
           className="beer-label sel"
-          ml="-4"
-          icon={<Fragment />}
-          borderColor="transparent"
+          style={{
+            borderColor: "transparent",
+            fontSize: "24px",
+            marginLeft: "-2px",
+            opacity: batch ? 1 : 0.2,
+            color: "#044350",
+            background: "transparent",
+            width: "100%",
+          }}
+          // icon={<Fragment />}
+          // borderColor="transparent"
           value={batch?._id}
-          fontSize="24px"
-          opacity={batch ? 1 : 0.2}
-          color="#044350"
+          // fontSize="24px"
+
           onChange={(e) => {
             if (taps.includes(e.target.value)) {
               return;
@@ -200,7 +207,7 @@ const TapMenuItem = ({
               </option>
             );
           })}
-        </Select>
+        </select>
       </Flex>
 
       <Flex
@@ -223,7 +230,7 @@ const TapMenuItem = ({
                 </Text>
               )}
 
-              <Divider orientation="vertical" borderColor="#044350" />
+              <Separator orientation="vertical" borderColor="#044350" />
 
               <Text>
                 {hops.map((hop: any, index, arr) => {
@@ -288,7 +295,7 @@ const TapMenuItem = ({
           <Fragment>
             <Heading fontSize="22px">Fermentables</Heading>
 
-            <List display="flex" flexDirection="column" fontSize="sm">
+            <Flex display="flex" flexDirection="column" fontSize="sm" as="ul">
               {batch?.recipe?.data?.mashFermentables?.map(
                 (fermentable: any) => {
                   return (
@@ -305,7 +312,7 @@ const TapMenuItem = ({
                   );
                 }
               )}
-            </List>
+            </Flex>
           </Fragment>
         ) : null}
 
@@ -327,7 +334,7 @@ const TapMenuItem = ({
                       <Flex flexDirection="column" key={use} width="100%">
                         <Heading fontSize="18px">{use}</Heading>
 
-                        <List gap="3" width="100%">
+                        <Flex as="ul" gap="3" width="100%">
                           {hopsGroupedByUse[use].map((hop: any) => {
                             return (
                               <ListItem
@@ -341,7 +348,7 @@ const TapMenuItem = ({
                               </ListItem>
                             );
                           })}
-                        </List>
+                        </Flex>
                       </Flex>
                     );
                   })}

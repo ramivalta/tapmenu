@@ -1,12 +1,10 @@
 "use client";
 
-import { Flex } from "@chakra-ui/layout";
-import { Button } from "@chakra-ui/react";
+import { Flex, Button } from "@chakra-ui/react";
+// import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import saveTapConfigAction from "./saveTapConfigAction";
-import { isEmpty } from "lodash";
 import { useEffect } from "react";
-import Link from "next/link";
 
 const Controls = ({
   showHops,
@@ -71,7 +69,9 @@ const Controls = ({
 
       <Button
         size="xs"
-        colorScheme="green"
+        colorPalette="cyan"
+        as="span"
+        px="4"
         onClick={async (e) => {
           const searchParamsObj = Object.fromEntries(searchParams);
           await saveTapConfigAction(

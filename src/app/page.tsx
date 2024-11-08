@@ -2,13 +2,17 @@ import {
   Box,
   Text,
   Flex,
-  Divider,
+  
   Center,
   Link as ChakraLink,
   Stack,
   Heading,
-} from "@chakra-ui/layout";
-import { Button } from "@chakra-ui/button";
+  // Button,
+} from "@chakra-ui/react";
+
+import { Button } from "@/components/ui/button";
+
+
 import TapMenuItem from "./TapMenuItem";
 import Controls from "./Controls";
 import Image from "next/image";
@@ -20,22 +24,23 @@ import { first, orderBy } from "lodash";
 
 const token = process.env.BREWFATHER_API_TOKEN;
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: {
-    tap1: string;
-    tap2: string;
-    tap3: string;
-    tap4: string;
-    tap1Notes?: string;
-    tap2Notes?: string;
-    tap3Notes?: string;
-    tap4Notes?: string;
-    showHops: string;
-    showFermentables: string;
-  };
-}) {
+export default async function Home(
+  props: {
+    searchParams: Promise<{
+      tap1: string;
+      tap2: string;
+      tap3: string;
+      tap4: string;
+      tap1Notes?: string;
+      tap2Notes?: string;
+      tap3Notes?: string;
+      tap4Notes?: string;
+      showHops: string;
+      showFermentables: string;
+    }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   if (!token) {
     return (
       <Flex
@@ -237,7 +242,7 @@ export default async function Home({
 
         <Flex minHeight="240px" width="100%">
           <Center width="100%" flexDirection="column" gap="2">
-            <Text size="xs" color="gray.500">
+            <Text fontSize="xs" color="gray.500">
               Updated{" "}
               {savedTapConfig?.uploadedAt &&
                 new Date(savedTapConfig?.uploadedAt).toLocaleDateString(
@@ -246,7 +251,7 @@ export default async function Home({
             </Text>
 
             <Link href="/history">
-              <Button size="xs" colorScheme="blackAlpha" as="span">
+              <Button size="xs" colorPalette="cyan" as="span" px="4">
                 See archived batches
               </Button>
             </Link>

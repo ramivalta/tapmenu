@@ -1,10 +1,9 @@
 "use server";
 
-import { promises as fs } from 'fs';
+import { promises as fs } from "fs";
 
-
-import { put } from '@vercel/blob';
-import { revalidatePath } from 'next/cache';
+import { put } from "@vercel/blob";
+import { revalidatePath } from "next/cache";
 
 // export async function Form() {
 //   async function uploadImage(formData: FormData) {
@@ -26,29 +25,30 @@ import { revalidatePath } from 'next/cache';
 //   );
 // }
 
-const saveTapConfigAction = async (queryParams: string, password: string | null) => {
-    console.log("BASSWORD", password, process.env.PASSWORD);
-    if (!password || password !== process.env.PASSWORD) {
-        throw new Error('Invalid password');
-    }
+const saveTapConfigAction = async (
+  queryParams: string,
+  password: string | null
+) => {
+  if (!password || password !== process.env.PASSWORD) {
+    throw new Error("Invalid password");
+  }
 
-    await put("tapmenu/defaultTapConfig.json", queryParams, {
-        access: 'public',
-    });
-    revalidatePath('/');
+  await put("tapmenu/defaultTapConfig.json", queryParams, {
+    access: "public",
+  });
+  revalidatePath("/");
 
-    return "Tap config saved";
+  return "Tap config saved";
 
-
-    // try {
-    //     console.log("LETS WRITE", queryParams);
-    //     await fs.writeFile('/tmp/defaultTapConfig.json', queryParams);
-    //     console.log('Tap configuration saved successfully.')
-    //     return 'Tap configuration saved successfully.';
-    // } catch (error) {
-    //     console.error('Error saving tap configuration:', error);
-    //     throw error; // Rethrow the error for further handling if necessary
-    // }
+  // try {
+  //     console.log("LETS WRITE", queryParams);
+  //     await fs.writeFile('/tmp/defaultTapConfig.json', queryParams);
+  //     console.log('Tap configuration saved successfully.')
+  //     return 'Tap configuration saved successfully.';
+  // } catch (error) {
+  //     console.error('Error saving tap configuration:', error);
+  //     throw error; // Rethrow the error for further handling if necessary
+  // }
 };
 
 export default saveTapConfigAction;

@@ -1,21 +1,20 @@
-import Image from "next/image";
-import "./globals.css";
-import {
-  AbsoluteCenter,
-  Box,
-  Center,
-  ChakraProvider,
-  Flex,
-} from "@chakra-ui/react";
-import Controls from "./Controls";
+"use client";
 
-export default async function RootLayout({
+import "./globals.css";
+import { Box, Center, Flex, Image } from "@chakra-ui/react";
+
+import { Provider } from "@/components/ui/provider";
+// import Image from "next/image";
+
+import bg from "/Panimo_Valta-taustalogo.png";
+
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning lang="en">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -25,13 +24,23 @@ export default async function RootLayout({
         ></link>
       </head>
       <body>
-        <ChakraProvider>
+        <Provider>
+          <Image
+            src="/noisy-gradient.svg"
+            backgroundRepeat="repeat"
+            backgroundSize="cover"
+            minHeight="100vh"
+            flexDirection="column"
+            width="100%"
+            flex="1"
+            alt=""
+            position="fixed"
+          />
           <Flex
             backgroundImage="/noisy-gradient.svg"
             backgroundRepeat="repeat"
             backgroundSize="cover"
             minHeight="100vh"
-            // justifyContent="center"
             flexDirection="column"
             width="100%"
             flex="1"
@@ -46,22 +55,38 @@ export default async function RootLayout({
               justifyContent="center"
               zIndex="0"
             >
-              <Box
-                width="100%"
+              <Image
+                alt=""
+                // style={{
+
+                //   width: "100%",
+                //   height: "100%",
+                //   backgroundSize: "contain",
+                //   backgroundRepeat: "no-repeat",
+                //   backgroundAttachment: "fixed",
+                //   backgroundPosition: "center",
+                //   margin: "auto",
+                // }}
+                // width="100%"
                 height="100%"
-                backgroundImage="/Panimo_Valta-taustalogo.png"
                 backgroundSize="contain"
                 backgroundRepeat="no-repeat"
                 backgroundAttachment="fixed"
                 backgroundPosition="center"
                 margin="auto"
+                src="/Panimo_Valta-taustalogo.png"
+                position="fixed"
+                top="0"
+                left="0"
+                right="0"
+                bottom="0"
               />
             </Center>
             <Box position="relative" zIndex="1">
               {children}
             </Box>
           </Flex>
-        </ChakraProvider>
+        </Provider>
       </body>
     </html>
   );

@@ -6,7 +6,7 @@ import {
   Text,
   Stack,
   Link as ChakraLink,
-} from "@chakra-ui/layout";
+} from "@chakra-ui/react";
 import { orderBy, round } from "lodash";
 import Link from "next/link";
 
