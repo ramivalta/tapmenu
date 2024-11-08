@@ -16,8 +16,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Fragment, useMemo } from "react";
 import { round, uniq } from "lodash";
 import QRCode from "react-qr-code";
-import { Field } from "@/components/ui/field";
-import { SelectItem, SelectTrigger } from "@/components/ui/select";
+
 
 const beerColors = [
   "#FFE699",
@@ -171,6 +170,8 @@ const TapMenuItem = ({
             color: "#044350",
             background: "transparent",
             width: "100%",
+            WebkitAppearance: "none",
+
           }}
           // icon={<Fragment />}
           // borderColor="transparent"
