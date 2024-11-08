@@ -129,7 +129,11 @@ const TapMenuItem = ({
         {tapNumber}.
       </Text>
 
-      {!batch && <Heading as="h4" fontSize="2xl" mt="1" opacity="0.8">Currently empty</Heading>}
+      {!batch && (
+        <Heading as="h4" fontSize="2xl" mt="1" opacity="0.8">
+          Currently empty
+        </Heading>
+      )}
 
       {batch && (
         <Fragment>
@@ -208,12 +212,7 @@ const TapMenuItem = ({
         fontSize="lg"
         flex="1"
       >
-        <Flex
-          flexDirection="column"
-          gap="3"
-          justifyContent="space-between"
-          flex="1"
-        >
+        <Flex flexDirection="column" gap="4" justifyContent="space-between">
           <Stack flex="1">
             <Text>{batch?.recipe?.style?.name}</Text>
 
