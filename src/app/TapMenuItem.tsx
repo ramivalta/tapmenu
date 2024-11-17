@@ -262,7 +262,7 @@ const TapMenuItem = ({
                 href={fullUntappedLink}
                 background="#eee"
                 p="1"
-                borderRadius="6"
+                borderRadius="6px"
               >
                 <QRCode
                   value={fullUntappedLink}

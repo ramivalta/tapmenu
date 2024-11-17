@@ -42,7 +42,7 @@ const BrewHistory = ({ batches }: any) => {
               justifyContent="space-between"
               background="rgba(255, 255, 255, 0.5)"
               backdropFilter="blur(16px)"
-              borderRadius="6"
+              borderRadius="6px"
               flexDirection="column"
               gap="2"
             >
