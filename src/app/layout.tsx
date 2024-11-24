@@ -66,17 +66,6 @@ export default function RootLayout({
             >
               <Image
                 alt=""
-                // style={{
-
-                //   width: "100%",
-                //   height: "100%",
-                //   backgroundSize: "contain",
-                //   backgroundRepeat: "no-repeat",
-                //   backgroundAttachment: "fixed",
-                //   backgroundPosition: "center",
-                //   margin: "auto",
-                // }}
-                // width="100%"
                 height="100%"
                 backgroundSize="contain"
                 backgroundRepeat="no-repeat"

@@ -17,7 +17,6 @@ import { Fragment, useMemo } from "react";
 import { round, uniq } from "lodash";
 import QRCode from "react-qr-code";
 
-
 const beerColors = [
   "#FFE699",
   "#FFD878",
@@ -106,6 +105,10 @@ const TapMenuItem = ({
   const fullUntappedLink = batch?.batchNotes?.match(
     /https:\/\/untappd.com\/b\/[^ ]*/g
   )?.[0];
+  const untappedBeerId = fullUntappedLink?.match(/b\/([^ ]*)/)?.[1];
+  const qrCodeUrl = untappedBeerId
+    ? `https://untappd.com/qr/beer/${untappedBeerId?.split("/")[1]}`
+    : null;
 
   return (
     <Flex
@@ -171,7 +174,6 @@ const TapMenuItem = ({
             background: "transparent",
             width: "100%",
             WebkitAppearance: "none",
-
           }}
           // icon={<Fragment />}
           // borderColor="transparent"
@@ -257,15 +259,10 @@ const TapMenuItem = ({
               </Text>
             )}
 
-            {fullUntappedLink && (
-              <Link
-                href={fullUntappedLink}
-                background="#eee"
-                p="1"
-                borderRadius="6px"
-              >
+            {qrCodeUrl && (
+              <Link href={qrCodeUrl} background="#eee" p="1" borderRadius="6px">
                 <QRCode
-                  value={fullUntappedLink}
+                  value={qrCodeUrl}
                   size={96}
                   fgColor="black"
                   bgColor="transparent"
