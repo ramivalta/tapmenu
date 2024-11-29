@@ -34,10 +34,6 @@ const Etiquette = ({ beer }: any) => {
 
   const hopsNames = uniq(beer?.batchHops?.map((hop: any) => hop.name));
 
-  // const yeastNames = uniq(beer?.batchYeasts?.map((yeast: any) => yeast.name));
-
-  console.log("HOP NAMES", hopsNames);
-
   return (
     <Flex
       position="relative"
@@ -67,7 +63,7 @@ const Etiquette = ({ beer }: any) => {
             width="100%"
             gap="2"
           >
-            <Flex flex="1" flexDirection="column">
+            <Flex flex="1" flexDirection="column" alignItems="center">
               <Heading fontVariant="small-caps" textAlign="center">
                 Panimo Valta
               </Heading>
@@ -76,14 +72,15 @@ const Etiquette = ({ beer }: any) => {
                 mt="48px"
                 width="100%"
                 textAlign="center"
-                borderTop="1px solid #ddd"
-                borderBottom="1px solid #ddd"
+                textDecoration="underline"
                 py="10px"
                 color="#044350"
                 fontSize="3xl"
               >
                 {beer?.recipe?.name}
               </Heading>
+
+              <Span mt="4">{beer?.recipe?.style?.name}</Span>
             </Flex>
           </Flex>
 
@@ -94,7 +91,12 @@ const Etiquette = ({ beer }: any) => {
             minWidth="200px"
             gap="2"
           >
-            Malts
+            <Span
+              fontVariantCaps="all-small-caps"
+              // fontVariant="small-caps"
+            >
+              Malts
+            </Span>
             <List.Root fontSize="12px">
               {beer?.recipe?.fermentables?.map((fermentable: any) => {
                 return (
@@ -104,7 +106,7 @@ const Etiquette = ({ beer }: any) => {
                 );
               })}
             </List.Root>
-            Hops
+            <Span fontVariantCaps="all-small-caps">Hops</Span>
             <List.Root fontSize="12px">
               {hopsNames?.map((hop: any) => {
                 return (
@@ -114,7 +116,7 @@ const Etiquette = ({ beer }: any) => {
                 );
               })}
             </List.Root>
-            Yeast
+            <Span fontVariantCaps="all-small-caps">Yeast</Span>
             <List.Root fontSize="12px">
               {beer?.batchYeasts?.map((yeast: any) => {
                 return (
@@ -139,36 +141,17 @@ const Etiquette = ({ beer }: any) => {
         px="6"
       >
         <Box textAlign="center" py="4" fontSize="18px">
-          <Span>{round(beer?.measuredAbv, 1).toFixed(1)}% ABV</Span>
-
+          <Span fontWeight="bold">
+            {round(beer?.measuredAbv, 1).toFixed(1)}% ABV
+          </Span>
+          {" | "}
+          <Span>{round(beer?.estimatedIbu)} IBU</Span>
           {" | "}
 
-          <Span>{beer?.recipe?.style?.name}</Span>
+          <Span>{Math.round(beer?.estimatedColor * 1.97)} EBC</Span>
         </Box>
 
         <Separator orientation="vertical" borderColor="#ccc" />
-
-        {/* <Span
-            // px="6"
-            fontVariant="small-caps"
-            fontSize="18px"
-            textAlign="center"
-            py="4"
-          >
-            {beer?.recipe?.style?.name}
-          </Span> */}
-
-        {/* <Separator orientation="vertical" borderColor="#044350" /> */}
-
-        {/* <Span py="4">
-            Brewed on
-            <br />
-            {beer?.brewDate
-              ? new Date(beer?.brewDate).toLocaleDateString("fi-FI")
-              : ""}
-          </Span>
-
-          <Separator orientation="vertical" borderColor="#ccc" /> */}
 
         <Box py="4">
           <Span>Bottled </Span>
@@ -179,29 +162,20 @@ const Etiquette = ({ beer }: any) => {
                   year: "numeric",
                 })
               : ""}
-
-            {/*             
-            {beer?.bottlingDate
-              ? new Date(beer?.bottlingDate).toLocaleDateString("fi-FI")
-              : ""} */}
           </Span>
         </Box>
 
         <Separator orientation="vertical" borderColor="#ccc" />
 
         {fullUntappedLink && (
-          <Center
-            py="4"
-
-            // border="1px solid #ccc"
-          >
+          <Flex justifyContent="flex-end" flex="1" py="4">
             <QRCode
               value={qrCodeUrl}
               size={52}
               fgColor="#333"
               bgColor="transparent"
             />
-          </Center>
+          </Flex>
         )}
       </Flex>
 

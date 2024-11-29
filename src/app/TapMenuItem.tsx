@@ -158,11 +158,12 @@ const TapMenuItem = ({
             height="16px"
             position="absolute"
             backgroundColor={beerColors[round(batch?.estimatedColor, 0)]}
+            zIndex="0"
           />
         </Fragment>
       )}
 
-      <Flex alignItems="center" borderBottom={batch ? "3px solid #044350" : ""}>
+      <Flex alignItems="center" borderBottom={batch ? "3px solid #044350" : ""} position="relative" zIndex="1">
         <select
           className="beer-label sel"
           style={{
@@ -175,11 +176,7 @@ const TapMenuItem = ({
             width: "100%",
             WebkitAppearance: "none",
           }}
-          // icon={<Fragment />}
-          // borderColor="transparent"
           value={batch?._id}
-          // fontSize="24px"
-
           onChange={(e) => {
             if (taps.includes(e.target.value)) {
               return;
