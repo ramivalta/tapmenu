@@ -17,6 +17,8 @@ import * as htmlToImage from "html-to-image";
 // @ts-ignore
 import { saveAs } from "file-saver";
 
+import Rocket from "./rocket.svg";
+
 const Etiquette = ({ beer }: any) => {
   const fullUntappedLink = beer?.batchNotes?.match(
     /https:\/\/untappd.com\/b\/[^ ]*/g
@@ -67,16 +69,16 @@ const Etiquette = ({ beer }: any) => {
           <Flex flex="1" />
           <Flex
             flexDirection="column"
-            opacity="0.8"
+            opacity="0.9"
             alignItems="center"
             color="#044350"
             position="absolute"
-            left="0"
+            left="46px"
           >
             <Image
-              src="/rocket.svg"
+              src="/rocket4.svg"
               alt=""
-              width={260}
+              width={200}
               height={80}
               color="#044350"
             />
@@ -85,7 +87,7 @@ const Etiquette = ({ beer }: any) => {
           <Flex
             ml="240px"
             pt="6"
-            height="360px"
+            height="320px"
             justifyContent="flex-start"
             flexDirection="column"
             width="100%"
@@ -99,7 +101,7 @@ const Etiquette = ({ beer }: any) => {
               gap="2"
             >
               <Heading
-                mt="36px"
+                mt="12px"
                 width="100%"
                 textAlign="center"
                 py="10px"
@@ -114,6 +116,16 @@ const Etiquette = ({ beer }: any) => {
 
               <Span fontSize="28px" fontWeight="bold">
                 {round(beer?.measuredAbv, 1).toFixed(1)}%
+              </Span>
+
+
+              <Span fontSize="16px" textAlign="center" mt="4">
+                
+                {beer?.tasteNotes}
+
+
+                
+
               </Span>
 
               {/* <Flex
@@ -133,7 +145,7 @@ const Etiquette = ({ beer }: any) => {
             minWidth="200px"
             gap="2px"
             pl="24px"
-            borderLeft="1px solid #ccc"
+            borderLeft="1px solid #044350"
             minHeight="100%"
           >
             <Span fontWeight="bold" fontVariantCaps="all-small-caps">
@@ -175,7 +187,23 @@ const Etiquette = ({ beer }: any) => {
                   </List.Item>
                 );
               })}
+
+              {beer?.measuredOg && (
+                <List.Item pl="1" mt="2">
+                  {round(beer?.measuredOg, 3).toFixed(3)} OG
+                </List.Item>
+              )}
+
+              {beer?.measuredFg && (
+                <List.Item pl="1">
+                  {round(beer?.measuredFg, 3).toFixed(3)} FG
+                </List.Item>
+              )}
             </List.Root>
+
+            {/* <List.Root fontSize="12px" listStyle="none" ml="2">
+              
+            </List.Root> */}
 
             {/* <Separator orientation="horizontal" borderColor="#ccc" mt="24px" /> */}
 
@@ -189,6 +217,7 @@ const Etiquette = ({ beer }: any) => {
         justifyContent="flex-start"
         width="100%"
         // px="6"
+        gap="4"
       >
         <Flex
           textAlign="center"
@@ -236,7 +265,7 @@ const Etiquette = ({ beer }: any) => {
             justifyContent="center"
             py="4"
             width="200px"
-            borderLeft="1px solid #ccc"
+            borderLeft="1px solid #044350"
             px="6"
           >
             {fullUntappedLink && (
