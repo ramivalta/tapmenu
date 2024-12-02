@@ -12,7 +12,7 @@ import {
 import { round, uniq } from "lodash";
 import Image from "next/image";
 import QRCode from "react-qr-code";
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 import * as htmlToImage from "html-to-image";
 // @ts-ignore
 import { saveAs } from "file-saver";
@@ -47,15 +47,43 @@ const Etiquette = ({ beer }: any) => {
       ref={ref}
       justifyContent="space-between"
       flexDirection="column"
-      width="720px"
+      width="920px"
+      maxWidth="920px"
+      minWidth="920px"
       alignItems="center"
       background="#fff"
       color="#044350"
       className="etiquette"
     >
       <Flex flex="1" flexDirection="column" width="100%">
-        <Flex flexDirection="row" flex="1" width="100%">
+        <Flex
+          flexDirection="row"
+          flex="1"
+          width="100%"
+          gap="4"
+          alignItems="center"
+          position="relative"
+        >
+          <Flex flex="1" />
           <Flex
+            flexDirection="column"
+            opacity="0.8"
+            alignItems="center"
+            color="#044350"
+            position="absolute"
+            left="0"
+          >
+            <Image
+              src="/rocket.svg"
+              alt=""
+              width={260}
+              height={80}
+              color="#044350"
+            />
+          </Flex>
+
+          <Flex
+            ml="240px"
             pt="6"
             height="360px"
             justifyContent="flex-start"
@@ -63,98 +91,136 @@ const Etiquette = ({ beer }: any) => {
             width="100%"
             gap="2"
           >
-            <Flex flex="1" flexDirection="column" alignItems="center">
-              <Heading fontVariant="small-caps" textAlign="center">
-                Panimo Valta
-              </Heading>
-
+            <Flex
+              flex="1"
+              flexDirection="column"
+              alignItems="center"
+              position="relative"
+              gap="2"
+            >
               <Heading
-                mt="48px"
+                mt="36px"
                 width="100%"
                 textAlign="center"
-                textDecoration="underline"
                 py="10px"
                 color="#044350"
-                fontSize="3xl"
+                fontSize="58px"
+                lineHeight={1}
               >
                 {beer?.recipe?.name}
               </Heading>
 
-              <Span mt="4">{beer?.recipe?.style?.name}</Span>
+              <Span>{beer?.recipe?.style?.name}</Span>
+
+              <Span fontSize="28px" fontWeight="bold">
+                {round(beer?.measuredAbv, 1).toFixed(1)}%
+              </Span>
+
+              {/* <Flex
+                flex="1"
+                flexDirection="column"
+                gap="2"
+                justifyContent="flex-end"
+              >
+                
+              </Flex> */}
             </Flex>
           </Flex>
 
           <Flex
             flexDirection="column"
             p="6"
-            // background="antiquewhite"
             minWidth="200px"
-            gap="2"
+            gap="2px"
+            pl="24px"
+            borderLeft="1px solid #ccc"
+            minHeight="100%"
           >
-            <Span
-              fontVariantCaps="all-small-caps"
-              // fontVariant="small-caps"
-            >
+            <Span fontWeight="bold" fontVariantCaps="all-small-caps">
               Malts
             </Span>
-            <List.Root fontSize="12px">
+
+            <List.Root fontSize="12px" listStyle="none">
               {beer?.recipe?.fermentables?.map((fermentable: any) => {
+                if (fermentable.name === "Rice Hulls") {
+                  return null;
+                }
                 return (
-                  <List.Item key={fermentable.name} listStyle="none" pl="1">
+                  <List.Item key={fermentable.name} pl="1">
                     {fermentable.name}
                   </List.Item>
                 );
               })}
             </List.Root>
-            <Span fontVariantCaps="all-small-caps">Hops</Span>
-            <List.Root fontSize="12px">
+            <Span fontWeight="bold" fontVariantCaps="all-small-caps">
+              Hops
+            </Span>
+            <List.Root fontSize="12px" listStyle="none">
               {hopsNames?.map((hop: any) => {
                 return (
-                  <List.Item key={hop} listStyle="none" pl="1">
+                  <List.Item key={hop} pl="1">
                     {hop}
                   </List.Item>
                 );
               })}
             </List.Root>
-            <Span fontVariantCaps="all-small-caps">Yeast</Span>
-            <List.Root fontSize="12px">
+            <Span fontWeight="bold" fontVariantCaps="all-small-caps">
+              Yeast
+            </Span>
+            <List.Root fontSize="12px" listStyle="none">
               {beer?.batchYeasts?.map((yeast: any) => {
                 return (
-                  <List.Item key={yeast._id} listStyle="none" pl="1">
+                  <List.Item key={yeast._id} pl="1">
                     {yeast.name} {yeast.productId}
                   </List.Item>
                 );
               })}
             </List.Root>
+
+            {/* <Separator orientation="horizontal" borderColor="#ccc" mt="24px" /> */}
+
+            {/* <Separator orientation="horizontal" borderColor="#ccc" mt="24px" /> */}
           </Flex>
         </Flex>
-
-        {/* <Heading>{beer?.recipe?.style?.name}</Heading> */}
-        {/* <p>{beer?.brewday?.notes}</p> */}
       </Flex>
       <Flex
-        gap="4"
+        // gap="2"
         alignItems="center"
         justifyContent="flex-start"
         width="100%"
-        borderTop="1px solid #ccc"
-        px="6"
+        // px="6"
       >
-        <Box textAlign="center" py="4" fontSize="18px">
-          <Span fontWeight="bold">
-            {round(beer?.measuredAbv, 1).toFixed(1)}% ABV
-          </Span>
-          {" | "}
+        <Flex
+          textAlign="center"
+          pb="4"
+          fontSize="18px"
+          // gap="16px"
+          alignItems="center"
+          width="260px"
+        >
+          <Box ml="64px" opacity="0.8">
+            <Image src="/textLogo.svg" alt="" width={120} height={50} />
+          </Box>
+        </Flex>
+
+        <Flex
+          flex="1"
+          fontSize="16px"
+          // mt="24px"
+          // listStyle="none"
+          gap="4"
+          flexDirection="row"
+          justifyContent="center"
+          alignItems="center"
+        >
           <Span>{round(beer?.estimatedIbu)} IBU</Span>
-          {" | "}
+
+          <Span>{"\u2022"}</Span>
 
           <Span>{Math.round(beer?.estimatedColor * 1.97)} EBC</Span>
-        </Box>
 
-        <Separator orientation="vertical" borderColor="#ccc" />
+          <Span>{"\u2022"}</Span>
 
-        <Box py="4">
-          <Span>Bottled </Span>
           <Span>
             {beer?.bottlingDate
               ? new Date(beer?.bottlingDate).toLocaleDateString("en-US", {
@@ -163,25 +229,27 @@ const Etiquette = ({ beer }: any) => {
                 })
               : ""}
           </Span>
-        </Box>
+        </Flex>
 
-        <Separator orientation="vertical" borderColor="#ccc" />
-
-        {fullUntappedLink && (
-          <Flex justifyContent="flex-end" flex="1" py="4">
-            <QRCode
-              value={qrCodeUrl}
-              size={52}
-              fgColor="#333"
-              bgColor="transparent"
-            />
+        <Flex justifyContent="flex-end" minHeight="100%">
+          <Flex
+            justifyContent="center"
+            py="4"
+            width="200px"
+            borderLeft="1px solid #ccc"
+            px="6"
+          >
+            {fullUntappedLink && (
+              <QRCode
+                value={qrCodeUrl}
+                size={52}
+                fgColor="#333"
+                bgColor="transparent"
+              />
+            )}
           </Flex>
-        )}
+        </Flex>
       </Flex>
-
-      {/* <Box opacity="0.1" position="absolute" right="0" left="0" bottom="0"> */}
-      {/* <Image src="/Panimo_Valta-logo.svg" alt="" width={520} height={240} /> */}
-      {/* </Box> */}
     </Flex>
   );
 };
