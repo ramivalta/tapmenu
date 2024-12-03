@@ -17,8 +17,6 @@ import * as htmlToImage from "html-to-image";
 // @ts-ignore
 import { saveAs } from "file-saver";
 
-
-
 const Etiquette = ({ beer }: any) => {
   const fullUntappedLink = beer?.batchNotes?.match(
     /https:\/\/untappd.com\/b\/[^ ]*/g
@@ -80,9 +78,8 @@ const Etiquette = ({ beer }: any) => {
             width="50px"
           />
 
-<Flex
+          <Flex
             height="400px"
-            
             background="#ccc"
             top="0"
             // top="25px"
@@ -203,13 +200,13 @@ const Etiquette = ({ beer }: any) => {
               Malts
             </Span>
 
-            <List.Root fontSize="12px" listStyle="none">
+            <List.Root fontSize="12px" listStyle="inside">
               {beer?.recipe?.fermentables?.map((fermentable: any) => {
                 if (fermentable.name === "Rice Hulls") {
                   return null;
                 }
                 return (
-                  <List.Item key={fermentable.name} pl="1">
+                  <List.Item key={fermentable.name} whiteSpace="nowrap">
                     {fermentable.name}
                   </List.Item>
                 );
@@ -218,10 +215,10 @@ const Etiquette = ({ beer }: any) => {
             <Span fontWeight="bold" fontVariantCaps="all-small-caps">
               Hops
             </Span>
-            <List.Root fontSize="12px" listStyle="none">
+            <List.Root fontSize="12px" listStyle="inside">
               {hopsNames?.map((hop: any) => {
                 return (
-                  <List.Item key={hop} pl="1">
+                  <List.Item key={hop} pl="1" whiteSpace="nowrap">
                     {hop}
                   </List.Item>
                 );
@@ -233,7 +230,7 @@ const Etiquette = ({ beer }: any) => {
             <List.Root fontSize="12px" listStyle="none">
               {beer?.batchYeasts?.map((yeast: any) => {
                 return (
-                  <List.Item key={yeast._id} pl="1">
+                  <List.Item key={yeast._id} pl="1" whiteSpace="nowrap">
                     {yeast.name} {yeast.productId}
                   </List.Item>
                 );
@@ -304,7 +301,12 @@ const Etiquette = ({ beer }: any) => {
           </Span>
         </Flex>
 
-        <Flex justifyContent="flex-end" minHeight="100%" position="relative" zIndex="3">
+        <Flex
+          justifyContent="flex-end"
+          minHeight="100%"
+          position="relative"
+          zIndex="3"
+        >
           {/* <Flex
             height="82px"
             width="60px"
@@ -319,7 +321,6 @@ const Etiquette = ({ beer }: any) => {
             width="200px"
             background="#eee"
             position="relative"
-            
             // borderLeft="1px solid #044350"
             px="6"
           >
