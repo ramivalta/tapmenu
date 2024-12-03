@@ -82,17 +82,12 @@ const Etiquette = ({ beer }: any) => {
             height="400px"
             background="#ccc"
             top="0"
-            // top="25px"
-            // mask="radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;"
-            //         mask="linear-gradient(to right,#0000 25px,#000 0),
-            // radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;
-            // "
             mask="radial-gradient(farthest-side,#000 98%,#0000) 0 25px/50px 50px;"
             position="absolute"
             right="0"
             zIndex="1"
             width="50px"
-            left="-21px"
+            left="-23px"
           />
           <Flex flex="1" />
           <Flex
