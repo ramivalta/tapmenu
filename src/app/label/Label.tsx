@@ -17,7 +17,7 @@ import * as htmlToImage from "html-to-image";
 // @ts-ignore
 import { saveAs } from "file-saver";
 
-import Rocket from "./rocket.svg";
+
 
 const Etiquette = ({ beer }: any) => {
   const fullUntappedLink = beer?.batchNotes?.match(
@@ -39,7 +39,7 @@ const Etiquette = ({ beer }: any) => {
   return (
     <Flex
       position="relative"
-      border="1px dashed #ddd"
+      border="1px dashed #333"
       onClick={() => {
         ref?.current &&
           htmlToImage.toPng(ref.current).then(function (dataUrl) {
@@ -49,13 +49,16 @@ const Etiquette = ({ beer }: any) => {
       ref={ref}
       justifyContent="space-between"
       flexDirection="column"
-      width="920px"
-      maxWidth="920px"
-      minWidth="920px"
+      width="940px"
+      maxWidth="940px"
+      minWidth="940px"
       alignItems="center"
       background="#fff"
       color="#044350"
       className="etiquette"
+      overflow="hidden"
+      height="400px"
+      boxSizing="content-box"
     >
       <Flex flex="1" flexDirection="column" width="100%">
         <Flex
@@ -66,6 +69,34 @@ const Etiquette = ({ beer }: any) => {
           alignItems="center"
           position="relative"
         >
+          <Flex
+            height="400px"
+            background="#efefef"
+            top="0"
+            mask="radial-gradient(farthest-side,#000 98%,#0000) 0 0px/50px 50px;"
+            position="absolute"
+            left="-30px"
+            zIndex="2"
+            width="50px"
+          />
+
+<Flex
+            height="400px"
+            
+            background="#ccc"
+            top="0"
+            // top="25px"
+            // mask="radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;"
+            //         mask="linear-gradient(to right,#0000 25px,#000 0),
+            // radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;
+            // "
+            mask="radial-gradient(farthest-side,#000 98%,#0000) 0 25px/50px 50px;"
+            position="absolute"
+            right="0"
+            zIndex="1"
+            width="50px"
+            left="-21px"
+          />
           <Flex flex="1" />
           <Flex
             flexDirection="column"
@@ -73,7 +104,7 @@ const Etiquette = ({ beer }: any) => {
             alignItems="center"
             color="#044350"
             position="absolute"
-            left="46px"
+            left="72px"
           >
             <Image
               src="/rocket4.svg"
@@ -92,6 +123,7 @@ const Etiquette = ({ beer }: any) => {
             flexDirection="column"
             width="100%"
             gap="2"
+            pr="24px"
           >
             <Flex
               flex="1"
@@ -118,35 +150,54 @@ const Etiquette = ({ beer }: any) => {
                 {round(beer?.measuredAbv, 1).toFixed(1)}%
               </Span>
 
-
               <Span fontSize="16px" textAlign="center" mt="4">
-                
                 {beer?.tasteNotes}
-
-
-                
-
               </Span>
-
-              {/* <Flex
-                flex="1"
-                flexDirection="column"
-                gap="2"
-                justifyContent="flex-end"
-              >
-                
-              </Flex> */}
             </Flex>
           </Flex>
+
+          <Flex
+            height="400px"
+            width="222px"
+            background="#efefef"
+            top="0"
+            // mask="radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;"
+            //         mask="linear-gradient(to right,#0000 25px,#000 0),
+            // radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;
+            // "
+            mask="radial-gradient(farthest-side,#000 98%,#0000) 0 0/50px 50px;"
+            position="absolute"
+            right="0"
+            zIndex="2"
+          />
+
+          <Flex
+            height="400px"
+            width="230px"
+            background="#ccc"
+            top="0"
+            // top="25px"
+            // mask="radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;"
+            //         mask="linear-gradient(to right,#0000 25px,#000 0),
+            // radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;
+            // "
+            mask="radial-gradient(farthest-side,#000 98%,#0000) 0 25px/50px 50px;"
+            position="absolute"
+            right="0"
+            zIndex="1"
+          />
 
           <Flex
             flexDirection="column"
             p="6"
             minWidth="200px"
+            background="#efefef"
             gap="2px"
-            pl="24px"
-            borderLeft="1px solid #044350"
+            pl="18px"
+            // borderLeft="1px solid #044350"
             minHeight="100%"
+            position="relative"
+            zIndex="2"
           >
             <Span fontWeight="bold" fontVariantCaps="all-small-caps">
               Malts
@@ -200,14 +251,6 @@ const Etiquette = ({ beer }: any) => {
                 </List.Item>
               )}
             </List.Root>
-
-            {/* <List.Root fontSize="12px" listStyle="none" ml="2">
-              
-            </List.Root> */}
-
-            {/* <Separator orientation="horizontal" borderColor="#ccc" mt="24px" /> */}
-
-            {/* <Separator orientation="horizontal" borderColor="#ccc" mt="24px" /> */}
           </Flex>
         </Flex>
       </Flex>
@@ -227,7 +270,7 @@ const Etiquette = ({ beer }: any) => {
           alignItems="center"
           width="260px"
         >
-          <Box ml="64px" opacity="0.8">
+          <Box ml="92px" opacity="0.8">
             <Image src="/textLogo.svg" alt="" width={120} height={50} />
           </Box>
         </Flex>
@@ -241,6 +284,7 @@ const Etiquette = ({ beer }: any) => {
           flexDirection="row"
           justifyContent="center"
           alignItems="center"
+          pr="24px"
         >
           <Span>{round(beer?.estimatedIbu)} IBU</Span>
 
@@ -260,12 +304,23 @@ const Etiquette = ({ beer }: any) => {
           </Span>
         </Flex>
 
-        <Flex justifyContent="flex-end" minHeight="100%">
+        <Flex justifyContent="flex-end" minHeight="100%" position="relative" zIndex="3">
+          {/* <Flex
+            height="82px"
+            width="60px"
+            background="#eee"
+            mask="radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;"
+            mr="-8"
+            // minHeight="100%"
+          /> */}
           <Flex
             justifyContent="center"
             py="4"
             width="200px"
-            borderLeft="1px solid #044350"
+            background="#eee"
+            position="relative"
+            
+            // borderLeft="1px solid #044350"
             px="6"
           >
             {fullUntappedLink && (
