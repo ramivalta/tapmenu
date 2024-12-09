@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Center,
-  Flex,
-  Heading,
-  List,
-  Separator,
-  Span,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, List, Span } from "@chakra-ui/react";
 import { round, uniq } from "lodash";
 import Image from "next/image";
 import QRCode from "react-qr-code";
@@ -55,7 +47,7 @@ const Etiquette = ({ beer }: any) => {
       color="#044350"
       className="etiquette"
       overflow="hidden"
-      height="400px"
+      // height="400px"
       boxSizing="content-box"
     >
       <Flex flex="1" flexDirection="column" width="100%">
@@ -68,7 +60,7 @@ const Etiquette = ({ beer }: any) => {
           position="relative"
         >
           <Flex
-            height="400px"
+            height="600px"
             background="#efefef"
             top="0"
             mask="radial-gradient(farthest-side,#000 98%,#0000) 0 0px/50px 50px;"
@@ -79,7 +71,7 @@ const Etiquette = ({ beer }: any) => {
           />
 
           <Flex
-            height="400px"
+            height="600px"
             background="#ccc"
             top="0"
             mask="radial-gradient(farthest-side,#000 98%,#0000) 0 25px/50px 50px;"
@@ -108,7 +100,7 @@ const Etiquette = ({ beer }: any) => {
           </Flex>
 
           <Flex
-            ml="240px"
+            ml="calc(240px + 1rem)"
             pt="6"
             height="320px"
             justifyContent="flex-start"
@@ -149,14 +141,10 @@ const Etiquette = ({ beer }: any) => {
           </Flex>
 
           <Flex
-            height="400px"
+            height="600px"
             width="222px"
             background="#efefef"
             top="0"
-            // mask="radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;"
-            //         mask="linear-gradient(to right,#0000 25px,#000 0),
-            // radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;
-            // "
             mask="radial-gradient(farthest-side,#000 98%,#0000) 0 0/50px 50px;"
             position="absolute"
             right="0"
@@ -164,15 +152,10 @@ const Etiquette = ({ beer }: any) => {
           />
 
           <Flex
-            height="400px"
+            height="600px"
             width="230px"
             background="#ccc"
             top="0"
-            // top="25px"
-            // mask="radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;"
-            //         mask="linear-gradient(to right,#0000 25px,#000 0),
-            // radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;
-            // "
             mask="radial-gradient(farthest-side,#000 98%,#0000) 0 25px/50px 50px;"
             position="absolute"
             right="0"
@@ -186,7 +169,6 @@ const Etiquette = ({ beer }: any) => {
             background="#efefef"
             gap="2px"
             pl="18px"
-            // borderLeft="1px solid #044350"
             minHeight="100%"
             position="relative"
             zIndex="2"
@@ -247,18 +229,15 @@ const Etiquette = ({ beer }: any) => {
         </Flex>
       </Flex>
       <Flex
-        // gap="2"
         alignItems="center"
         justifyContent="flex-start"
         width="100%"
-        // px="6"
         gap="4"
       >
         <Flex
           textAlign="center"
           pb="4"
           fontSize="18px"
-          // gap="16px"
           alignItems="center"
           width="260px"
         >
@@ -270,8 +249,6 @@ const Etiquette = ({ beer }: any) => {
         <Flex
           flex="1"
           fontSize="16px"
-          // mt="24px"
-          // listStyle="none"
           gap="4"
           flexDirection="row"
           justifyContent="center"
@@ -302,21 +279,12 @@ const Etiquette = ({ beer }: any) => {
           position="relative"
           zIndex="3"
         >
-          {/* <Flex
-            height="82px"
-            width="60px"
-            background="#eee"
-            mask="radial-gradient(25px,#000 98%,#0000) left/50px 46.25px;"
-            mr="-8"
-            // minHeight="100%"
-          /> */}
           <Flex
             justifyContent="center"
             py="4"
             width="200px"
             background="#eee"
             position="relative"
-            // borderLeft="1px solid #044350"
             px="6"
           >
             {fullUntappedLink && (
