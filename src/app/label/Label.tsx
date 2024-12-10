@@ -128,13 +128,13 @@ const Etiquette = ({ beer }: any) => {
                 {beer?.recipe?.name}
               </Heading>
 
-              <Span>{beer?.recipe?.style?.name}</Span>
+              <Span fontSize="lg">{beer?.recipe?.style?.name}</Span>
 
               <Span fontSize="28px" fontWeight="bold">
                 {round(beer?.measuredAbv, 1).toFixed(1)}%
               </Span>
 
-              <Span fontSize="16px" textAlign="center" mt="4">
+              <Span fontSize="lg" textAlign="center">
                 {beer?.tasteNotes}
               </Span>
             </Flex>
@@ -168,62 +168,61 @@ const Etiquette = ({ beer }: any) => {
             minWidth="200px"
             background="#efefef"
             gap="2px"
-            pl="18px"
+            pl="24px"
             minHeight="100%"
             position="relative"
             zIndex="2"
+            fontSize="lg"
           >
             <Span fontWeight="bold" fontVariantCaps="all-small-caps">
               Malts
             </Span>
 
-            <List.Root fontSize="12px" listStyle="inside">
+            <List.Root
+              fontSize="13px"
+              // listStyle="inside"
+              listStylePosition="outside"
+            >
               {beer?.recipe?.fermentables?.map((fermentable: any) => {
                 if (fermentable.name === "Rice Hulls") {
                   return null;
                 }
                 return (
-                  <List.Item key={fermentable.name} whiteSpace="nowrap">
+                  <List.Item key={fermentable.name}>
                     {fermentable.name}
                   </List.Item>
                 );
               })}
             </List.Root>
+
             <Span fontWeight="bold" fontVariantCaps="all-small-caps">
               Hops
             </Span>
-            <List.Root fontSize="12px" listStyle="inside">
+
+            <List.Root
+              fontSize="13px"
+              // listStyle="inside"
+              listStylePosition="outside"
+            >
               {hopsNames?.map((hop: any) => {
-                return (
-                  <List.Item key={hop} pl="1" whiteSpace="nowrap">
-                    {hop}
-                  </List.Item>
-                );
+                return <List.Item key={hop}>{hop}</List.Item>;
               })}
             </List.Root>
             <Span fontWeight="bold" fontVariantCaps="all-small-caps">
               Yeast
             </Span>
-            <List.Root fontSize="12px" listStyle="none">
+            <List.Root
+              fontSize="13px"
+              // listStyle="none"
+              listStylePosition="outside"
+            >
               {beer?.batchYeasts?.map((yeast: any) => {
                 return (
-                  <List.Item key={yeast._id} pl="1" whiteSpace="nowrap">
+                  <List.Item key={yeast._id}>
                     {yeast.name} {yeast.productId}
                   </List.Item>
                 );
               })}
-
-              {beer?.measuredOg && (
-                <List.Item pl="1" mt="2">
-                  {round(beer?.measuredOg, 3).toFixed(3)} OG
-                </List.Item>
-              )}
-
-              {beer?.measuredFg && (
-                <List.Item pl="1">
-                  {round(beer?.measuredFg, 3).toFixed(3)} FG
-                </List.Item>
-              )}
             </List.Root>
           </Flex>
         </Flex>
@@ -248,29 +247,45 @@ const Etiquette = ({ beer }: any) => {
 
         <Flex
           flex="1"
-          fontSize="16px"
-          gap="4"
+          // gap="4"
           flexDirection="row"
           justifyContent="center"
           alignItems="center"
           pr="24px"
+          fontSize="lg"
         >
-          <Span>{round(beer?.estimatedIbu)} IBU</Span>
+          <Flex width="428px" justifyContent="center" alignItems="center" gap="4">
+            <Span>{round(beer?.estimatedIbu)} IBU</Span>
 
-          <Span>{"\u2022"}</Span>
+            <Span>{"\u2022"}</Span>
 
-          <Span>{Math.round(beer?.estimatedColor * 1.97)} EBC</Span>
+            {/* <Span>{Math.round(beer?.estimatedColor * 1.97)} EBC</Span> */}
 
-          <Span>{"\u2022"}</Span>
+            {/* <Span>{"\u2022"}</Span> */}
 
-          <Span>
-            {beer?.bottlingDate
-              ? new Date(beer?.bottlingDate).toLocaleDateString("en-US", {
-                  month: "2-digit",
-                  year: "numeric",
-                })
-              : ""}
-          </Span>
+            {/* {beer?.measuredOg && (
+            <Fragment>
+              <Span>{round(beer?.measuredOg, 3).toFixed(3)} OG</Span>
+              <Span>{"\u2022"}</Span>
+            </Fragment>
+          )}
+
+          {beer?.measuredFg && (
+            <Fragment>
+              <Span>{round(beer?.measuredFg, 3).toFixed(3)} FG</Span>
+              <Span>{"\u2022"}</Span>
+            </Fragment>
+          )} */}
+
+            <Span>
+              {beer?.bottlingDate
+                ? new Date(beer?.bottlingDate).toLocaleDateString("en-US", {
+                    month: "2-digit",
+                    year: "numeric",
+                  })
+                : ""}
+            </Span>
+          </Flex>
         </Flex>
 
         <Flex
@@ -288,12 +303,14 @@ const Etiquette = ({ beer }: any) => {
             px="6"
           >
             {fullUntappedLink && (
-              <QRCode
-                value={qrCodeUrl}
-                size={52}
-                fgColor="#333"
-                bgColor="transparent"
-              />
+              <Box position="absolute" bottom="24px" right="76px">
+                <QRCode
+                  value={qrCodeUrl}
+                  size={76}
+                  fgColor="#333"
+                  bgColor="transparent"
+                />
+              </Box>
             )}
           </Flex>
         </Flex>
