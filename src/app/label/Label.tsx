@@ -4,7 +4,7 @@ import { Box, Flex, Heading, List, Span } from "@chakra-ui/react";
 import { round, uniq } from "lodash";
 import Image from "next/image";
 import QRCode from "react-qr-code";
-import { Fragment, useRef } from "react";
+import { useRef } from "react";
 import * as htmlToImage from "html-to-image";
 // @ts-ignore
 import { saveAs } from "file-saver";
@@ -32,9 +32,13 @@ const Etiquette = ({ beer }: any) => {
       border="1px dashed #333"
       onClick={() => {
         ref?.current &&
-          htmlToImage.toPng(ref.current).then(function (dataUrl) {
-            saveAs(dataUrl, "etiketti.png");
-          });
+          htmlToImage
+            .toPng(ref.current, {
+              includeQueryParams: true,
+            })
+            .then(function (dataUrl) {
+              saveAs(dataUrl, "etiketti.png");
+            });
       }}
       ref={ref}
       justifyContent="space-between"
@@ -47,7 +51,6 @@ const Etiquette = ({ beer }: any) => {
       color="#044350"
       className="etiquette"
       overflow="hidden"
-      // height="400px"
       boxSizing="content-box"
     >
       <Flex flex="1" flexDirection="column" width="100%">
@@ -92,10 +95,12 @@ const Etiquette = ({ beer }: any) => {
           >
             <Image
               src="/rocket4.svg"
+              // src="/rocket_green@3x.png"
               alt=""
               width={200}
               height={80}
               color="#044350"
+              key="rocket"
             />
           </Flex>
 
@@ -128,9 +133,9 @@ const Etiquette = ({ beer }: any) => {
                 {beer?.recipe?.name}
               </Heading>
 
-              <Span fontSize="lg">{beer?.recipe?.style?.name}</Span>
+              <Span fontSize="xl">{beer?.recipe?.style?.name}</Span>
 
-              <Span fontSize="28px" fontWeight="bold">
+              <Span fontSize="32px" fontWeight="bold">
                 {round(beer?.measuredAbv, 1).toFixed(1)}%
               </Span>
 
@@ -241,7 +246,13 @@ const Etiquette = ({ beer }: any) => {
           width="260px"
         >
           <Box ml="92px" opacity="0.8">
-            <Image src="/textLogo.svg" alt="" width={120} height={50} />
+            <Image
+              key="textLogo"
+              src="/textLogo.svg"
+              alt=""
+              width={120}
+              height={50}
+            />
           </Box>
         </Flex>
 
@@ -252,9 +263,14 @@ const Etiquette = ({ beer }: any) => {
           justifyContent="center"
           alignItems="center"
           pr="24px"
-          fontSize="lg"
+          fontSize="xl"
         >
-          <Flex width="428px" justifyContent="center" alignItems="center" gap="4">
+          <Flex
+            width="428px"
+            justifyContent="center"
+            alignItems="center"
+            gap="4"
+          >
             <Span>{round(beer?.estimatedIbu)} IBU</Span>
 
             <Span>{"\u2022"}</Span>
