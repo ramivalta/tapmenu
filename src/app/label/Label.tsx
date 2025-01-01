@@ -24,7 +24,9 @@ const Etiquette = ({ beer }: any) => {
     return <Box>Select a beer from the dropdown</Box>;
   }
 
-  const hopsNames = uniq(beer?.batchHops?.map((hop: any) => hop.name));
+  const hopsNames = uniq(beer?.recipe?.hops?.map((hop: any) => hop.name));
+
+
 
   return (
     <Flex overflow="auto" flexDirection="column">
