@@ -1,6 +1,14 @@
 "use client";
 
-import { Box, Button, Flex, Heading, List, Span } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  List,
+  Span,
+  Stack,
+} from "@chakra-ui/react";
 import { round, uniq } from "lodash";
 import Image from "next/image";
 import QRCode from "react-qr-code";
@@ -25,8 +33,6 @@ const Etiquette = ({ beer }: any) => {
   }
 
   const hopsNames = uniq(beer?.recipe?.hops?.map((hop: any) => hop.name));
-
-
 
   return (
     <Flex overflow="auto" flexDirection="column">
@@ -174,14 +180,10 @@ const Etiquette = ({ beer }: any) => {
                 fontSize="lg"
               >
                 <Span fontWeight="bold" fontVariantCaps="all-small-caps">
-                  Malts
+                  Käyvät
                 </Span>
 
-                <List.Root
-                  fontSize="13px"
-                  // listStyle="inside"
-                  listStylePosition="outside"
-                >
+                <List.Root fontSize="13px" listStylePosition="outside">
                   {beer?.recipe?.fermentables?.map((fermentable: any) => {
                     if (fermentable.name === "Rice Hulls") {
                       return null;
@@ -195,12 +197,11 @@ const Etiquette = ({ beer }: any) => {
                 </List.Root>
 
                 <Span fontWeight="bold" fontVariantCaps="all-small-caps">
-                  Hops
+                  Humalat
                 </Span>
 
                 <List.Root
                   fontSize="13px"
-                  // listStyle="inside"
                   listStylePosition="outside"
                 >
                   {hopsNames?.map((hop: any) => {
@@ -208,14 +209,10 @@ const Etiquette = ({ beer }: any) => {
                   })}
                 </List.Root>
                 <Span fontWeight="bold" fontVariantCaps="all-small-caps">
-                  Yeast
+                  Hiiva
                 </Span>
-                <List.Root
-                  fontSize="13px"
-                  // listStyle="none"
-                  listStylePosition="outside"
-                >
-                  {beer?.batchYeasts?.map((yeast: any) => {
+                <List.Root fontSize="13px" listStylePosition="outside">
+                  {beer?.recipe?.yeasts?.map((yeast: any) => {
                     return (
                       <List.Item key={yeast._id}>
                         {yeast.name} {yeast.productId}
@@ -288,12 +285,20 @@ const Etiquette = ({ beer }: any) => {
           )} */}
 
                 <Span>
-                  {beer?.bottlingDate
-                    ? new Date(beer?.bottlingDate).toLocaleDateString("en-US", {
-                        month: "2-digit",
-                        year: "numeric",
-                      })
-                    : ""}
+                  {beer?.bottlingDate ? (
+                    <Stack gap="2">
+                      Pantu{" "}
+                      {new Date(beer?.bottlingDate).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "2-digit",
+                          year: "numeric",
+                        }
+                      )}
+                    </Stack>
+                  ) : (
+                    ""
+                  )}
                 </Span>
               </Flex>
             </Flex>
