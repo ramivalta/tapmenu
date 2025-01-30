@@ -70,9 +70,6 @@ const BrewHistory = ({ batches }: any) => {
                   Untappd
                 </ChakraLink>
               )}
-
-              {/* <p>{batch.brewday.date}</p>
-                      <p>{batch.brewday.brewer}</p> */}
             </Flex>
           );
         })}

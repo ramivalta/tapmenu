@@ -95,7 +95,6 @@ const Etiquette = ({ beer }: any) => {
               >
                 <Image
                   src="/rocket4.svg"
-                  // src="/rocket_green@3x.png"
                   alt=""
                   width={200}
                   height={80}
@@ -200,10 +199,7 @@ const Etiquette = ({ beer }: any) => {
                   Humalat
                 </Span>
 
-                <List.Root
-                  fontSize="13px"
-                  listStylePosition="outside"
-                >
+                <List.Root fontSize="13px" listStylePosition="outside">
                   {hopsNames?.map((hop: any) => {
                     return <List.Item key={hop}>{hop}</List.Item>;
                   })}
@@ -249,7 +245,6 @@ const Etiquette = ({ beer }: any) => {
 
             <Flex
               flex="1"
-              // gap="4"
               flexDirection="row"
               justifyContent="center"
               alignItems="center"
@@ -266,28 +261,10 @@ const Etiquette = ({ beer }: any) => {
 
                 <Span>{"\u2022"}</Span>
 
-                {/* <Span>{Math.round(beer?.estimatedColor * 1.97)} EBC</Span> */}
-
-                {/* <Span>{"\u2022"}</Span> */}
-
-                {/* {beer?.measuredOg && (
-            <Fragment>
-              <Span>{round(beer?.measuredOg, 3).toFixed(3)} OG</Span>
-              <Span>{"\u2022"}</Span>
-            </Fragment>
-          )}
-
-          {beer?.measuredFg && (
-            <Fragment>
-              <Span>{round(beer?.measuredFg, 3).toFixed(3)} FG</Span>
-              <Span>{"\u2022"}</Span>
-            </Fragment>
-          )} */}
-
                 <Span>
                   {beer?.bottlingDate ? (
                     <Stack gap="2">
-                      Pantu{" "}
+                      Pullotettu{" "}
                       {new Date(beer?.bottlingDate).toLocaleDateString(
                         "en-US",
                         {

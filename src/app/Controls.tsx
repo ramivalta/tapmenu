@@ -25,48 +25,7 @@ const Controls = ({
   }, []);
 
   return (
-    <Flex
-      p="1"
-      gap="4"
-      // background="rgba(50, 50, 50, 0.1)"
-      // borderBottomRadius="6"
-      px="8"
-    >
-      {/* <Button
-        colorScheme="black"
-        size="xs"
-        onClick={(e) => {
-          const params = new URLSearchParams(searchParams.toString());
-          params.set("showHops", Number(!showHops).toString());
-          router.replace(`
-            /?${params.toString()}
-          `);
-        }}
-      >
-        {showHops ? "Hide hops" : "Show hops"}
-      </Button> */}
-
-      {/* <Button
-        size="xs"
-        colorScheme="black"
-        onClick={(e) => {
-          const params = new URLSearchParams(searchParams.toString());
-          params.set("showFermentables", Number(!showFermentables).toString());
-          router.replace(`
-            /?${params.toString()}
-          `);
-        }}
-      >
-        {showFermentables ? "Hide fermentables" : "Show fermentables"}
-      </Button> */}
-
-      {/* <Button size="xs" colorScheme="gray" onClick={async (e) => {
-        const newUrl = await urlGenerator(window.location.href);
-        navigator.clipboard.writeText(newUrl);
-      }}>
-        Share link
-      </Button> */}
-
+    <Flex p="1" gap="4" px="8">
       <Button
         size="xs"
         colorPalette="cyan"

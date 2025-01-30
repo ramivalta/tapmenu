@@ -132,7 +132,7 @@ const TapMenuItem = ({
       </Text>
 
       {!batch && (
-        <Heading as="h4" fontSize="2xl" mt="1" opacity="0.8">
+        <Heading as="h4" fontSize="2xl" mt="1" opacity="0.5">
           Currently empty
         </Heading>
       )}
@@ -163,7 +163,12 @@ const TapMenuItem = ({
         </Fragment>
       )}
 
-      <Flex alignItems="center" borderBottom={batch ? "3px solid #044350" : ""} position="relative" zIndex="1">
+      <Flex
+        alignItems="center"
+        borderBottom={batch ? "3px solid #044350" : ""}
+        position="relative"
+        zIndex="1"
+      >
         <select
           className="beer-label sel"
           style={{
@@ -219,139 +224,113 @@ const TapMenuItem = ({
         fontSize="lg"
         flex="1"
       >
-        <Flex flexDirection="column" gap="4" justifyContent="space-between">
-          <Stack flex="1">
-            <Text>{batch?.recipe?.style?.name}</Text>
+        {batch && (
+          <Flex flexDirection="column" gap="4" justifyContent="space-between">
+            <Stack flex="1" gap="2">
+              <Fragment>
+                <Stack
+                  flexDirection="row"
+                  gap="2"
+                  fontSize="xl"
+                  fontWeight="bold"
+                >
+                  <Text whiteSpace="nowrap">
+                    {round(batch?.measuredAbv, 1)}% ABV
+                  </Text>
 
-            <Stack flexDirection="row">
-              {batch && (
+                  {" |"}
+
+                  <Text whiteSpace="nowrap">
+                    {round(batch?.estimatedIbu)} IBU
+                  </Text>
+                </Stack>
+                <Stack>
+                  <Text fontVariantCaps="all-small-caps" fontSize="2xl">
+                    {batch?.recipe?.style?.name}
+                  </Text>
+                </Stack>
+              </Fragment>
+
+              <Stack flexDirection="column">
+                {/* {batch && (
                 <Text whiteSpace="nowrap">
                   {round(batch?.estimatedIbu)} IBU
                 </Text>
-              )}
+              )} */}
 
-              <Separator orientation="vertical" borderColor="#044350" />
-
-              <Text>
-                {hops.map((hop: any, index, arr) => {
-                  return (
-                    <Fragment key={hop}>
-                      {hop}
-                      {arr[index + 1] && ", "}
-                    </Fragment>
-                  );
-                })}
-              </Text>
-            </Stack>
-          </Stack>
-
-          <Stack
-            flexDirection="row"
-            alignItems="flex-start"
-            justifyContent="space-between"
-          >
-            {batch && (
-              <Text fontSize="xl" fontWeight="bold">
-                {round(batch?.measuredAbv, 1)}% ABV
-              </Text>
-            )}
-
-            {qrCodeUrl && (
-              <Link href={qrCodeUrl} background="#eee" p="1" borderRadius="6px">
-                <QRCode
-                  value={qrCodeUrl}
-                  size={96}
-                  fgColor="black"
-                  bgColor="transparent"
-                />
-              </Link>
-            )}
-          </Stack>
-
-          <Textarea
-            resize="none"
-            _hover={{
-              border: "1px solid",
-            }}
-            border="0"
-            defaultValue={tapNotes}
-            pl="124px"
-            onChange={(e) => {
-              const params = new URLSearchParams(searchParams.toString());
-              params.set(tap + "Notes", e.target.value);
-              router.replace(`
-                /?${params.toString()}
-              `);
-            }}
-          />
-        </Flex>
-
-        {showFermentables && batch?.recipe?.data?.mashFermentables ? (
-          <Fragment>
-            <Heading fontSize="22px">Fermentables</Heading>
-
-            <Flex display="flex" flexDirection="column" fontSize="sm" as="ul">
-              {batch?.recipe?.data?.mashFermentables?.map(
-                (fermentable: any) => {
-                  return (
-                    <Fragment key={fermentable._id}>
-                      <ListItem
-                        display="flex"
-                        justifyContent="space-between"
-                        width="100%"
-                      >
-                        <Text>{fermentable.name}</Text>
-                        <Text>{round(fermentable.percentage, 0)}%</Text>
-                      </ListItem>
-                    </Fragment>
-                  );
-                }
-              )}
-            </Flex>
-          </Fragment>
-        ) : null}
-
-        {showHops ? (
-          <Fragment>
-            {hopsGroupedByUse && (
-              <Fragment>
-                <Heading fontSize="22px">Hops</Heading>
-
-                <Flex
-                  flexDirection="row"
-                  width="100%"
-                  justifyContent="space-between"
-                  gap="8"
-                  fontSize="sm"
-                >
-                  {Object.keys(hopsGroupedByUse).map((use, index) => {
+                {/* <Text>
+                  {hops.map((hop: any, index, arr) => {
                     return (
-                      <Flex flexDirection="column" key={use} width="100%">
-                        <Heading fontSize="18px">{use}</Heading>
-
-                        <Flex as="ul" gap="3" width="100%">
-                          {hopsGroupedByUse[use].map((hop: any) => {
-                            return (
-                              <ListItem
-                                key={hop._id}
-                                width="100%"
-                                display="flex"
-                                justifyContent="space-between"
-                              >
-                                <Text as="span">{hop.name}</Text>
-                                <Text as="span">{hop.amount}g</Text>
-                              </ListItem>
-                            );
-                          })}
-                        </Flex>
-                      </Flex>
+                      <Fragment key={hop}>
+                        {hop}
+                        {arr[index + 1] ? ", " : "."}
+                      </Fragment>
                     );
                   })}
-                </Flex>
-              </Fragment>
-            )}
-          </Fragment>
-        ) : null}
+                </Text> */}
+
+                
+                  {batch?.bottlingDate ? (
+                    <Stack gap="2">
+                      Kegitetty{" "}
+                      {new Date(batch?.bottlingDate).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "2-digit",
+                          year: "numeric",
+                        }
+                      )}
+                    </Stack>
+                  ) : (
+                    ""
+                  )}
+                
+              </Stack>
+            </Stack>
+
+            <Stack
+              flexDirection="row"
+              alignItems="flex-start"
+              justifyContent="space-between"
+              minHeight="100px"
+            >
+              {qrCodeUrl && (
+                <Box position="absolute" right="0" bottom="0">
+                  <Link
+                    href={qrCodeUrl}
+                    background="#eee"
+                    p="1"
+                    borderRadius="6px"
+                  >
+                    <QRCode
+                      value={qrCodeUrl}
+                      size={96}
+                      fgColor="black"
+                      bgColor="transparent"
+                    />
+                  </Link>
+                </Box>
+              )}
+            </Stack>
+
+            <Textarea
+              resize="none"
+              _hover={{
+                border: "1px solid",
+              }}
+              border="0"
+              defaultValue={tapNotes}
+              pl="124px"
+              onChange={(e) => {
+                const params = new URLSearchParams(searchParams.toString());
+                params.set(tap + "Notes", e.target.value);
+                router.replace(`
+                /?${params.toString()}
+              `);
+              }}
+            />
+          </Flex>
+        )}
       </Flex>
     </Flex>
   );
