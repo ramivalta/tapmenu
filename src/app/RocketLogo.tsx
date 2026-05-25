@@ -138,6 +138,9 @@ export function MainRocketLogo() {
   puffRef.current = puff;
   useEffect(() => {
     const interval = setInterval(() => {
+      // Only animate when the tab is visible
+      if (document.hidden) return;
+
       const roll = Math.random();
       if (roll > 0.75) {
         // 25% chance: re-entry sequence
@@ -151,7 +154,26 @@ export function MainRocketLogo() {
       }
       // 30% chance: just the ambient CSS animation
     }, 60000);
-    return () => clearInterval(interval);
+
+    // Reset state when tab becomes visible again after being hidden
+    const handleVisibility = () => {
+      if (!document.hidden && animatingRef.current) {
+        // Tab came back — reset everything to clean state
+        setFiring(false);
+        setReentry(false);
+        setShaking(false);
+        setPuffing(false);
+        setRotation(0);
+        setGlowIntensity(0);
+        animatingRef.current = false;
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, []);
 
   return (
