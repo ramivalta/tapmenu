@@ -2,7 +2,7 @@
 
 import NextImage from "next/image";
 import { Box, Flex } from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * Inline rocket SVG without the planet and stars.
@@ -66,6 +66,20 @@ export function MainRocketLogo() {
     }, dur * 1000);
   }, [firing]);
 
+  // Periodically trigger: randomly pick full fire or just the CSS shake
+  const fireRef = useRef(fire);
+  fireRef.current = fire;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // 50% chance of full thruster, 50% just the ambient CSS animation
+      if (Math.random() > 0.5) {
+        fireRef.current();
+      }
+      // Otherwise the CSS `rocket-thruster` keyframe handles the ambient shake
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Flex alignItems="center" gap="6" position="relative">
       {/* Text logo */}
@@ -75,6 +89,31 @@ export function MainRocketLogo() {
         width={280}
         height={180}
       />
+      {/* Planet and stars — copied from original rocket4.svg */}
+      <Box position="absolute" top="-15px" right="-35px" pointerEvents="none">
+        <svg
+          width="50"
+          height="40"
+          viewBox="406 -1 52 28"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Planet with ring */}
+          <path
+            d="m 447.47,10.15 c -0.3,-1.32 -3.6,-1.79 -8.31,-1.41 -1.68,-2.61 -4.62,-4.35 -7.95,-4.35 -4.82,0 -8.8,3.62 -9.38,8.29 -4.41,1.69 -7.18,3.54 -6.88,4.86 0.3,1.32 3.6,1.79 8.31,1.41 1.68,2.61 4.62,4.35 7.95,4.35 4.82,0 8.8,-3.62 9.38,-8.29 4.41,-1.69 7.18,-3.54 6.88,-4.86 z m -29.36,6.34 c -0.2,-0.86 1.22,-2 3.65,-3.12 0,0.16 -0.01,0.32 -0.01,0.48 0,1.38 0.3,2.7 0.84,3.88 -2.58,0.01 -4.28,-0.4 -4.47,-1.24 z m 13.1,-10.45 c 2.44,0 4.62,1.13 6.05,2.89 -2.12,0.25 -4.46,0.65 -6.9,1.21 -2.44,0.55 -4.72,1.2 -6.74,1.89 0.82,-3.43 3.91,-5.98 7.59,-5.98 z m 0,15.61 c -2.44,0 -4.62,-1.13 -6.05,-2.89 2.12,-0.25 4.46,-0.65 6.9,-1.21 2.44,-0.55 4.72,-1.2 6.74,-1.89 -0.82,3.43 -3.91,5.98 -7.59,5.98 z m 7.78,-7.28 c -2,0.78 -4.44,1.53 -7.11,2.13 -2.73,0.62 -5.31,1 -7.48,1.15 -0.63,-1.13 -1,-2.43 -1,-3.81 0,-0.41 0.03,-0.82 0.09,-1.21 1.98,-0.77 4.4,-1.51 7.03,-2.1 2.57,-0.58 5,-0.96 7.09,-1.12 0.88,1.26 1.39,2.79 1.39,4.44 0,0.18 0,0.35 -0.02,0.52 z m 1.67,-0.71 c -0.03,-1.57 -0.45,-3.05 -1.16,-4.35 2.76,-0.05 4.6,0.36 4.8,1.24 0.19,0.86 -1.22,1.99 -3.64,3.11 z"
+            fill="#044350"
+          />
+          {/* Star 1 */}
+          <path
+            d="m 410.81,7.18 0.66,3.9 0.66,-3.9 c 0.04,-0.24 0.23,-0.43 0.47,-0.47 l 3.9,-0.66 -3.9,-0.66 c -0.24,-0.04 -0.43,-0.23 -0.47,-0.47 l -0.66,-3.9 -0.66,3.9 c -0.04,0.24 -0.23,0.43 -0.47,0.47 l -3.9,0.66 3.9,0.66 c 0.24,0.04 0.43,0.23 0.47,0.47 z"
+            fill="#044350"
+          />
+          {/* Star 2 */}
+          <path
+            d="m 452.08,22.64 c -0.24,-0.04 -0.43,-0.23 -0.47,-0.47 l -0.66,-3.9 -0.66,3.9 c -0.04,0.24 -0.23,0.43 -0.47,0.47 l -3.9,0.66 3.9,0.66 c 0.24,0.04 0.43,0.23 0.47,0.47 l 0.66,3.9 0.66,-3.9 c 0.04,-0.24 0.23,-0.43 0.47,-0.47 l 3.9,-0.66 z"
+            fill="#044350"
+          />
+        </svg>
+      </Box>
       {/* Rocket with thruster animation */}
       <Box
         position="relative"
