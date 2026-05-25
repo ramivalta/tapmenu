@@ -2,11 +2,7 @@
 
 import "./globals.css";
 import { Box, Center, Flex, Image } from "@chakra-ui/react";
-
 import { Provider } from "@/components/ui/provider";
-// import Image from "next/image";
-
-import bg from "/Panimo_Valta-taustalogo.png";
 
 export default function RootLayout({
   children,
@@ -44,6 +40,7 @@ export default function RootLayout({
             flex="1"
             alt=""
             position="fixed"
+            opacity="0.55"
           />
           <Flex
             backgroundImage="/noisy-gradient.svg"

@@ -2,7 +2,6 @@ import {
   Box,
   Text,
   Flex,
-  
   Center,
   Link as ChakraLink,
   Stack,
@@ -11,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 
 import { Button } from "@/components/ui/button";
-
 
 import TapMenuItem from "./TapMenuItem";
 import Controls from "./Controls";
@@ -24,22 +22,20 @@ import { first, orderBy } from "lodash";
 
 const token = process.env.BREWFATHER_API_TOKEN;
 
-export default async function Home(
-  props: {
-    searchParams: Promise<{
-      tap1: string;
-      tap2: string;
-      tap3: string;
-      tap4: string;
-      tap1Notes?: string;
-      tap2Notes?: string;
-      tap3Notes?: string;
-      tap4Notes?: string;
-      showHops: string;
-      showFermentables: string;
-    }>;
-  }
-) {
+export default async function Home(props: {
+  searchParams: Promise<{
+    tap1: string;
+    tap2: string;
+    tap3: string;
+    tap4: string;
+    tap1Notes?: string;
+    tap2Notes?: string;
+    tap3Notes?: string;
+    tap4Notes?: string;
+    showHops: string;
+    showFermentables: string;
+  }>;
+}) {
   const searchParams = await props.searchParams;
   if (!token) {
     return (
@@ -77,7 +73,7 @@ export default async function Home(
         next: {
           revalidate: 1,
         },
-      }
+      },
     );
 
     const blobs = await list();
@@ -145,8 +141,8 @@ export default async function Home(
             <Image
               src="/Panimo_Valta-logo.svg"
               alt="Panimo Valta logo"
-              width={480}
-              height={360}
+              width={600}
+              height={450}
             />
           </ChakraLink>
         </Center>
@@ -156,7 +152,7 @@ export default async function Home(
           fontFamily="Open Sans"
           alignItems="center"
           textAlign="center"
-          fontSize="3xl"
+          fontSize="4xl"
           color="#044350"
           backdropFilter="blur(16px)"
           py="4"
@@ -246,7 +242,7 @@ export default async function Home(
               Updated{" "}
               {savedTapConfig?.uploadedAt &&
                 new Date(savedTapConfig?.uploadedAt).toLocaleDateString(
-                  "fi-FI"
+                  "fi-FI",
                 )}
             </Text>
 
