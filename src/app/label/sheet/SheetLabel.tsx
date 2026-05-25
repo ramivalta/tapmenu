@@ -5,6 +5,7 @@ import { round, uniq } from "lodash";
 import Image from "next/image";
 import QRCode from "react-qr-code";
 import { LabelVariation } from "./A4Sheet";
+import { RocketLogo } from "./RocketLogo";
 
 /**
  * SRM color lookup — maps SRM value to hex color.
@@ -126,6 +127,8 @@ function getStyleColor(styleName: string): [number, number, number] {
     s.includes("red") ||
     s.includes("amber") ||
     s.includes("scottish") ||
+    s.includes("scotch") ||
+    s.includes("wee heavy") ||
     s.includes("irish")
   ) {
     return [20, 40, 70];
@@ -475,24 +478,18 @@ export function SheetLabel({
           {/* Left section: rocket logo */}
           <Flex
             flexDirection="column"
-            opacity="0.9"
             alignItems="center"
             color="#044350"
             position="absolute"
             left="72px"
             top="50%"
-            transform="translateY(-50%)"
+            transform={`translateY(-55%) rotate(${(variation.hueShift * 0.5).toFixed(1)}deg)`}
             zIndex="2"
             background="radial-gradient(ellipse, #fff 50%, transparent 70%)"
             p="20px"
+            opacity="0.9"
           >
-            <Image
-              src="/rocket4.svg"
-              alt=""
-              width={200}
-              height={80}
-              color="#044350"
-            />
+            <RocketLogo width={180} height={245} boltColor="#044350" />
           </Flex>
 
           {/* Center text content */}
@@ -548,8 +545,8 @@ export function SheetLabel({
               width="260px"
               justifyContent="center"
             >
-              <Box opacity="0.8" ml="60px">
-                <Image src="/textLogo.svg" alt="" width={120} height={50} />
+              <Box opacity="0.8" ml="60px" mt="-20px">
+                <Image src="/textLogo.svg" alt="" width={150} height={60} />
               </Box>
             </Flex>
 
