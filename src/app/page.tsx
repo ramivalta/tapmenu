@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 
 import TapMenuItem from "./TapMenuItem";
 import Controls from "./Controls";
-import Image from "next/image";
+import { MainRocketLogo } from "./RocketLogo";
 import { Fragment } from "react";
 import Link from "next/link";
 
@@ -137,14 +137,7 @@ export default async function Home(props: {
           pt={["60px", "160px"]}
           px="4"
         >
-          <ChakraLink href="/">
-            <Image
-              src="/Panimo_Valta-logo.svg"
-              alt="Panimo Valta logo"
-              width={600}
-              height={450}
-            />
-          </ChakraLink>
+          <MainRocketLogo />
         </Center>
 
         <Heading
