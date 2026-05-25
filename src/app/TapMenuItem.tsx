@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { Link, Textarea } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Fragment, useMemo } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { round, uniq } from "lodash";
 import QRCode from "react-qr-code";
 import { getWaveColor, srmColors } from "./beerStyleColors";
@@ -64,7 +64,11 @@ function TapWindBackground({
       const t = x / totalWidth;
       const thickness =
         (6 + i * 3) * (0.4 + Math.sin(t * Math.PI * 2 + wave.phase) * 0.6);
-      points.push({ x: x - offsetX, baseY, thickness });
+      points.push({
+        x: Math.round((x - offsetX) * 10) / 10,
+        baseY: Math.round(baseY * 10) / 10,
+        thickness: Math.round(thickness * 10) / 10,
+      });
     }
 
     let d = `M ${points[0].x} ${points[0].baseY - points[0].thickness}`;
@@ -101,11 +105,11 @@ function TapWindBackground({
     return (
       <circle
         key={`grain-${i}`}
-        cx={x * 420}
-        cy={y * 450}
-        r={0.5 + size * 1}
+        cx={Math.round(x * 4200) / 10}
+        cy={Math.round(y * 4500) / 10}
+        r={Math.round((0.5 + size * 1) * 10) / 10}
         fill="#000"
-        opacity={0.05 + size * 0.05}
+        opacity={Math.round((0.05 + size * 0.05) * 100) / 100}
       />
     );
   });
@@ -123,6 +127,7 @@ function TapWindBackground({
       }}
       viewBox="0 0 420 450"
       preserveAspectRatio="xMidYMid slice"
+      suppressHydrationWarning
     >
       {grainDots}
       {paths}
@@ -149,6 +154,11 @@ const TapMenuItem = ({
   taps: string[];
   tapNotes?: string;
 }) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const hopsGroupedByUse = useMemo(
     () =>
       batch?.recipe?.hops?.reduce((acc: any, hop: any) => {
@@ -209,11 +219,13 @@ const TapMenuItem = ({
 
       {batch && (
         <Fragment>
-          <TapWindBackground
-            styleName={batch?.recipe?.style?.name}
-            estimatedColor={batch?.estimatedColor}
-            tapNumber={tapNumber}
-          />
+          {mounted && (
+            <TapWindBackground
+              styleName={batch?.recipe?.style?.name}
+              estimatedColor={batch?.estimatedColor}
+              tapNumber={tapNumber}
+            />
+          )}
 
           <Box
             opacity="0.15"
