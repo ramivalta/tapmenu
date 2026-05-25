@@ -49,9 +49,14 @@ export function MainRocketLogo() {
   const [firing, setFiring] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [duration, setDuration] = useState(3);
+  const [reentry, setReentry] = useState(false);
+  const [glowIntensity, setGlowIntensity] = useState(0);
+  const [shaking, setShaking] = useState(false);
+  const animatingRef = useRef(false);
 
   const fire = useCallback(() => {
-    if (firing) return;
+    if (animatingRef.current) return;
+    animatingRef.current = true;
     // Random duration between 2 and 20 seconds
     const dur = 2 + Math.random() * 18;
     // Random rotation: sometimes rotate, sometimes don't
@@ -63,19 +68,68 @@ export function MainRocketLogo() {
     setTimeout(() => {
       setFiring(false);
       setRotation(0);
+      animatingRef.current = false;
     }, dur * 1000);
-  }, [firing]);
+  }, []);
 
-  // Periodically trigger: randomly pick full fire or just the CSS shake
+  const reentrySequence = useCallback(() => {
+    if (animatingRef.current) return;
+    animatingRef.current = true;
+
+    // Phase 1: Slowly tilt nose-down (12 seconds)
+    setReentry(true);
+    setRotation(160);
+    setGlowIntensity(0);
+
+    // Gradually increase glow over 60 seconds
+    const glowInterval = setInterval(() => {
+      setGlowIntensity((prev) => Math.min(prev + 0.012, 1));
+    }, 720);
+
+    // Start shaking at the halfway point (30s)
+    setTimeout(() => {
+      setShaking(true);
+    }, 30000);
+
+    // Phase 2: After 60s, fire thrusters and right the rocket
+    setTimeout(() => {
+      setGlowIntensity(1);
+      setFiring(true);
+
+      // Phase 3: Slowly right itself
+      setTimeout(() => {
+        setRotation(0);
+      }, 300);
+
+      // Phase 4: End sequence — glow fades after burn ends
+      const burnDur = 4 + Math.random() * 6;
+      setTimeout(() => {
+        clearInterval(glowInterval);
+        setFiring(false);
+        setReentry(false);
+        setShaking(false);
+        setGlowIntensity(0);
+        animatingRef.current = false;
+      }, burnDur * 1000);
+    }, 60000);
+  }, []);
+
+  // Periodically trigger: randomly pick full fire, re-entry, or ambient shake
   const fireRef = useRef(fire);
+  const reentryRef = useRef(reentrySequence);
   fireRef.current = fire;
+  reentryRef.current = reentrySequence;
   useEffect(() => {
     const interval = setInterval(() => {
-      // 50% chance of full thruster, 50% just the ambient CSS animation
-      if (Math.random() > 0.5) {
+      const roll = Math.random();
+      if (roll > 0.7) {
+        // 30% chance: re-entry sequence
+        reentryRef.current();
+      } else if (roll > 0.4) {
+        // 30% chance: normal thruster fire
         fireRef.current();
       }
-      // Otherwise the CSS `rocket-thruster` keyframe handles the ambient shake
+      // 40% chance: just the ambient CSS animation
     }, 60000);
     return () => clearInterval(interval);
   }, []);
@@ -118,15 +172,25 @@ export function MainRocketLogo() {
       <Box
         position="relative"
         cursor="pointer"
-        onClick={fire}
+        onClick={() => {
+          if (Math.random() > 0.7) {
+            reentrySequence();
+          } else {
+            fire();
+          }
+        }}
         style={{
           transform: `rotate(${rotation}deg)`,
-          transition: firing
-            ? `transform ${duration * 0.3}s ease-in-out`
-            : "transform 0.8s ease-out",
+          transition: reentry
+            ? "transform 12s ease-in-out"
+            : firing
+              ? `transform ${duration * 0.3}s ease-in-out`
+              : "transform 0.8s ease-out",
         }}
       >
-        <Box className="rocket-thruster">
+        <Box
+          className={`rocket-thruster ${shaking ? "rocket-reentry-shake" : ""}`}
+        >
           <RocketOnly size={165} />
           {/* Red glow at the tip */}
           <Box
@@ -134,12 +198,14 @@ export function MainRocketLogo() {
             top="3px"
             left="42%"
             transform="translateX(-50%)"
-            width="40px"
-            height="30px"
+            width={`${35 + glowIntensity * 80}px`}
+            height={`${25 + glowIntensity * 100}px`}
             borderRadius="50%"
-            background="radial-gradient(ellipse, rgba(255, 30, 10, 0.7) 0%, rgba(255, 50, 20, 0.35) 40%, transparent 70%)"
-            opacity={firing ? 1 : 0}
-            transition="opacity 6s ease-in-out"
+            background={`radial-gradient(ellipse, rgba(255, 20, 5, ${0.4 + glowIntensity * 0.3}) 0%, rgba(255, 50, 20, ${0.2 + glowIntensity * 0.2}) 40%, transparent 70%)`}
+            opacity={
+              firing || reentry ? Math.max(glowIntensity, firing ? 1 : 0) : 0
+            }
+            transition="opacity 2s ease-in-out, width 1s ease, height 1s ease"
             pointerEvents="none"
           />
         </Box>
