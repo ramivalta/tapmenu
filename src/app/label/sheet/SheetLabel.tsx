@@ -483,7 +483,7 @@ export function SheetLabel({
             position="absolute"
             left="72px"
             top="50%"
-            transform={`translateY(-55%) rotate(${(variation.hueShift * 0.5).toFixed(1)}deg)`}
+            transform="translateY(-55%)"
             zIndex="2"
             background="radial-gradient(ellipse, #fff 50%, transparent 70%)"
             p="20px"

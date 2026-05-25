@@ -11,7 +11,7 @@ export default async function SheetPage({
 }: Readonly<{ params: any; searchParams: any }>) {
   try {
     const batches = await fetch(
-      "https://api.brewfather.app/v2/batches?complete=True&limit=50",
+      "https://api.brewfather.app/v2/batches?complete=True&limit=50&order_by=brewDate&order_by_direction=desc",
       {
         headers: {
           Authorization: `Basic ${token}`,

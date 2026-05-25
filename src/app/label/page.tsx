@@ -13,7 +13,7 @@ export default async function History({
     const batches = await fetch(
       // "https://api.brewfather.app/v2/batches?include=[brewday,recipe,batchNotes,batch.notes]&status=Completed",
       // "https://api.brewfather.app/v2/batches?complete=True",
-      "https://api.brewfather.app/v2/batches?complete=True&limit=50",
+      "https://api.brewfather.app/v2/batches?complete=True&limit=50&order_by=brewDate&order_by_direction=desc",
       {
         headers: {
           Authorization: `Basic ${token}`,
@@ -21,7 +21,7 @@ export default async function History({
         next: {
           revalidate: 1,
         },
-      }
+      },
     );
     const batchesData = await batches.json();
     const sps = await searchParams;
