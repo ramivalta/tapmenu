@@ -562,10 +562,10 @@ export function SheetLabel({
               <Span>{round(beer?.estimatedIbu)} IBU</Span>
               <Span>{"\u2022"}</Span>
               <Span>
-                {beer?.bottlingDate ? (
+                {beer?.brewDate ? (
                   <Stack gap="2">
-                    Pullotettu{" "}
-                    {new Date(beer?.bottlingDate).toLocaleDateString("en-US", {
+                    Pantu{" "}
+                    {new Date(beer?.brewDate).toLocaleDateString("en-US", {
                       month: "2-digit",
                       year: "numeric",
                     })}
