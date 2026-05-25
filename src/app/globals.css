@@ -194,3 +194,46 @@ body {
 .rocket-reentry-shake {
   animation: reentry-shake 0.15s linear infinite;
 }
+
+/* Smoke puffs from thruster */
+.rocket-smoke {
+  opacity: 0;
+}
+
+.rocket-smoke-active {
+  opacity: 1;
+}
+
+.smoke-puff {
+  fill: #aaa;
+  opacity: 0;
+}
+
+.rocket-smoke-active .smoke-puff {
+  animation: smoke-drift 3s ease-out forwards;
+}
+
+.rocket-smoke-active .smoke-1 { animation-delay: 0s; }
+.rocket-smoke-active .smoke-2 { animation-delay: 0.2s; }
+.rocket-smoke-active .smoke-3 { animation-delay: 0.4s; }
+.rocket-smoke-active .smoke-4 { animation-delay: 0.7s; }
+.rocket-smoke-active .smoke-5 { animation-delay: 1s; }
+
+@keyframes smoke-drift {
+  0% {
+    opacity: 0.5;
+    transform: translateY(0) scale(0.5);
+  }
+  30% {
+    opacity: 0.4;
+    transform: translateY(10px) translateX(-8px) scale(1.2);
+  }
+  60% {
+    opacity: 0.2;
+    transform: translateY(25px) translateX(-15px) scale(1.8);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(45px) translateX(-20px) scale(2.5);
+  }
+}

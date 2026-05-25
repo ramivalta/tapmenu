@@ -136,6 +136,8 @@ export default async function Home(props: {
           flex="1"
           pt={["60px", "160px"]}
           px="4"
+          position="relative"
+          zIndex="2"
         >
           <MainRocketLogo />
         </Center>

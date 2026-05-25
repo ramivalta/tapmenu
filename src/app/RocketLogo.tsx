@@ -52,6 +52,7 @@ export function MainRocketLogo() {
   const [reentry, setReentry] = useState(false);
   const [glowIntensity, setGlowIntensity] = useState(0);
   const [shaking, setShaking] = useState(false);
+  const [puffing, setPuffing] = useState(false);
   const animatingRef = useRef(false);
 
   const fire = useCallback(() => {
@@ -95,47 +96,66 @@ export function MainRocketLogo() {
     setTimeout(() => {
       setGlowIntensity(1);
       setFiring(true);
+      setShaking(false);
+      setDuration(30); // makes rotation transition = 30 * 0.3 = 9s
 
-      // Phase 3: Slowly right itself
+      // Phase 3: Start righting itself (takes ~9s with the transition)
       setTimeout(() => {
         setRotation(0);
       }, 300);
 
-      // Phase 4: End sequence — glow fades after burn ends
-      const burnDur = 4 + Math.random() * 6;
+      // Phase 4: Once upright (~12s), dissipate glow and return planet
+      setTimeout(() => {
+        setGlowIntensity(0);
+        setReentry(false);
+      }, 12000);
+
+      // Phase 5: End burn after planet has returned
       setTimeout(() => {
         clearInterval(glowInterval);
         setFiring(false);
-        setReentry(false);
-        setShaking(false);
-        setGlowIntensity(0);
         animatingRef.current = false;
-      }, burnDur * 1000);
+      }, 24000);
     }, 60000);
   }, []);
 
-  // Periodically trigger: randomly pick full fire, re-entry, or ambient shake
+  const puff = useCallback(() => {
+    if (animatingRef.current) return;
+    animatingRef.current = true;
+    setPuffing(true);
+    setTimeout(() => {
+      setPuffing(false);
+      animatingRef.current = false;
+    }, 4000);
+  }, []);
+
+  // Periodically trigger: randomly pick full fire, re-entry, puff, or ambient shake
   const fireRef = useRef(fire);
   const reentryRef = useRef(reentrySequence);
+  const puffRef = useRef(puff);
   fireRef.current = fire;
   reentryRef.current = reentrySequence;
+  puffRef.current = puff;
   useEffect(() => {
     const interval = setInterval(() => {
       const roll = Math.random();
-      if (roll > 0.7) {
-        // 30% chance: re-entry sequence
+      if (roll > 0.75) {
+        // 25% chance: re-entry sequence
         reentryRef.current();
-      } else if (roll > 0.4) {
-        // 30% chance: normal thruster fire
+      } else if (roll > 0.5) {
+        // 25% chance: normal thruster fire
         fireRef.current();
+      } else if (roll > 0.3) {
+        // 20% chance: smoke puff
+        puffRef.current();
       }
-      // 40% chance: just the ambient CSS animation
+      // 30% chance: just the ambient CSS animation
     }, 60000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <Flex alignItems="center" gap="6" position="relative">
+    <Flex alignItems="center" gap="6" position="relative" overflow="visible">
       {/* Text logo */}
       <NextImage
         src="/textLogo.svg"
@@ -144,7 +164,20 @@ export function MainRocketLogo() {
         height={180}
       />
       {/* Planet and stars — copied from original rocket4.svg */}
-      <Box position="absolute" top="-15px" right="-35px" pointerEvents="none">
+      <Box
+        position="absolute"
+        top="-15px"
+        right="-35px"
+        pointerEvents="none"
+        style={{
+          transform: reentry
+            ? "translate(-80px, -120px) scale(0.4)"
+            : "translate(0, 0) scale(1)",
+          transition: reentry
+            ? "transform 60s ease-in"
+            : "transform 10s ease-out",
+        }}
+      >
         <svg
           width="50"
           height="40"
@@ -172,11 +205,15 @@ export function MainRocketLogo() {
       <Box
         position="relative"
         cursor="pointer"
+        overflow="visible"
         onClick={() => {
-          if (Math.random() > 0.7) {
+          const roll = Math.random();
+          if (roll > 0.7) {
             reentrySequence();
-          } else {
+          } else if (roll > 0.3) {
             fire();
+          } else {
+            puff();
           }
         }}
         style={{
@@ -201,11 +238,15 @@ export function MainRocketLogo() {
             width={`${35 + glowIntensity * 80}px`}
             height={`${25 + glowIntensity * 100}px`}
             borderRadius="50%"
-            background={`radial-gradient(ellipse, rgba(255, 20, 5, ${0.4 + glowIntensity * 0.3}) 0%, rgba(255, 50, 20, ${0.2 + glowIntensity * 0.2}) 40%, transparent 70%)`}
+            background={`radial-gradient(ellipse, rgba(255, 10, 0, ${0.6 + glowIntensity * 0.35}) 0%, rgba(255, 30, 10, ${0.35 + glowIntensity * 0.3}) 40%, transparent 70%)`}
             opacity={
               firing || reentry ? Math.max(glowIntensity, firing ? 1 : 0) : 0
             }
-            transition="opacity 2s ease-in-out, width 1s ease, height 1s ease"
+            transition={
+              firing || reentry
+                ? "opacity 2s ease-in-out, width 1s ease, height 1s ease"
+                : "opacity 16s ease-out, width 6s ease-out, height 6s ease-out"
+            }
             pointerEvents="none"
           />
         </Box>
@@ -246,6 +287,23 @@ export function MainRocketLogo() {
               ry="28"
               className="flame flame-tail"
             />
+          </svg>
+        </Box>
+        {/* Smoke puffs */}
+        <Box
+          position="absolute"
+          bottom="-100px"
+          left="41%"
+          transform="translateX(-50%)"
+          className={firing || puffing ? "rocket-smoke-active" : "rocket-smoke"}
+          pointerEvents="none"
+        >
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="20" r="6" className="smoke-puff smoke-1" />
+            <circle cx="30" cy="35" r="8" className="smoke-puff smoke-2" />
+            <circle cx="50" cy="40" r="7" className="smoke-puff smoke-3" />
+            <circle cx="35" cy="55" r="9" className="smoke-puff smoke-4" />
+            <circle cx="48" cy="60" r="6" className="smoke-puff smoke-5" />
           </svg>
         </Box>
       </Box>
