@@ -16,49 +16,119 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Fragment, useMemo } from "react";
 import { round, uniq } from "lodash";
 import QRCode from "react-qr-code";
+import { getWaveColor, srmColors } from "./beerStyleColors";
 
-const beerColors = [
-  "#FFE699",
-  "#FFD878",
-  "#FFCA5A",
-  "#FFBF42",
-  "#FBB123",
-  "#F8A600",
-  "#F39C00",
-  "#EA8F00",
-  "#E58500",
-  "#DE7C00",
-  "#D77200",
-  "#CF6900",
-  "#CB6200",
-  "#C35900",
-  "#BB5100",
-  "#B54C00",
-  "#B04500",
-  "#A63E00",
-  "#A13700",
-  "#9B3200",
-  "#952D00",
-  "#8E2900",
-  "#882300",
-  "#821E00",
-  "#7B1A00",
-  "#771900",
-  "#701400",
-  "#6A0E00",
-  "#660D00",
-  "#5E0B00",
-  "#5A0A02",
-  "#600903",
-  "#520907",
-  "#4C0505",
-  "#470606",
-  "#440607",
-  "#3F0708",
-  "#3B0607",
-  "#3A070B",
-  "#36080A",
-];
+const beerColors = srmColors;
+
+/**
+ * Wind waves + paper grain for the tap menu cards.
+ * Uses a wide viewBox offset by tap position so waves flow continuously
+ * across all 4 cards.
+ */
+function TapWindBackground({
+  styleName,
+  estimatedColor,
+  tapNumber,
+}: {
+  styleName: string;
+  estimatedColor: number | undefined;
+  tapNumber: string;
+}) {
+  const [baseHue, baseSat, baseLightness] = getWaveColor(
+    styleName,
+    estimatedColor,
+  );
+  const tapIndex = (parseInt(tapNumber) || 1) - 1;
+
+  // Total width spans all 4 cards; each card shows a 420px slice
+  const totalWidth = 1680; // 420 * 4
+  const offsetX = tapIndex * 420;
+
+  // Generate waves that span the full width (seeded consistently across all taps)
+  const waves = Array.from({ length: 4 }, (_, i) => {
+    const amplitude = 14 + i * 4;
+    const frequency = 0.004 + i * 0.001;
+    const yOffset = 60 + i * 95;
+    const phase = i * 1.2;
+    return { amplitude, frequency, yOffset, phase };
+  });
+
+  const paths = waves.map((wave, i) => {
+    const points = [];
+    for (let x = offsetX; x <= offsetX + 420; x += 5) {
+      const baseY =
+        wave.yOffset +
+        Math.sin(x * wave.frequency + wave.phase) * wave.amplitude +
+        Math.sin(x * wave.frequency * 1.7 + wave.phase * 2) *
+          (wave.amplitude * 0.4);
+      const t = x / totalWidth;
+      const thickness =
+        (6 + i * 3) * (0.4 + Math.sin(t * Math.PI * 2 + wave.phase) * 0.6);
+      points.push({ x: x - offsetX, baseY, thickness });
+    }
+
+    let d = `M ${points[0].x} ${points[0].baseY - points[0].thickness}`;
+    for (let j = 1; j < points.length; j++) {
+      d += ` L ${points[j].x} ${points[j].baseY - points[j].thickness}`;
+    }
+    for (let j = points.length - 1; j >= 0; j--) {
+      d += ` L ${points[j].x} ${points[j].baseY + points[j].thickness}`;
+    }
+    d += " Z";
+
+    return (
+      <path
+        key={`wave-${i}`}
+        d={d}
+        fill={`hsla(${baseHue}, ${baseSat}%, ${baseLightness}%, ${0.18 - i * 0.03})`}
+        stroke="none"
+      />
+    );
+  });
+
+  // Paper grain
+  const grainDots = Array.from({ length: 200 }, (_, i) => {
+    const hash = (s: number) => {
+      let t = (s + 0x6d2b79f5) | 0;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    const base = tapIndex * 7919 + i;
+    const x = hash(base);
+    const y = hash(base + 100003);
+    const size = hash(base + 200003);
+    return (
+      <circle
+        key={`grain-${i}`}
+        cx={x * 420}
+        cy={y * 450}
+        r={0.5 + size * 1}
+        fill="#000"
+        opacity={0.05 + size * 0.05}
+      />
+    );
+  });
+
+  return (
+    <svg
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        zIndex: 0,
+      }}
+      viewBox="0 0 420 450"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      {grainDots}
+      {paths}
+    </svg>
+  );
+}
 
 const TapMenuItem = ({
   batch,
@@ -89,12 +159,12 @@ const TapMenuItem = ({
         !acc[hop.use].some((hopInAcc: any) => hopInAcc._id === hop._id)
           ? acc[hop.use].push(hop)
           : (acc[hop.use].find(
-              (hopInAcc: any) => hopInAcc._id === hop._id
+              (hopInAcc: any) => hopInAcc._id === hop._id,
             ).amount += hop.amount);
 
         return acc;
       }, {}),
-    []
+    [],
   );
 
   const hops = uniq(batch?.recipe?.hops.map((hop: any) => hop.name));
@@ -103,7 +173,7 @@ const TapMenuItem = ({
   const searchParams = useSearchParams();
 
   const fullUntappedLink = batch?.batchNotes?.match(
-    /https:\/\/untappd.com\/b\/[^ ]*/g
+    /https:\/\/untappd.com\/b\/[^ ]*/g,
   )?.[0];
   const untappedBeerId = fullUntappedLink?.match(/b\/([^ ]*)/)?.[1];
   const qrCodeUrl = untappedBeerId
@@ -139,8 +209,14 @@ const TapMenuItem = ({
 
       {batch && (
         <Fragment>
+          <TapWindBackground
+            styleName={batch?.recipe?.style?.name}
+            estimatedColor={batch?.estimatedColor}
+            tapNumber={tapNumber}
+          />
+
           <Box
-            opacity="0.4"
+            opacity="0.15"
             left="0"
             right="0"
             bottom="0"
@@ -158,6 +234,7 @@ const TapMenuItem = ({
             height="16px"
             position="absolute"
             backgroundColor={beerColors[round(batch?.estimatedColor, 0)]}
+            opacity="0.5"
             zIndex="0"
           />
         </Fragment>
@@ -188,7 +265,7 @@ const TapMenuItem = ({
             }
 
             const selectedBatch = batches.find(
-              (batch) => batch._id === e.target.value
+              (batch) => batch._id === e.target.value,
             );
 
             const params = new URLSearchParams(searchParams.toString());
@@ -269,22 +346,17 @@ const TapMenuItem = ({
                   })}
                 </Text> */}
 
-                
-                  {batch?.bottlingDate ? (
-                    <Stack gap="2">
-                      Kegitetty{" "}
-                      {new Date(batch?.bottlingDate).toLocaleDateString(
-                        "en-US",
-                        {
-                          month: "2-digit",
-                          year: "numeric",
-                        }
-                      )}
-                    </Stack>
-                  ) : (
-                    ""
-                  )}
-                
+                {batch?.bottlingDate ? (
+                  <Stack gap="2">
+                    Kegitetty{" "}
+                    {new Date(batch?.bottlingDate).toLocaleDateString("en-US", {
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </Stack>
+                ) : (
+                  ""
+                )}
               </Stack>
             </Stack>
 
