@@ -423,11 +423,41 @@ export function SheetLabel({
             flexDirection="column"
             zIndex="5"
             p="6"
-            pt="36px"
+            pt="56px"
             pl="24px"
             fontSize="lg"
           >
             <Flex flex="1" flexDirection="column" gap="2px">
+              {beer?.batchNo && (
+                <Box
+                  position="absolute"
+                  top="0"
+                  left="0"
+                  right="0"
+                  bottom="0"
+                  overflow="hidden"
+                  pointerEvents="none"
+                  zIndex="0"
+                >
+                  {[0, 1, 2, 3].map((i) => (
+                    <Span
+                      key={i}
+                      fontVariantCaps="all-small-caps"
+                      fontSize="70px"
+                      opacity="0.03"
+                      position="absolute"
+                      top={`${i * 100 + 10}px`}
+                      left="50%"
+                      transform="translateX(-50%) rotate(45deg)"
+                      transformOrigin="center"
+                      textShadow="0 1px 0 rgba(255,255,255,0.8), 0 -1px 0 rgba(0,0,0,0.08)"
+                      whiteSpace="nowrap"
+                    >
+                      Batch #{beer.batchNo}
+                    </Span>
+                  ))}
+                </Box>
+              )}
               <Span fontWeight="bold" fontVariantCaps="all-small-caps">
                 Käyvät
               </Span>
