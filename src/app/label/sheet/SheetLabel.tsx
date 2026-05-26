@@ -423,6 +423,7 @@ export function SheetLabel({
             flexDirection="column"
             zIndex="5"
             p="6"
+            pt="36px"
             pl="24px"
             fontSize="lg"
           >
@@ -504,7 +505,7 @@ export function SheetLabel({
             justifyContent="flex-start"
             gap="2"
             zIndex="2"
-            pt="24px"
+            pt="36px"
           >
             <Heading
               width="100%"
