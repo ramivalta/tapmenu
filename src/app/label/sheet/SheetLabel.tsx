@@ -481,7 +481,7 @@ export function SheetLabel({
             alignItems="center"
             color="#044350"
             position="absolute"
-            left="72px"
+            left="56px"
             top="50%"
             transform="translateY(-55%)"
             zIndex="2"
@@ -489,7 +489,7 @@ export function SheetLabel({
             p="20px"
             opacity="0.9"
           >
-            <RocketLogo width={180} height={245} boltColor="#044350" />
+            <RocketLogo width={210} height={285} boltColor="#044350" />
           </Flex>
 
           {/* Center text content */}
@@ -501,10 +501,10 @@ export function SheetLabel({
             right={`${rightPanelWidth + 24}px`}
             flexDirection="column"
             alignItems="center"
-            justifyContent="center"
+            justifyContent="flex-start"
             gap="2"
             zIndex="2"
-            pt="6"
+            pt="24px"
           >
             <Heading
               width="100%"
