@@ -111,21 +111,27 @@ export default async function Home(props: {
           top="0"
           left="0"
           right="0"
-          zIndex="2"
-          background="#ddd"
-          opacity="0"
-          _hover={{
-            opacity: 1,
+          zIndex="10"
+          minHeight="40px"
+          css={{
+            "& .controls-bar": {
+              opacity: 0,
+              transition: "0.35s all",
+            },
+            "&:hover .controls-bar": {
+              opacity: 1,
+            },
           }}
-          transition="0.35s all"
         >
-          <Center>
-            <Controls
-              showHops={showHops}
-              showFermentables={showFermentables}
-              savedTapConfig={savedTapConfigJson}
-            />
-          </Center>
+          <Box className="controls-bar" background="#ddd">
+            <Center>
+              <Controls
+                showHops={showHops}
+                showFermentables={showFermentables}
+                savedTapConfig={savedTapConfigJson}
+              />
+            </Center>
+          </Box>
         </Box>
 
         <Center
