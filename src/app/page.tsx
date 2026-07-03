@@ -64,7 +64,7 @@ export default async function Home(props: {
   try {
     const batches = await fetch(
       // "https://api.brewfather.app/v2/batches?include=[brewday,recipe,batchNotes,batch.notes]&status=Completed",
-      "https://api.brewfather.app/v2/batches?complete=True&status=Completed",
+      "https://api.brewfather.app/v2/batches?complete=True&status=Completed&limit=25",
       // "https://api.brewfather.app/v2/batches?complete=True",
       {
         headers: {
