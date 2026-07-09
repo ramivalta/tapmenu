@@ -76,8 +76,11 @@ export default async function Home(props: {
       },
     );
 
-    const blobs = await list();
-    const sortedByDate = orderBy(blobs?.blobs, "uploadedAt", "desc");
+    const blobs = await list({ prefix: "tapmenu/defaultTapConfig" });
+    const tapConfigBlobs = (blobs?.blobs ?? []).filter((blob) =>
+      blob.pathname.startsWith("tapmenu/defaultTapConfig"),
+    );
+    const sortedByDate = orderBy(tapConfigBlobs, "uploadedAt", "desc");
     const savedTapConfig = first(sortedByDate);
     const savedTapConfigData =
       savedTapConfig?.downloadUrl && (await fetch(savedTapConfig?.downloadUrl));
