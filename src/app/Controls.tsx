@@ -2,7 +2,7 @@
 
 import { Flex, Button } from "@chakra-ui/react";
 // import { Button } from "@/components/ui/button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import saveTapConfigAction from "./saveTapConfigAction";
 import { useEffect } from "react";
 
@@ -17,10 +17,13 @@ const Controls = ({
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (savedTapConfig) {
-      router.replace(`/?${new URLSearchParams(savedTapConfig).toString()}`);
+      router.replace(
+        `${pathname}?${new URLSearchParams(savedTapConfig).toString()}`,
+      );
     }
   }, []);
 
@@ -35,7 +38,7 @@ const Controls = ({
           const searchParamsObj = Object.fromEntries(searchParams);
           await saveTapConfigAction(
             JSON.stringify(searchParamsObj, null, 4),
-            prompt("Enter password")
+            prompt("Enter password"),
           );
         }}
       >

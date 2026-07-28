@@ -27,7 +27,7 @@ import { revalidatePath } from "next/cache";
 
 const saveTapConfigAction = async (
   queryParams: string,
-  password: string | null
+  password: string | null,
 ) => {
   if (!password || password !== process.env.PASSWORD) {
     throw new Error("Invalid password");
@@ -37,6 +37,7 @@ const saveTapConfigAction = async (
     access: "public",
   });
   revalidatePath("/");
+  revalidatePath("/taproom");
 
   return "Tap config saved";
 
