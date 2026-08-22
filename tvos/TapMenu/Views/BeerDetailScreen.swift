@@ -63,7 +63,6 @@ struct BeerDetailScreen: View {
             .foregroundStyle(Palette.ink)
             .padding(64)
         }
-        .background(Color.white)
     }
 
     private var header: some View {

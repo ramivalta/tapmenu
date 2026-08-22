@@ -49,7 +49,6 @@ struct CatalogueScreen: View {
                 ProgressView().padding(64)
             }
         }
-        .background(Color.white)
         .navigationTitle("Archived batches")
         .task { await store.loadArchiveIfNeeded() }
     }

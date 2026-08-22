@@ -21,6 +21,19 @@ struct RootView: View {
     }
 
     var body: some View {
+        ZStack {
+            TaproomBackdrop()
+            stack
+        }
+        .task { await store.pollForever() }
+        // Never let tvOS sleep the display or start a screensaver.
+        .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+        .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
+        .onChange(of: path) { lastActivity = .now }
+        .task(id: path.isEmpty) { await watchForIdle() }
+    }
+
+    private var stack: some View {
         NavigationStack(path: $path) {
             MenuScreen(onOpen: open, onOpenCatalogue: { push(.catalogue) })
                 .navigationDestination(for: Route.self) { route in
@@ -32,14 +45,6 @@ struct RootView: View {
                     }
                 }
         }
-        .task { await store.pollForever() }
-        // Never let tvOS sleep the display or start a screensaver.
-        .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
-        .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
-        // Any navigation counts as activity, so the timeout measures genuine
-        // idleness rather than time-since-arrival.
-        .onChange(of: path) { lastActivity = .now }
-        .task(id: path.isEmpty) { await watchForIdle() }
     }
 
     private func open(_ beer: Beer) { push(.beer(beer)) }
@@ -53,8 +58,12 @@ struct RootView: View {
     /// to return to.
     private func watchForIdle() async {
         guard !path.isEmpty else { return }
-        while !Task.isCancelled {
-            try? await Task.sleep(for: .seconds(5))
+        while true {
+            do {
+                try await Task.sleep(for: .seconds(5))
+            } catch {
+                return  // cancelled: never act on a stale activity timestamp
+            }
             if Date.now.timeIntervalSince(lastActivity) > idleTimeout {
                 withAnimation { path.removeAll() }
                 return
