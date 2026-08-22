@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>Tap Menu</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<!-- Lets the app talk to a Next dev server over plain HTTP on the LAN
+		     (http://<mac>.local:3000). Production traffic is HTTPS to Vercel;
+		     this exception only relaxes local networking, not the internet. -->
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Reads the tap menu from the brewery server on your network.</string>
+</dict>
+</plist>
