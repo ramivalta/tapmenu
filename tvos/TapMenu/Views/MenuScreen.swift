@@ -61,9 +61,7 @@ struct MenuScreen: View {
 
     private var content: some View {
         VStack(spacing: 24) {
-            Text("Taproom")
-                .font(.largeTitle)
-                .foregroundStyle(Palette.ink)
+            RocketLogo(rocketHeight: 150)
 
             Spacer(minLength: 0)
 
@@ -124,16 +122,16 @@ private struct TapCard: View {
             if let beer = tap.beer { onOpen(beer) }
         } label: {
             VStack(alignment: .leading, spacing: 12) {
-                Text("TAP \(tap.tapNumber)")
-                    .font(.caption)
-                    .opacity(marked ? 0.85 : 0.55)
-
+                // No "TAP n" label: the oversized number at the foot of the
+                // card already says which tap this is.
                 if let beer = tap.beer {
                     Text(beer.name ?? "Untitled")
-                        // Names run to 47 characters in the catalogue, so
-                        // titles must wrap rather than truncate.
+                        // Names run to 47 characters, so rather than spilling
+                        // to a third line they shrink to fit two. Cards keep
+                        // a consistent shape whatever is on tap.
                         .font(.title2)
-                        .lineLimit(3)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.5)
                         .multilineTextAlignment(.leading)
 
                     // The one crisp piece of colour on the card. Small enough

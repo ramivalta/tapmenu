@@ -69,7 +69,8 @@ struct BeerDetailScreen: View {
         VStack(alignment: .leading, spacing: 12) {
             Text(beer.name ?? "Untitled")
                 .font(.largeTitle)
-                .lineLimit(3)
+                .lineLimit(2)
+                .minimumScaleFactor(0.5)
 
             Text(beer.style ?? "")
                 .font(.title2)

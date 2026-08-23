@@ -20,7 +20,8 @@ struct CatalogueScreen: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(beer.name ?? "Untitled")
                                     .font(.headline)
-                                    .lineLimit(3)
+                                    .lineLimit(2)
+                                    .minimumScaleFactor(0.5)
                                 Text(beer.style ?? "")
                                     .font(.subheadline)
                                     .opacity(0.75)
