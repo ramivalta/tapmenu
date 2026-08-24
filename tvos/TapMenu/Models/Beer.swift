@@ -38,6 +38,13 @@ struct Beer: Codable, Hashable, Sendable, Identifiable {
     struct Untappd: Codable, Hashable, Sendable {
         let beerUrl: String
         let qrUrl: String
+
+        /// The numeric beer id, taken from the QR redirect
+        /// (`https://untappd.com/qr/beer/6775036`).
+        var beerID: String? {
+            let id = qrUrl.split(separator: "/").last.map(String.init)
+            return id?.allSatisfy(\.isNumber) == true ? id : nil
+        }
     }
 
     struct Hop: Codable, Hashable, Sendable {

@@ -77,6 +77,11 @@ struct MenuScreen: View {
                         .focused($focusedTap, equals: tap.tapNumber)
                     }
                 }
+                // Needed in both directions. Coming back up from the footer,
+                // the only card directly above the centred button is tap 2 —
+                // and an empty tap is not focusable, so without a section to
+                // enter, focus had nowhere to go and stayed put.
+                .focusSection()
             } else if store.lastError != nil {
                 ContentUnavailableView(
                     "Cannot reach the brewery server",
@@ -106,11 +111,7 @@ private struct TapCard: View {
 
     private var marked: Bool { isFocused && showFocus }
 
-    private let radius: CGFloat = 18
-
-    private var shape: RoundedRectangle {
-        RoundedRectangle(cornerRadius: radius, style: .continuous)
-    }
+    private var shape: RoundedRectangle { Surface.shape }
 
     /// The beer's colour, or nil on an empty tap.
     private var colour: Color? {
@@ -191,7 +192,7 @@ private struct TapCard: View {
                 // Focus is a firmer edge, not a lift — the stock tvOS
                 // treatment made one beer look inexplicably special.
                 shape.strokeBorder(
-                    Palette.ink.opacity(marked ? 0.34 : 0.10),
+                    marked ? Palette.ink.opacity(0.34) : Surface.stroke,
                     lineWidth: marked ? 3 : 1
                 )
             }
@@ -205,7 +206,7 @@ private struct TapCard: View {
     /// rather than a tint across the whole card.
     private var surface: some View {
         ZStack(alignment: .bottomLeading) {
-            Color.white.opacity(0.45)
+            Surface.fill
 
             if let colour {
                 LinearGradient(
@@ -229,7 +230,7 @@ private struct TapCard: View {
                 .offset(x: 4, y: 34)
         }
         .clipShape(shape)
-        .shadow(color: Palette.ink.opacity(0.12), radius: 16, y: 6)
+        .shadow(color: Surface.shadow, radius: Surface.shadowRadius, y: Surface.shadowY)
     }
 }
 
@@ -238,13 +239,25 @@ private struct Footer: View {
     let onOpenCatalogue: () -> Void
     let showFocus: Bool
 
+    @FocusState private var focused: Bool
+
     var body: some View {
         HStack(spacing: 24) {
             Button("Archived batches", action: onOpenCatalogue)
                 .buttonStyle(.bare)
                 .font(.callout)
+                .padding(.vertical, 10)
+                .padding(.horizontal, 22)
+                .background(focused ? Palette.ink.opacity(0.10) : .clear)
+                .clipShape(Capsule())
+                .overlay {
+                    if focused {
+                        Capsule().strokeBorder(Palette.ink.opacity(0.34), lineWidth: 2)
+                    }
+                }
+                .focused($focused)
                 // Reads as a hint in ambient, as a control once navigating.
-                .opacity(showFocus ? 1 : 0.45)
+                .opacity(showFocus || focused ? 1 : 0.45)
 
             if let updated = store.menu?.updatedAt {
                 Text("Updated \(updated.formatted(date: .abbreviated, time: .omitted))")
@@ -261,5 +274,9 @@ private struct Footer: View {
             }
         }
         .foregroundStyle(Palette.ink)
+        // Without this the button is unreachable from most of the row: tvOS
+        // moves focus geometrically, and a centred button has nothing of the
+        // outer cards directly above it to travel down from.
+        .focusSection()
     }
 }
