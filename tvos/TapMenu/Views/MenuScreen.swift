@@ -13,6 +13,7 @@ struct MenuScreen: View {
     @Environment(MenuStore.self) private var store
 
     let onOpen: (Beer) -> Void
+    let onAssign: (Int) -> Void
     let onOpenCatalogue: () -> Void
 
     @FocusState private var focusedTap: Int?
@@ -72,7 +73,8 @@ struct MenuScreen: View {
                             tap: tap,
                             isFocused: focusedTap == tap.tapNumber,
                             showFocus: showFocus,
-                            onOpen: onOpen
+                            onOpen: onOpen,
+                            onAssign: onAssign
                         )
                         .focused($focusedTap, equals: tap.tapNumber)
                     }
@@ -108,6 +110,7 @@ private struct TapCard: View {
     let isFocused: Bool
     let showFocus: Bool
     let onOpen: (Beer) -> Void
+    let onAssign: (Int) -> Void
 
     private var marked: Bool { isFocused && showFocus }
 
@@ -120,9 +123,13 @@ private struct TapCard: View {
 
     var body: some View {
         Button {
-            if let beer = tap.beer { onOpen(beer) }
+            if let beer = tap.beer {
+                onOpen(beer)
+            } else {
+                onAssign(tap.tapNumber)
+            }
         } label: {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 16) {
                 // No "TAP n" label: the oversized number at the foot of the
                 // card already says which tap this is.
                 if let beer = tap.beer {
@@ -176,15 +183,25 @@ private struct TapCard: View {
                     Text("Currently empty")
                         .font(.title3)
                         .opacity(0.35)
+
+                    // Only offered once someone is actually navigating; the
+                    // ambient display should not read as a set of buttons.
+                    if marked {
+                        Text("Press to choose a beer")
+                            .font(.footnote)
+                            .opacity(0.65)
+                            .transition(.opacity)
+                    }
+
                     Spacer(minLength: 0)
                 }
             }
             .foregroundStyle(Palette.ink)
-            .padding(24)
+            .padding(32)
             .frame(
                 maxWidth: .infinity,
-                minHeight: 520,
-                maxHeight: 520,
+                minHeight: 548,
+                maxHeight: 548,
                 alignment: .topLeading
             )
             .background { surface }
@@ -205,7 +222,6 @@ private struct TapCard: View {
             .animation(.easeOut(duration: 0.22), value: marked)
         }
         .buttonStyle(.bare)
-        .disabled(tap.beer == nil)
     }
 
     /// A translucent panel, as the web cards use, so the wave field still
@@ -240,9 +256,14 @@ private struct TapCard: View {
         }
         .clipShape(shape)
         .shadow(
-            color: marked ? Palette.ink.opacity(0.34) : Surface.shadow,
-            radius: marked ? 42 : Surface.shadowRadius,
-            y: marked ? 24 : Surface.shadowY
+            color: Color.black.opacity(marked ? 0.22 : 0.16),
+            radius: marked ? 18 : Surface.shadowNearRadius,
+            y: marked ? 12 : Surface.shadowNearY
+        )
+        .shadow(
+            color: Color.black.opacity(marked ? 0.50 : 0.38),
+            radius: marked ? 72 : Surface.shadowFarRadius,
+            y: marked ? 50 : Surface.shadowFarY
         )
     }
 }

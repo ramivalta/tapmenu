@@ -22,3 +22,19 @@ struct Archive: Codable, Hashable, Sendable {
     let limit: Int
     let beers: [Beer]
 }
+
+/// `GET /api/tapmenu/batches` — completed batches that can be put on a tap.
+struct BatchList: Codable, Hashable, Sendable {
+    let count: Int
+    let batches: [AssignableBatch]
+}
+
+struct AssignableBatch: Codable, Hashable, Sendable, Identifiable {
+    let id: String
+    let name: String
+    let style: String?
+    let abv: Double?
+    let ibu: Double?
+    /// The tap this batch is already pouring on, if any.
+    let onTap: Int?
+}

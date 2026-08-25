@@ -18,6 +18,8 @@ struct RootView: View {
     enum Route: Hashable {
         case beer(Beer)
         case catalogue
+        /// Choosing a beer for an empty tap.
+        case assign(Int)
     }
 
     var body: some View {
@@ -35,13 +37,21 @@ struct RootView: View {
 
     private var stack: some View {
         NavigationStack(path: $path) {
-            MenuScreen(onOpen: open, onOpenCatalogue: { push(.catalogue) })
+            MenuScreen(
+                onOpen: open,
+                onAssign: { push(.assign($0)) },
+                onOpenCatalogue: { push(.catalogue) }
+            )
                 .navigationDestination(for: Route.self) { route in
                     switch route {
                     case .beer(let beer):
                         BeerDetailScreen(beer: beer)
                     case .catalogue:
                         CatalogueScreen(onOpen: open)
+                    case .assign(let tapNumber):
+                        AssignBeerScreen(tapNumber: tapNumber) {
+                            withAnimation { path.removeAll() }
+                        }
                     }
                 }
         }

@@ -64,16 +64,55 @@ enum MenuAPI {
     static func archive() async throws -> Archive {
         try await get("/api/tapmenu/archive", as: Archive.self)
     }
+
+    static func batches() async throws -> BatchList {
+        try await get("/api/tapmenu/batches", as: BatchList.self)
+    }
+
+    /// Put a batch on a tap. The server checks the code and rate-limits
+    /// attempts, so a wrong code comes back as a plain message to show.
+    static func assign(tap: Int, batchId: String, code: String) async throws {
+        var request = URLRequest(url: baseURL.appending(path: "/api/tapmenu/assign"))
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(
+            AssignRequest(tap: tap, batchId: batchId, code: code)
+        )
+        request.timeoutInterval = 20
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let http = response as? HTTPURLResponse else {
+            throw MenuError.badResponse
+        }
+        guard (200..<300).contains(http.statusCode) else {
+            // The server explains itself — wrong code, too many attempts, and
+            // so on — and that text is better than anything invented here.
+            let message = (try? decoder.decode(ServerError.self, from: data))?.error
+            throw MenuError.message(message ?? "Could not save (HTTP \(http.statusCode))")
+        }
+    }
+
+    private struct AssignRequest: Encodable {
+        let tap: Int
+        let batchId: String
+        let code: String
+    }
+
+    private struct ServerError: Decodable {
+        let error: String
+    }
 }
 
 enum MenuError: LocalizedError {
     case badResponse
     case http(Int)
+    case message(String)
 
     var errorDescription: String? {
         switch self {
         case .badResponse: "Unexpected response from the brewery server"
         case .http(let code): "Brewery server returned HTTP \(code)"
+        case .message(let text): text
         }
     }
 }
