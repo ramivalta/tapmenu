@@ -66,7 +66,7 @@ struct MenuScreen: View {
             Spacer(minLength: 0)
 
             if let menu = store.menu {
-                HStack(spacing: 20) {
+                HStack(spacing: 32) {
                     ForEach(menu.taps) { tap in
                         TapCard(
                             tap: tap,
@@ -189,13 +189,20 @@ private struct TapCard: View {
             )
             .background { surface }
             .overlay {
-                // Focus is a firmer edge, not a lift — the stock tvOS
-                // treatment made one beer look inexplicably special.
                 shape.strokeBorder(
-                    marked ? Palette.ink.opacity(0.34) : Surface.stroke,
-                    lineWidth: marked ? 3 : 1
+                    marked ? Palette.ink.opacity(0.22) : Surface.stroke,
+                    lineWidth: marked ? 2 : 1
                 )
             }
+            // A lift like tvOS's own, but ours rather than the button style's.
+            // The stock effect cannot be gated: it ignores `showFocus` and so
+            // would sit on a card from launch, which is what made one beer
+            // look inexplicably special on an untouched display. Driving it
+            // ourselves means it only appears once a guest picks up the remote.
+            .scaleEffect(marked ? 1.07 : 1)
+            // Rises as well as grows, which is most of what reads as "lifted".
+            .offset(y: marked ? -8 : 0)
+            .animation(.easeOut(duration: 0.22), value: marked)
         }
         .buttonStyle(.bare)
         .disabled(tap.beer == nil)
@@ -206,7 +213,9 @@ private struct TapCard: View {
     /// rather than a tint across the whole card.
     private var surface: some View {
         ZStack(alignment: .bottomLeading) {
-            Surface.fill
+            // Brighter when focused, so the card reads as raised off the
+            // backdrop rather than merely outlined.
+            Color.white.opacity(marked ? 0.90 : 0.45)
 
             if let colour {
                 LinearGradient(
@@ -230,7 +239,11 @@ private struct TapCard: View {
                 .offset(x: 4, y: 34)
         }
         .clipShape(shape)
-        .shadow(color: Surface.shadow, radius: Surface.shadowRadius, y: Surface.shadowY)
+        .shadow(
+            color: marked ? Palette.ink.opacity(0.34) : Surface.shadow,
+            radius: marked ? 42 : Surface.shadowRadius,
+            y: marked ? 24 : Surface.shadowY
+        )
     }
 }
 
@@ -274,9 +287,12 @@ private struct Footer: View {
             }
         }
         .foregroundStyle(Palette.ink)
-        // Without this the button is unreachable from most of the row: tvOS
-        // moves focus geometrically, and a centred button has nothing of the
-        // outer cards directly above it to travel down from.
+        // Full width so the section's frame sits under every card. Marking it
+        // a focus section is not enough on its own: the section still has to
+        // lie in the direction of travel, and a centre-hugging footer left the
+        // outer cards with nothing beneath them to move into. Content stays
+        // centred; only the section's frame grows.
+        .frame(maxWidth: .infinity)
         .focusSection()
     }
 }

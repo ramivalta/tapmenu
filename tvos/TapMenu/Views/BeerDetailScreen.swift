@@ -32,7 +32,7 @@ struct BeerDetailScreen: View {
                     // 18% of the catalogue has no Untappd link, so this is
                     // dropped entirely rather than leaving a gap.
                     if let qr = beer.untappd.flatMap({ QRCodeImage.make(from: $0.qrUrl) }) {
-                        untappd(qr).frame(width: 290)
+                        untappd(qr).frame(width: 440)
                     }
                 }
 
@@ -190,39 +190,58 @@ struct BeerDetailScreen: View {
         }
     }
 
+    /// Laid out across rather than down: stacked, it stood taller than the
+    /// header beside it, and there is plenty of width going spare.
     private func untappd(_ qr: Image) -> some View {
-        VStack(spacing: 14) {
+        HStack(spacing: 22) {
             qr.resizable()
-                .frame(width: 196, height: 196)
+                .frame(width: 168, height: 168)
                 .padding(10)
                 .background(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
 
-            Text("Scan to rate on Untappd")
-                .font(.caption)
-                .multilineTextAlignment(.center)
-                .opacity(0.7)
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Scan to rate on Untappd")
+                    .font(.callout)
+                    .opacity(0.75)
+                    .fixedSize(horizontal: false, vertical: true)
 
-            if let stats = untappdStats, stats.isWorthShowing {
-                HStack(spacing: 10) {
-                    if let checkins = stats.checkins {
-                        stat(
-                            "\(checkins)",
-                            checkins == 1 ? "Check-in" : "Check-ins",
-                            compact: true
-                        )
-                    }
-                    // Absent until Untappd has enough ratings to publish a
-                    // score, which is most of the catalogue for now.
-                    if let rating = stats.rating {
-                        stat(Format.decimal(rating, max: 2), "Rating", compact: true)
+                // The figures arrive after the screen is already up, so their
+                // row is laid out from the start and merely filled in later.
+                // Letting it appear would resize the panel — and with it
+                // everything below — a second or so after opening the beer.
+                ZStack(alignment: .leading) {
+                    if let stats = untappdStats, stats.isWorthShowing {
+                        HStack(spacing: 10) {
+                            if let checkins = stats.checkins {
+                                stat(
+                                    "\(checkins)",
+                                    checkins == 1 ? "Check-in" : "Check-ins",
+                                    compact: true
+                                )
+                            }
+                            // Absent until Untappd has enough ratings to
+                            // publish a score, which is most of the catalogue.
+                            if let rating = stats.rating {
+                                stat(
+                                    Format.decimal(rating, max: 2),
+                                    "Rating",
+                                    compact: true
+                                )
+                            }
+                        }
+                        .transition(.opacity)
                     }
                 }
-                .padding(.top, 2)
+                .frame(height: 62)
+                .animation(.easeIn(duration: 0.3), value: untappdStats)
             }
+
+            Spacer(minLength: 0)
         }
         .padding(24)
-        .frame(maxWidth: .infinity)
+        // Fills the header's height rather than setting the row's.
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .panel()
     }
 
