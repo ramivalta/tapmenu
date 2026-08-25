@@ -27,6 +27,9 @@ struct MenuScreen: View {
     @State private var showFocus = false
     /// Set when a long press asks to take a beer off a tap.
     @State private var removingTap: Int?
+    /// The board's rendered size, needed to place condensation in points and
+    /// to hand the refraction shader coordinates it can use.
+    @State private var boardSize: CGSize = .zero
 
     /// How long after the last input the focus marker stays visible before the
     /// display settles back to ambient.
@@ -42,12 +45,10 @@ struct MenuScreen: View {
     var body: some View {
         ZStack {
             TaproomBackdrop()
-            // The drifting wave field, tinted by whatever is on tap. Sits
-            // between the backdrop and the board, and shows through the
-            // board's translucent columns.
-            if let menu = store.menu {
-                MenuBackground(taps: menu.taps)
-            }
+            // No generated pattern: the backdrop's watermark is the subject,
+            // and three attempts at a pattern behind it (MenuBackground,
+            // AerialBackground, CausticBackground — all still in the tree)
+            // each buried it.
             content
         }
         .overlay {
@@ -119,39 +120,74 @@ struct MenuScreen: View {
         .padding(.bottom, 32)
     }
 
+    /// How far below the board a falling drop is followed before it fades.
+    private let fallZone: CGFloat = 260
+
     private func board(_ menu: TapMenu) -> some View {
-        HStack(spacing: 0) {
-            ForEach(menu.taps) { tap in
-                TapColumn(
-                    tap: tap,
-                    isFocused: focusedTap == tap.tapNumber,
-                    showFocus: showFocus,
-                    onOpen: onOpen,
-                    onAssign: onAssign,
-                    onRemove: { removingTap = $0 }
-                )
-                .focused($focusedTap, equals: tap.tapNumber)
+        // Driven per frame so the shader's drop positions stay in step with
+        // the painted ones. The subtree is four columns of text, so
+        // re-evaluating it is cheap; letting the two drift apart is not.
+        TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { context in
+            let drops = Condensation.drops(
+                at: context.date.timeIntervalSinceReferenceDate,
+                boardSize: boardSize,
+                fallZone: fallZone
+            )
+
+            HStack(spacing: 0) {
+                ForEach(menu.taps) { tap in
+                    TapColumn(
+                        tap: tap,
+                        isFocused: focusedTap == tap.tapNumber,
+                        showFocus: showFocus,
+                        onOpen: onOpen,
+                        onAssign: onAssign,
+                        onRemove: { removingTap = $0 }
+                    )
+                    .focused($focusedTap, equals: tap.tapNumber)
+                }
             }
+            .frame(maxWidth: boardWidth)
+            .onGeometryChange(for: CGSize.self) { $0.size } action: { boardSize = $0 }
+            // Clipped so each column's colour stops at the board's edge, as
+            // the web's `overflow: hidden` does.
+            .clipShape(boardShape)
+            .overlay { boardShape.strokeBorder(Surface.stroke, lineWidth: 1) }
+            // Refraction: each bead distorts the board's own pixels beneath
+            // it. Applied here so it samples the finished columns — text,
+            // colour and numerals — and before the drops are painted, so the
+            // lens shading is not itself refracted.
+            .layerEffect(
+                ShaderLibrary.droplets(
+                    .floatArray(Condensation.shaderArguments(drops))
+                ),
+                maxSampleOffset: CGSize(width: 90, height: 90)
+            )
+            .shadow(
+                color: Surface.shadowNear,
+                radius: Surface.shadowNearRadius,
+                y: Surface.shadowNearY
+            )
+            .shadow(
+                color: Surface.shadowFar,
+                radius: Surface.shadowFarRadius,
+                y: Surface.shadowFarY
+            )
+            // The beads themselves, painted over the refracted board and
+            // after the shadows: a drop leaving the bottom edge must not be
+            // clipped, and must not be given the board's own drop shadow.
+            .overlay(alignment: .top) {
+                Condensation(drops: drops)
+                    .frame(
+                        width: boardSize.width,
+                        height: boardSize.height + fallZone
+                    )
+            }
+            // Needed in both directions. Coming back up from the footer, the
+            // only column directly above the centred button may be an empty
+            // one, and without a section to enter focus had nowhere to go.
+            .focusSection()
         }
-        .frame(maxWidth: boardWidth)
-        // Clipped so each column's colour stops at the board's edge, as the
-        // web's `overflow: hidden` does.
-        .clipShape(boardShape)
-        .overlay { boardShape.strokeBorder(Surface.stroke, lineWidth: 1) }
-        .shadow(
-            color: Surface.shadowNear,
-            radius: Surface.shadowNearRadius,
-            y: Surface.shadowNearY
-        )
-        .shadow(
-            color: Surface.shadowFar,
-            radius: Surface.shadowFarRadius,
-            y: Surface.shadowFarY
-        )
-        // Needed in both directions. Coming back up from the footer, the only
-        // column directly above the centred button may be an empty one, and
-        // without a section to enter focus had nowhere to go.
-        .focusSection()
     }
 
     /// Returns an error to show, or nil once the tap is cleared.

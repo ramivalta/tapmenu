@@ -33,3 +33,11 @@ enum Palette {
             .opacity(opacity)
     }
 }
+
+extension Color {
+    /// A hint of another colour, without losing this one's opacity.
+    func blended(with other: Color, amount: Double = 0.16) -> Color {
+        let resolved = other.opacity(amount)
+        return self.mix(with: resolved, by: amount)
+    }
+}
