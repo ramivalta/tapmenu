@@ -1,14 +1,12 @@
 // Reading the saved tap assignment.
 //
-// `/taproom` persists its query string as JSON in Vercel Blob, so the saved
-// config arrives as `{ tap1: "<batchId>", tap1Notes: "...", ... }`. Blobs are
-// written under a fixed pathname but Vercel may suffix it, so the newest
-// matching blob wins.
+// `/taproom` persists its query string as JSON, so the saved config arrives as
+// `{ tap1: "<batchId>", tap1Notes: "...", ... }`. The whole thing lives in a
+// single Redis key together with its save timestamp.
 
-import { list } from "@vercel/blob";
-import { first, orderBy } from "lodash";
+import { redis } from "@/lib/redis";
 
-const BLOB_PREFIX = "tapmenu/defaultTapConfig";
+export const TAP_CONFIG_KEY = "tapmenu:defaultTapConfig";
 
 export type SavedTapConfig = {
   config: Record<string, string>;
@@ -17,28 +15,15 @@ export type SavedTapConfig = {
 };
 
 export async function readSavedTapConfig(): Promise<SavedTapConfig> {
-  const blobs = await list({ prefix: BLOB_PREFIX });
-  const candidates = (blobs?.blobs ?? []).filter((blob) =>
-    blob.pathname.startsWith(BLOB_PREFIX),
-  );
-  const latest = first(orderBy(candidates, "uploadedAt", "desc"));
-  const updatedAt = latest?.uploadedAt
-    ? new Date(latest.uploadedAt).toISOString()
-    : null;
+  const saved = await redis().get<SavedTapConfig>(TAP_CONFIG_KEY);
 
-  if (!latest?.downloadUrl) {
-    return { config: {}, updatedAt };
+  if (!saved || typeof saved !== "object") {
+    return { config: {}, updatedAt: null };
   }
 
-  const res = await fetch(latest.downloadUrl, { cache: "no-store" });
-  if (!res.ok) {
-    console.error(`Failed to read saved tap config (HTTP ${res.status})`);
-    return { config: {}, updatedAt };
-  }
-
-  const config = await res.json();
   return {
-    config: config && typeof config === "object" ? config : {},
-    updatedAt,
+    config:
+      saved.config && typeof saved.config === "object" ? saved.config : {},
+    updatedAt: saved.updatedAt ?? null,
   };
 }

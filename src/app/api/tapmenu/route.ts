@@ -5,8 +5,8 @@
 // encoding the web pages use.
 //
 // The web pages build this same view inline as server components: fetch
-// completed batches from Brewfather, read the saved tap assignment from blob
-// storage, then join the two. This route does that join once and returns the
+// completed batches from Brewfather, read the saved tap assignment from
+// Redis, then join the two. This route does that join once and returns the
 // whole recipe payload — hops grouped by use, malt bill, yeast, dates, Untappd
 // links — rather than the subset the cards happen to render.
 //

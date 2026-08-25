@@ -15,8 +15,7 @@ import { MainRocketLogo } from "./RocketLogo";
 import { Fragment } from "react";
 import Link from "next/link";
 
-import { list } from "@vercel/blob";
-import { first, orderBy } from "lodash";
+import { readSavedTapConfig } from "@/lib/tapmenu/config";
 
 const token = process.env.BREWFATHER_API_TOKEN;
 
@@ -58,16 +57,8 @@ export default async function Home() {
       },
     );
 
-    const blobs = await list({ prefix: "tapmenu/defaultTapConfig" });
-    const tapConfigBlobs = (blobs?.blobs ?? []).filter((blob) =>
-      blob.pathname.startsWith("tapmenu/defaultTapConfig"),
-    );
-    const sortedByDate = orderBy(tapConfigBlobs, "uploadedAt", "desc");
-    const savedTapConfig = first(sortedByDate);
-    const savedTapConfigData =
-      savedTapConfig?.downloadUrl && (await fetch(savedTapConfig?.downloadUrl));
-    const savedTapConfigJson: Record<string, string> =
-      (savedTapConfigData && (await savedTapConfigData.json())) || {};
+    const { config: savedTapConfigJson, updatedAt: savedTapConfigUpdatedAt } =
+      await readSavedTapConfig();
 
     const batchesData = await batches.json();
 
@@ -131,10 +122,8 @@ export default async function Home() {
           <Center width="100%" flexDirection="column" gap="2">
             <Text fontSize="xs" color="gray.500">
               Updated{" "}
-              {savedTapConfig?.uploadedAt &&
-                new Date(savedTapConfig?.uploadedAt).toLocaleDateString(
-                  "fi-FI",
-                )}
+              {savedTapConfigUpdatedAt &&
+                new Date(savedTapConfigUpdatedAt).toLocaleDateString("fi-FI")}
             </Text>
 
             <Link href="/history">

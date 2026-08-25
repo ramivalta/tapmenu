@@ -1,29 +1,9 @@
 "use server";
 
-import { promises as fs } from "fs";
-
-import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 
-// export async function Form() {
-//   async function uploadImage(formData: FormData) {
-//     'use server';
-//     const imageFile = formData.get('image') as File;
-//     const blob = await put(imageFile.name, imageFile, {
-//       access: 'public',
-//     });
-//     revalidatePath('/');
-//     return blob;
-//   }
-
-//   return (
-//     <form action={uploadImage}>
-//       <label htmlFor="image">Image</label>
-//       <input type="file" id="image" name="image" required />
-//       <button>Upload</button>
-//     </form>
-//   );
-// }
+import { redis } from "@/lib/redis";
+import { TAP_CONFIG_KEY } from "@/lib/tapmenu/config";
 
 const saveTapConfigAction = async (
   queryParams: string,
@@ -33,23 +13,22 @@ const saveTapConfigAction = async (
     throw new Error("Invalid password");
   }
 
-  await put("tapmenu/defaultTapConfig.json", queryParams, {
-    access: "public",
+  let config: Record<string, string>;
+  try {
+    config = JSON.parse(queryParams);
+  } catch {
+    throw new Error("Invalid tap config payload");
+  }
+
+  await redis().set(TAP_CONFIG_KEY, {
+    config,
+    updatedAt: new Date().toISOString(),
   });
+
   revalidatePath("/");
   revalidatePath("/taproom");
 
   return "Tap config saved";
-
-  // try {
-  //     console.log("LETS WRITE", queryParams);
-  //     await fs.writeFile('/tmp/defaultTapConfig.json', queryParams);
-  //     console.log('Tap configuration saved successfully.')
-  //     return 'Tap configuration saved successfully.';
-  // } catch (error) {
-  //     console.error('Error saving tap configuration:', error);
-  //     throw error; // Rethrow the error for further handling if necessary
-  // }
 };
 
 export default saveTapConfigAction;

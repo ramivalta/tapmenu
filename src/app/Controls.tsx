@@ -13,14 +13,14 @@ const Controls = ({
 }: {
   showHops: number;
   showFermentables: number;
-  savedTapConfig: string;
+  savedTapConfig: Record<string, string>;
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (savedTapConfig) {
+    if (Object.keys(savedTapConfig ?? {}).length > 0) {
       router.replace(
         `${pathname}?${new URLSearchParams(savedTapConfig).toString()}`,
       );
