@@ -71,7 +71,7 @@ enum MenuAPI {
 
     /// Put a batch on a tap. The server checks the code and rate-limits
     /// attempts, so a wrong code comes back as a plain message to show.
-    static func assign(tap: Int, batchId: String, code: String) async throws {
+    static func assign(tap: Int, batchId: String?, code: String) async throws {
         var request = URLRequest(url: baseURL.appending(path: "/api/tapmenu/assign"))
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -94,7 +94,8 @@ enum MenuAPI {
 
     private struct AssignRequest: Encodable {
         let tap: Int
-        let batchId: String
+        /// Nil clears the tap — the server treats a missing id as "empty this".
+        let batchId: String?
         let code: String
     }
 
