@@ -45,10 +45,13 @@ struct MenuScreen: View {
     var body: some View {
         ZStack {
             TaproomBackdrop()
-            // No generated pattern: the backdrop's watermark is the subject,
-            // and three attempts at a pattern behind it (MenuBackground,
-            // AerialBackground, CausticBackground — all still in the tree)
-            // each buried it.
+            // The wave field, back after the aerial map and the caustic
+            // network were both tried and set aside. It sits between the
+            // backdrop and the board, and shows through the board's
+            // translucent columns.
+            if let menu = store.menu {
+                MenuBackground(taps: menu.taps)
+            }
             content
         }
         .overlay {

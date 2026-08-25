@@ -194,10 +194,10 @@ struct Condensation: View {
         let boardHeight = boardSize.height
 
         return beads.compactMap { bead -> Drop? in
-            let x = bead.x * boardSize.width
             let restingY = bead.y * boardHeight
 
             guard let glide = bead.glide else {
+                let x = bead.x * boardSize.width
                 return Drop(
                     centre: CGPoint(x: x, y: restingY),
                     radius: bead.radius, stretch: 1, alpha: 1,
@@ -205,7 +205,15 @@ struct Condensation: View {
                 )
             }
 
-            let toEdge = max(0, boardHeight - restingY)
+            // Which run this is, so each one can start somewhere different.
+            // A bead that always re-forms where it last ran reads as a fixed
+            // dripping point rather than as condensation.
+            let approxPeriod = Double(boardHeight / glide) * 1.6 + bead.restFor + 2
+            let run = Int((time + bead.offset) / max(approxPeriod, 1))
+            let x = random(bead.seed &* 7919 &+ run &* 104_729) * boardSize.width
+            let startY = random(bead.seed &* 6151 &+ run &* 92_821) * 0.72 * boardHeight
+
+            let toEdge = max(0, boardHeight - startY)
             // Easing means the average rate is about half the peak, so the
             // duration has to allow for it or the run ends before the edge.
             let slideFor = Double(toEdge / glide) * 1.6
@@ -217,9 +225,13 @@ struct Condensation: View {
             let cycle = (time + bead.offset).truncatingRemainder(dividingBy: period)
 
             guard cycle < slideFor + fallFor else {
+                // Resting between runs, and fading in as it re-forms: a bead
+                // that simply appeared at a new spot would pop.
+                let resting = cycle - (slideFor + fallFor)
                 return Drop(
-                    centre: CGPoint(x: x, y: restingY),
-                    radius: bead.radius, stretch: 1, alpha: 1,
+                    centre: CGPoint(x: x, y: startY),
+                    radius: bead.radius, stretch: 1,
+                    alpha: min(1, resting / 4),
                     track: nil, onBoard: true
                 )
             }
@@ -230,12 +242,12 @@ struct Condensation: View {
                 let progress = CGFloat(cycle / slideFor)
                 let travelled = toEdge * pow(progress, 1.5)
                 return Drop(
-                    centre: CGPoint(x: x, y: restingY + travelled),
+                    centre: CGPoint(x: x, y: startY + travelled),
                     radius: bead.radius,
                     stretch: 1 + progress * progress * 0.34,
                     alpha: 1,
                     track: CGRect(
-                        x: x - bead.radius * 0.30, y: restingY,
+                        x: x - bead.radius * 0.30, y: startY,
                         width: bead.radius * 0.60, height: travelled
                     ),
                     onBoard: true
@@ -274,6 +286,7 @@ struct Condensation: View {
     // MARK: - Beads
 
     private struct Bead {
+        let seed: Int
         let x: CGFloat
         let y: CGFloat
         let radius: CGFloat
@@ -286,11 +299,17 @@ struct Condensation: View {
 
     /// Deterministic, so the board does not rearrange its own moisture on
     /// every launch.
+    ///
+    /// This is the splitmix64 finaliser. The previous hash was a 32-bit mix
+    /// that correlated badly across small consecutive seeds — beads 1 and 27
+    /// came out at x = 0.726 and 0.727, so two separate drops ran from what
+    /// looked like the same spot.
     private static func random(_ seed: Int) -> CGFloat {
-        var t = UInt32(truncatingIfNeeded: seed &+ 0x6D2B_79F5)
-        t = (t ^ (t >> 15)) &* (t | 1)
-        t ^= t &+ ((t ^ (t >> 7)) &* (t | 61))
-        return CGFloat((t ^ (t >> 14)) % 10000) / 10000
+        var x = UInt64(bitPattern: Int64(seed)) &+ 0x9E37_79B9_7F4A_7C15
+        x = (x ^ (x >> 30)) &* 0xBF58_476D_1CE4_E5B9
+        x = (x ^ (x >> 27)) &* 0x94D0_49BB_1331_11EB
+        x = x ^ (x >> 31)
+        return CGFloat(x % 100_000) / 100_000
     }
 
     private static let beads: [Bead] = (0..<64).map { index in
@@ -310,16 +329,17 @@ struct Condensation: View {
             radius = 0.9 + spread * 2.6
         }
 
-        let runs = radius > 6.5 && random(index &* 13 &+ 9) > 0.4
+        let runs = radius > 4.6 && random(index &* 13 &+ 9) > 0.22
 
         return Bead(
+            seed: index,
             x: random(index &* 3 &+ 1),
             y: random(index &* 5 &+ 2) * 0.75,
             radius: radius,
             // Weight helps, but the spread between beads is deliberately
             // wide: two drops of the same size should not run in step.
             glide: runs
-                ? 10 + (radius - 6.5) * 1.9 + random(index &* 17 &+ 11) * 38
+                ? 10 + max(0, radius - 4.6) * 1.9 + random(index &* 17 &+ 11) * 38
                 : nil,
             restFor: 25 + Double(random(index &* 23 &+ 15)) * 105,
             offset: Double(random(index &* 29 &+ 17)) * 160
