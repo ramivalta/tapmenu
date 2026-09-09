@@ -19,6 +19,11 @@ struct MenuScreen: View {
     let onOpenCatalogue: () -> Void
 
     @FocusState private var focusedTap: Int?
+
+    private enum TapAction: Hashable { case change, remove, cancel }
+    @FocusState private var actionsFocus: TapAction?
+    /// Anchors focus inside the action menu so it is confined to its buttons.
+    @Namespace private var actionsScope
     /// Claimed once, not on every poll — otherwise a background refresh yanks
     /// focus back mid-browse.
     @State private var hasClaimedFocus = false
@@ -27,9 +32,20 @@ struct MenuScreen: View {
     @State private var showFocus = false
     /// Set when a long press asks to take a beer off a tap.
     @State private var removingTap: Int?
+    /// The tap whose long-press menu is showing, if any.
+    @State private var actionsForTap: Int?
     /// The board's rendered size, needed to place condensation in points and
     /// to hand the refraction shader coordinates it can use.
     @State private var boardSize: CGSize = .zero
+
+    /// True while either the long-press action menu or the code prompt is up.
+    /// Both are modal: while one is showing, the board and footer behind must
+    /// be taken out of the focus engine so directional input cannot escape the
+    /// overlay. A translucent dim looks like a barrier but is not one — only
+    /// disabling the content behind actually confines focus.
+    private var overlayPresented: Bool {
+        actionsForTap != nil || removingTap != nil
+    }
 
     /// How long after the last input the focus marker stays visible before the
     /// display settles back to ambient.
@@ -52,7 +68,16 @@ struct MenuScreen: View {
             if let menu = store.menu {
                 MenuBackground(taps: menu.taps)
             }
+            // Disabled while an overlay is up: a disabled subtree leaves the
+            // focus engine entirely, so the board and footer can no longer
+            // steal focus from the modal on top of them.
             content
+                .disabled(overlayPresented)
+        }
+        .overlay {
+            if let tap = actionsForTap {
+                tapActions(for: tap)
+            }
         }
         .overlay {
             if let tap = removingTap {
@@ -66,6 +91,14 @@ struct MenuScreen: View {
             }
         }
         .ignoresSafeArea()
+        // The Menu button sends an exit command; unhandled, it leaves the app.
+        // While a modal is up, catch it and peel one layer instead — the code
+        // prompt first if it is showing, then the action menu — so Back means
+        // "back out of this step", not "quit the display". The handler is only
+        // attached when a modal is present: `.onExitCommand` always consumes
+        // the press once attached, so on the bare board it is left off entirely
+        // and Back keeps its normal behaviour rather than being swallowed.
+        .modifier(DismissOnExit(active: overlayPresented, dismiss: dismissTopOverlay))
         // Any directional input means a guest is driving; reveal the marker.
         .onMoveCommand { _ in
             lastInput = .now
@@ -137,19 +170,7 @@ struct MenuScreen: View {
                 fallZone: fallZone
             )
 
-            HStack(spacing: 0) {
-                ForEach(menu.taps) { tap in
-                    TapColumn(
-                        tap: tap,
-                        isFocused: focusedTap == tap.tapNumber,
-                        showFocus: showFocus,
-                        onOpen: onOpen,
-                        onAssign: onAssign,
-                        onRemove: { removingTap = $0 }
-                    )
-                    .focused($focusedTap, equals: tap.tapNumber)
-                }
-            }
+            columns(menu)
             .frame(maxWidth: boardWidth)
             .onGeometryChange(for: CGSize.self) { $0.size } action: { boardSize = $0 }
             // Clipped so each column's colour stops at the board's edge, as
@@ -193,6 +214,101 @@ struct MenuScreen: View {
         }
     }
 
+    private func columns(_ menu: TapMenu) -> some View {
+        HStack(spacing: 0) {
+            ForEach(menu.taps) { tap in
+                TapColumn(
+                    tap: tap,
+                    isFocused: focusedTap == tap.tapNumber,
+                    showFocus: showFocus,
+                    onOpen: onOpen,
+                    onAssign: onAssign,
+                    onLongPress: { actionsForTap = $0 }
+                )
+                .focused($focusedTap, equals: tap.tapNumber)
+            }
+        }
+    }
+
+    /// What a long press offers. Deliberately ours rather than the system's
+    /// context menu — see the note on the column's gesture.
+    private func tapActions(for tap: Int) -> some View {
+        let beer = store.menu?.taps.first { $0.tapNumber == tap }?.beer
+
+        return ZStack {
+            // Purely a scrim now. The board behind is `.disabled` while this
+            // is up (see `overlayPresented`), which is what actually keeps
+            // focus from escaping — the dim only sets the menu apart visually.
+            Color.black.opacity(0.45).ignoresSafeArea()
+
+            VStack(alignment: .leading, spacing: 18) {
+                Text("Tap \(tap)")
+                    .font(.caption)
+                    .tracking(2)
+                    .opacity(0.55)
+
+                if let name = beer?.name {
+                    Text(name).font(.title2).italic().bold().lineLimit(2)
+                }
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Button("Choose a different beer") {
+                        actionsForTap = nil
+                        onAssign(tap)
+                    }
+                    .focused($actionsFocus, equals: .change)
+
+                    Button("Take this beer off", role: .destructive) {
+                        actionsForTap = nil
+                        removingTap = tap
+                    }
+                    .focused($actionsFocus, equals: .remove)
+
+                    Button("Cancel") { actionsForTap = nil }
+                        .focused($actionsFocus, equals: .cancel)
+                }
+                // Confines the focus engine to these three buttons, so a
+                // directional press cannot wander out of the menu.
+                .focusScope(actionsScope)
+            }
+            .foregroundStyle(Palette.ink)
+            .padding(36)
+            .frame(maxWidth: 620, alignment: .leading)
+            .panel()
+            // The buttons do not exist when the gesture fires, so focus is
+            // claimed once they are actually on screen.
+            .onAppear { actionsFocus = .change }
+        }
+    }
+
+    /// Peels the topmost modal layer: the code prompt if it is up, otherwise
+    /// the action menu. Called by Back so a press steps out one layer at a
+    /// time rather than dismissing everything or leaving the app.
+    private func dismissTopOverlay() {
+        if removingTap != nil {
+            removingTap = nil
+        } else if actionsForTap != nil {
+            actionsForTap = nil
+        }
+    }
+
+    /// Attaches `.onExitCommand` only while a modal is up. `.onExitCommand`
+    /// consumes the Back press whenever it is present, so applying it
+    /// conditionally is what lets Back leave the app from the bare board yet
+    /// merely dismiss the modal when one is showing.
+    private struct DismissOnExit: ViewModifier {
+        let active: Bool
+        let dismiss: () -> Void
+
+        func body(content: Content) -> some View {
+            if active {
+                content.onExitCommand(perform: dismiss)
+            } else {
+                content
+            }
+        }
+    }
+
     /// Returns an error to show, or nil once the tap is cleared.
     private func clear(tap: Int, code: String) async -> String? {
         do {
@@ -215,7 +331,7 @@ private struct TapColumn: View {
     let showFocus: Bool
     let onOpen: (Beer) -> Void
     let onAssign: (Int) -> Void
-    let onRemove: (Int) -> Void
+    let onLongPress: (Int) -> Void
 
     private var marked: Bool { isFocused && showFocus }
 
@@ -318,14 +434,24 @@ private struct TapColumn: View {
             .background { background }
         }
         .buttonStyle(.bare)
-        .contextMenu {
-            if tap.beer != nil {
-                Button("Choose a different beer") { onAssign(tap.tapNumber) }
-                Button("Take this beer off", role: .destructive) {
-                    onRemove(tap.tapNumber)
+        // Not `.contextMenu`: the board re-evaluates every frame to feed the
+        // refraction shader, so a presented menu's source view is rebuilt
+        // under it 30 times a second and flickers wildly. The menu is put up
+        // by MenuScreen instead, outside the TimelineView.
+        //
+        // Not `.onLongPressGesture` either: on tvOS a long-press gesture
+        // layered on a focusable Button never fires. The Siri Remote's select
+        // is a discrete click that the Button claims for its primary action,
+        // and there is no touch-and-dwell for the gesture to observe — so the
+        // hold was silently swallowed. The hold is instead expressed as a
+        // LongPressGesture on the select press, given priority over the
+        // button so the dwell is seen before the click is delivered.
+        .highPriorityGesture(
+            LongPressGesture(minimumDuration: 0.45)
+                .onEnded { _ in
+                    if tap.beer != nil { onLongPress(tap.tapNumber) }
                 }
-            }
-        }
+        )
     }
 
     /// Focus cannot lift a flush column without breaking the board, so it
