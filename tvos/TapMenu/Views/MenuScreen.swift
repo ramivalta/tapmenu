@@ -398,12 +398,6 @@ private struct TapColumn: View {
                     }
 
                     Spacer(minLength: 0)
-
-                    if let qr = beer.untappd.flatMap({
-                        QRCodeImage.make(from: $0.qrUrl)
-                    }) {
-                        qr.resizable().frame(width: 96, height: 96)
-                    }
                 } else {
                     Text("Currently empty")
                         .font(.body)
@@ -431,6 +425,17 @@ private struct TapColumn: View {
                 maxHeight: 470,
                 alignment: .topLeading
             )
+            // Pinned to the bottom-right, out of the text flow, so it clears
+            // the tap-number watermark that sits in the bottom-left corner.
+            .overlay(alignment: .bottomTrailing) {
+                if let qr = tap.beer?.untappd.flatMap({
+                    QRCodeImage.make(from: $0.qrUrl)
+                }) {
+                    qr.resizable()
+                        .frame(width: 96, height: 96)
+                        .padding(28)
+                }
+            }
             .background { background }
         }
         .buttonStyle(.bare)
